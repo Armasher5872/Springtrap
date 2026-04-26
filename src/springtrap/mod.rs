@@ -1,6 +1,6 @@
 use {
     crate::common::{
-        common_func::*, 
+        common_func::*,
         globals::*,
         springtrap_func::*, 
         springtrap_var::*

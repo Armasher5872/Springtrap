@@ -1,6 +1,10 @@
 use super::*;
 
-unsafe extern "C" fn springtrap_up_special_end_acmd(_agent: &mut L2CAgentBase) {}
+unsafe extern "C" fn springtrap_up_special_end_acmd(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        FT_MOTION_RATE(agent, 40.0/30.0);
+    }
+}
 
 unsafe extern "C" fn springtrap_up_special_end_effect(_agent: &mut L2CAgentBase) {}
 

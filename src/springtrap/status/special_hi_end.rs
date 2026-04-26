@@ -1,7 +1,7 @@
 use super::*;
 
 unsafe extern "C" fn springtrap_special_hi_end_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    StatusModule::init_settings(fighter.module_accessor, SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_NONE as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLOAT, 0);
+    StatusModule::init_settings(fighter.module_accessor, SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_NONE as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLOAT, 0);
     FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, 0, 0, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_HI as u32, 0);
     0.into()
 }
@@ -9,11 +9,14 @@ unsafe extern "C" fn springtrap_special_hi_end_pre_status(fighter: &mut L2CFight
 unsafe extern "C" fn springtrap_special_hi_end_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     KineticModule::clear_speed_all(fighter.module_accessor);
+    KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_DAMAGE);
     if situation_kind == *SITUATION_KIND_AIR {
+        fighter.set_situation(SITUATION_KIND_AIR.into());
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
     }
     else {
+        fighter.set_situation(SITUATION_KIND_GROUND.into());
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
     }
@@ -47,17 +50,27 @@ unsafe extern "C" fn springtrap_special_hi_end_main_loop(fighter: &mut L2CFighte
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }
-    if situation_kind == *SITUATION_KIND_GROUND
-    && prev_situation_kind == *SITUATION_KIND_AIR {
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_hi_end"), -1.0, 1.0, 0.0, false, false);
-    }
-    if situation_kind == *SITUATION_KIND_AIR
-    && prev_situation_kind == *SITUATION_KIND_GROUND {
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
-        fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
+    if !StatusModule::is_changing(fighter.module_accessor) {
+        if situation_kind == *SITUATION_KIND_GROUND
+        && prev_situation_kind == *SITUATION_KIND_AIR {
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+            if current_frame > 2.0 {
+                WorkModule::set_float(fighter.module_accessor, 40.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
+                fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
+            }
+            else {    
+                MotionModule::change_motion_inherit_frame_keep_rate(fighter.module_accessor, Hash40::new("special_hi_end"), -1.0, 1.0, 0.0);
+            }
+            return 1.into();
+        }
+        if situation_kind == *SITUATION_KIND_AIR
+        && prev_situation_kind == *SITUATION_KIND_GROUND {
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+            fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
+            return 1.into();
+        }
     }
     EffectModule::set_alpha(fighter.module_accessor, effect_id as u32, 0.5-(current_frame/60.0));
     if MotionModule::is_end(fighter.module_accessor) {

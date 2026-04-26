@@ -34,8 +34,8 @@ unsafe extern "C" fn ganon_on_attack(vtable: u64, fighter: &mut Fighter, log: u6
             let volume = match sound_level {
                 0 => {0.3},
                 1 => {0.5},
-                2 => {1.0},
-                3 => {1.5},
+                2 => {0.7},
+                3 => {1.0},
                 _ => {1.0}
             };
             let crit = SoundModule::play_se(boma, Hash40::new("se_ganon_attackhard_h03"), true, false, false, false, enSEType(0));
@@ -105,7 +105,7 @@ unsafe extern "C" fn notify_log_event_collision_hit(fighter_manager: u64, attack
             if attacker_kind == *WEAPON_KIND_KOOPAJR_CANNONBALL {
                 if owner_kind == *FIGHTER_KIND_GANON {
                     if is_springtrap_slots(owner_boma) {
-                        if [*WEAPON_SPRINGTRAP_AXE_STATUS_KIND_FLY, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_RECALL].contains(&attacker_status_kind) && !WorkModule::is_flag(attacker_boma, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_PREVIOUSLY_LINKED) {
+                        if attacker_status_kind == *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_FLY && !WorkModule::is_flag(attacker_boma, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_PREVIOUSLY_LINKED) {
                             LinkModule::remove_model_constraint(attacker_boma, true);
                             if LinkModule::is_link(attacker_boma, *WEAPON_LINK_NO_CONSTRAINT) {
                                 LinkModule::unlink(attacker_boma, *WEAPON_LINK_NO_CONSTRAINT);

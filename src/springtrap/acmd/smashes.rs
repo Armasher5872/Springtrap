@@ -67,15 +67,26 @@ unsafe extern "C" fn springtrap_forward_smash_game(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn springtrap_forward_smash_effect(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     frame(lua_state, 3.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("haver"), 0, 12, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+    }
+    frame(lua_state, 27.0);
+    if is_excute(agent) {
+        if ArticleModule::is_exist(boma, *FIGHTER_GANON_GENERATE_ARTICLE_SWORD) {
+            let axe_boma = get_article_boma(boma, *FIGHTER_GANON_GENERATE_ARTICLE_SWORD);
+            let axe_agent = get_weapon_common_from_accessor(&mut *axe_boma);
+            AFTER_IMAGE4_ON_arg29(axe_agent, Hash40::new("tex_springtrap_axe1"), Hash40::new("tex_springtrap_axe2"), 4, Hash40::new("have"), 0, 8.0, 0, Hash40::new("have"), 0, 14.5, 0, true, Hash40::new("null"), Hash40::new("have"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.3, 0.1);
+            AFTER_IMAGE4_ON_arg29(axe_agent, Hash40::new("tex_springtrap_axe3"), Hash40::new("tex_springtrap_axe4"), 4, Hash40::new("have"), 0, 0.0, 0, Hash40::new("have"), 0, 12.0, 0, true, Hash40::new("null"), Hash40::new("have"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.3, 0.1);
+        }
     }
     frame(lua_state, 30.0);
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 1.5, 0, 17, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
         LANDING_EFFECT(agent, Hash40::new("sys_quake"), Hash40::new("top"), 1.5, 0, 17, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
         EFFECT(agent, Hash40::new("springtrap_axe_ground_crack"), Hash40::new("top"), 17, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        AFTER_IMAGE_OFF(agent, 2);
     }
 }
 

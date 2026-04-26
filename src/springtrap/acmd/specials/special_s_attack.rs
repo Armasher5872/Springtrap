@@ -9,11 +9,11 @@ unsafe extern "C" fn springtrap_side_special_attack_acmd(agent: &mut L2CAgentBas
     let mut damage_1 = 7.0+(7.0*special_s_charge);
     let mut damage_2 = 5.0+(5.0*special_s_charge);
     let size_0 = 4.0+(4.0*special_s_charge);
-    let size_1 = 7.0+(7.0*special_s_charge);
-    let size_2 = 10.0+(10.0*special_s_charge);
+    let size_1 = 7.0+(3.0*special_s_charge);
+    let size_2 = 10.0+(2.0*special_s_charge);
     let z2_coord_0 = 8.0+(8.0*special_s_charge);
-    let z2_coord_1 = 8.0+(12.0*special_s_charge);
-    let z2_coord_2 = 8.0+(16.0*special_s_charge);
+    let z2_coord_1 = 8.0+(10.0*special_s_charge);
+    let z2_coord_2 = 8.0+(12.0*special_s_charge);
     let saving_level = if special_s_charge > 0.5 {*FIGHTER_RYU_SAVING_LV_2} else {*FIGHTER_RYU_SAVING_LV_1};
     frame(lua_state, 3.0);
     if is_excute(agent) {

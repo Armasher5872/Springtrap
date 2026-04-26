@@ -136,11 +136,12 @@ unsafe extern "C" fn springtrap_fair_effect(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     frame(lua_state, 15.0);
     if is_excute(agent) {
-        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_springtrap_knife1"), Hash40::new("tex_springtrap_knife2"), 4, Hash40::new("haver"), 0, 0.0, 0, Hash40::new("haver"), 0, 14.5, 0, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.3, 0.1);
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_springtrap_axe1"), Hash40::new("tex_springtrap_axe2"), 4, Hash40::new("haver"), 0, 8.0, 0, Hash40::new("haver"), 0, 14.5, 0, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.3, 0.1);
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_springtrap_axe3"), Hash40::new("tex_springtrap_axe4"), 4, Hash40::new("haver"), 0, 0.0, 0, Hash40::new("haver"), 0, 12.0, 0, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.3, 0.1);
     }
     frame(lua_state, 18.0);
     if is_excute(agent) {
-        AFTER_IMAGE_OFF(agent, 2);
+        AFTER_IMAGE_OFF(agent, 6);
     }
 }
 
@@ -195,9 +196,12 @@ unsafe extern "C" fn springtrap_bair_effect(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     frame(lua_state, 11.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 1, 15, -5, 6, 132, 220, 1, true, *EF_FLIP_YZ, 1);
-        LAST_EFFECT_SET_COLOR(agent, 0.75, 1.0, 0.40);
+        EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("springtrap_attack_arc"), Hash40::new("springtrap_attack_arc"), Hash40::new("top"), 1, 15, -5, 6, 132, 220, 1, true, *EF_FLIP_YZ, 1);
         LAST_EFFECT_SET_RATE(agent, 1.5);
+    }
+    frame(lua_state, 13.0);
+    if is_excute(agent) {
+        EFFECT(agent, Hash40::new("springtrap_spark"), Hash40::new("top"), 0, 11, -15, 0, 0, 0, 0.3, 0, 0, 0, 0, 0, 0, true);
     }
 }
 
@@ -258,8 +262,7 @@ unsafe extern "C" fn springtrap_uair_effect(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     frame(lua_state, 9.0);
 	if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc"), Hash40::new("top"), -2.0, 8.0, 4.5, 0, -90, -90, 1.0, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.75, 1.0, 0.40);
+        EFFECT_FOLLOW(agent, Hash40::new("springtrap_attack_arc"), Hash40::new("top"), -2.0, 8.0, 4.5, 0, -90, -90, 1.0, true);
         LAST_EFFECT_SET_RATE(agent, 0.8);
     }
 }

@@ -1,11 +1,8 @@
 use super::*;
 
 unsafe extern "C" fn springtrap_up_special_acmd(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.module_accessor;
-    frame(lua_state, 20.0);
     if is_excute(agent) {
-        HitModule::set_whole(boma, HitStatus(*HIT_STATUS_XLU), 0);
+        FT_MOTION_RATE(agent, 40.0/30.0);
     }
 }
 

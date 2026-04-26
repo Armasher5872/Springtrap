@@ -198,8 +198,7 @@ unsafe extern "C" fn springtrap_forward_throw_effect(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     frame(lua_state, 25.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc"), Hash40::new("top"), -3, 17, 2.5, 0, -75, 50, 0.85, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.75, 1.0, 0.40);
+        EFFECT_FOLLOW(agent, Hash40::new("springtrap_attack_arc"), Hash40::new("top"), -3, 17, 2.5, 0, -75, 50, 0.85, true);
     }
     frame(lua_state, 27.0);
     if is_excute(agent) {
@@ -268,15 +267,16 @@ unsafe extern "C" fn springtrap_back_throw_game(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn springtrap_back_throw_effect(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0, 12, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, true);
+        EFFECT(agent, Hash40::new("springtrap_static"), Hash40::new("top"), 0, 12, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, true);
     }
     frame(lua_state, 23.0);
     if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("springtrap_static"), true, true);
         LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, 0, -180, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
     }
     frame(lua_state, 27.0);
     if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), 0, 11.8, 10, -165, 0, 0, 1.6, 0, 0, 0, 0, 0, 0, true);
+        EFFECT(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), 0, 11.8, 10, -205, 0, 0, 1.6, 0, 0, 0, 0, 0, 0, true);
         LAST_EFFECT_SET_COLOR(agent, 0.75, 1.0, 0.40);
     }
     frame(lua_state, 30.0);
@@ -291,6 +291,9 @@ unsafe extern "C" fn springtrap_back_throw_effect(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn springtrap_back_throw_sound(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_ganon_special_h01"));
+    }
     frame(lua_state, 23.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_common_throw_01"));

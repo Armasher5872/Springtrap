@@ -10,8 +10,8 @@ unsafe extern "C" fn springtrap_axe_bb_fall_init_status(weapon: &mut L2CWeaponCo
     let speed_y = WorkModule::get_float(weapon.module_accessor, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLOAT_BB_SPEED_Y);
     KineticModule::enable_energy(weapon.module_accessor, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
     sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x, speed_y);
-    sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, -0.08);
-    sv_kinetic_energy!(set_brake, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, -0.04);
+    sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, -0.065);
+    sv_kinetic_energy!(set_brake, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.04);
     0.into()
 }
 

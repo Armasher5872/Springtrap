@@ -2,45 +2,7 @@
 use super::*;
 
 pub unsafe extern "C" fn is_springtrap_slots(boma: *mut BattleObjectModuleAccessor) -> bool {
-    let color = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR);
-    (16..=23).contains(&color)
-}
-
-pub unsafe extern "C" fn should_stop_recall(fighter: &mut L2CFighterCommon, start_axe_homing: bool) -> bool {
-    let boma = fighter.module_accessor;
-    if ArticleModule::is_exist(boma, FIGHTER_SPRINGTRAP_GENERATE_ARTICLE_AXE) {
-        let active_axe_count = ArticleModule::get_active_num(boma, FIGHTER_SPRINGTRAP_GENERATE_ARTICLE_AXE);
-        for idx in 0..active_axe_count {
-            let axe_battle_object_id = WorkModule::get_int(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_ACTIVE_AXE_BATTLE_OBJECT_ID);
-            if sv_battle_object::is_active(axe_battle_object_id as u32) {
-                let axe_article = get_article_from_no(boma, FIGHTER_SPRINGTRAP_GENERATE_ARTICLE_AXE, idx as i32);
-                let axe_battle_object_id = smash::app::lua_bind::Article::get_battle_object_id(axe_article) as u32;
-                if axe_battle_object_id != *BATTLE_OBJECT_ID_INVALID as u32 {
-                    if start_axe_homing {
-                        let axe_boma = sv_battle_object::module_accessor(axe_battle_object_id);
-                        let axe_status_kind = StatusModule::status_kind(axe_boma);
-                        if [*WEAPON_SPRINGTRAP_AXE_STATUS_KIND_FLY, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_STICK, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_HIT_STICK].contains(&axe_status_kind) {
-                            StatusModule::change_status_request_from_script(axe_boma, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_RECALL, false);
-                            return false;
-                        }
-                        else {
-                            return true;
-                        }
-                    }
-                    else {
-                        return false;
-                    }
-                }
-                else {
-                    return true;
-                }
-            }
-            else {
-                return true;
-            }
-        }
-    }
-    true
+    MARKED_COLORS[WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) as usize]
 }
 
 pub unsafe extern "C" fn should_remove_axe(weapon: &mut L2CWeaponCommon) -> bool {
@@ -98,7 +60,6 @@ pub unsafe extern "C" fn remove_axe(weapon: &mut L2CWeaponCommon) {
 
 pub unsafe extern "C" fn remove_phantom(weapon: &mut L2CWeaponCommon) {
     let owner_boma = get_owner_boma(weapon);
-    WorkModule::set_int(owner_boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_ACTIVE_AXE_BATTLE_OBJECT_ID);
     WorkModule::off_flag(owner_boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_ACTIVE_PHANTOM);
     notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
     weapon.pop_lua_stack(1);

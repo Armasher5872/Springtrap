@@ -20,7 +20,29 @@ unsafe extern "C" fn springtrap_special_n_recall_loop_init_status(fighter: &mut 
 }
 
 unsafe extern "C" fn springtrap_special_n_recall_loop_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if should_stop_recall(fighter, true) {
+    let active_axe_count = ArticleModule::get_active_num(fighter.module_accessor, FIGHTER_SPRINGTRAP_GENERATE_ARTICLE_AXE);
+    let active_axe_battle_object_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_ACTIVE_AXE_BATTLE_OBJECT_ID);
+    let mut should_end = true;
+    for idx in 0..active_axe_count {
+        println!("Active Axe Battle Object ID: {}", active_axe_battle_object_id);
+        println!("Is Axe Active: {}", sv_battle_object::is_active(active_axe_battle_object_id as u32));
+        if sv_battle_object::is_active(active_axe_battle_object_id as u32) {
+            let axe_article = get_article_from_no(fighter.module_accessor, FIGHTER_SPRINGTRAP_GENERATE_ARTICLE_AXE, idx as i32);
+            let axe_battle_object_id = smash::app::lua_bind::Article::get_battle_object_id(axe_article) as u32;
+            println!("Axe Battle Object ID: {}", axe_battle_object_id);
+            if axe_battle_object_id == active_axe_battle_object_id as u32 {
+                let axe_boma = sv_battle_object::module_accessor(axe_battle_object_id as u32);
+                let axe_status_kind = StatusModule::status_kind(axe_boma);
+                println!("Axe Status Kind: {}", axe_status_kind);
+                if [*WEAPON_SPRINGTRAP_AXE_STATUS_KIND_FLY, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_STICK, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_HIT_STICK].contains(&axe_status_kind) {
+                    StatusModule::change_status_request_from_script(axe_boma, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_RECALL, false);
+                    should_end = false;
+                    break;
+                }
+            }
+        }
+    }
+    if should_end {
         StatusModule::set_status_kind_interrupt(fighter.module_accessor, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_END);
     }
     fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_n_recall_loop"), L2CValue::Hash40s("special_air_n_recall_loop"), false.into());
@@ -30,6 +52,7 @@ unsafe extern "C" fn springtrap_special_n_recall_loop_main_status(fighter: &mut 
 unsafe extern "C" fn springtrap_special_n_recall_loop_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
+    let axe_battle_object_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_ACTIVE_AXE_BATTLE_OBJECT_ID);
     if !StatusModule::is_changing(fighter.module_accessor) {
         if situation_kind == *SITUATION_KIND_GROUND
         && prev_situation_kind == *SITUATION_KIND_AIR {
@@ -44,7 +67,7 @@ unsafe extern "C" fn springtrap_special_n_recall_loop_main_loop(fighter: &mut L2
             MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_n_recall_loop"), -1.0, 1.0, 0.0, false, false);
         }
     }
-    if should_stop_recall(fighter, false) {
+    if axe_battle_object_id == *BATTLE_OBJECT_ID_INVALID || !sv_battle_object::is_active(axe_battle_object_id as u32) {
         fighter.change_status(FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_END.into(), false.into());
     }
     if MotionModule::is_end(fighter.module_accessor) {

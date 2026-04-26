@@ -25,7 +25,7 @@ unsafe extern "C" fn springtrap_forward_tilt_effect(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 13.0);
     if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0, 9, 18, 0, 0, 0, 0.3, 0, 0, 0, 0, 0, 0, true);
+        EFFECT(agent, Hash40::new("springtrap_spark"), Hash40::new("top"), 0, 9, 18, 0, 0, 0, 0.3, 0, 0, 0, 0, 0, 0, true);
     }
 }
 

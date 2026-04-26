@@ -39,19 +39,21 @@ unsafe extern "C" fn springtrap_special_hi_main_loop(fighter: &mut L2CFighterCom
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
     let current_frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let effect_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID);
-    if situation_kind == *SITUATION_KIND_GROUND
-    && prev_situation_kind == *SITUATION_KIND_AIR {
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
-        MotionModule::change_motion_inherit_frame_keep_rate(fighter.module_accessor, Hash40::new("special_hi"), -1.0, 1.0, 0.0);
-    }
-    if situation_kind == *SITUATION_KIND_AIR
-    && prev_situation_kind == *SITUATION_KIND_GROUND {
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
-        KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-        KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
-        MotionModule::change_motion_inherit_frame_keep_rate(fighter.module_accessor, Hash40::new("special_air_hi"), -1.0, 1.0, 0.0);
+    if !StatusModule::is_changing(fighter.module_accessor) {
+        if situation_kind == *SITUATION_KIND_GROUND
+        && prev_situation_kind == *SITUATION_KIND_AIR {
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
+            MotionModule::change_motion_inherit_frame_keep_rate(fighter.module_accessor, Hash40::new("special_hi"), -1.0, 1.0, 0.0);
+        }
+        if situation_kind == *SITUATION_KIND_AIR
+        && prev_situation_kind == *SITUATION_KIND_GROUND {
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+            KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+            KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+            MotionModule::change_motion_inherit_frame_keep_rate(fighter.module_accessor, Hash40::new("special_air_hi"), -1.0, 1.0, 0.0);
+        }
     }
     EffectModule::set_alpha(fighter.module_accessor, effect_id as u32, current_frame/24.0);
     if MotionModule::is_end(fighter.module_accessor) {
@@ -79,6 +81,11 @@ unsafe extern "C" fn springtrap_special_hi_exec_status(fighter: &mut L2CFighterC
 unsafe extern "C" fn springtrap_special_hi_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
     if ![*FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_HI_MOVE, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_HI_END].contains(&status_kind) {
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NAME_CURSOR);
+        VisibilityModule::set_whole(fighter.module_accessor, true);
+        HitModule::set_whole(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
+        GroundModule::set_ignore_boss(fighter.module_accessor, false);
+        JostleModule::set_status(fighter.module_accessor, true);
         WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE);
         WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_MOVE_TIME);
         WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID);
@@ -90,6 +97,11 @@ unsafe extern "C" fn springtrap_special_hi_end_status(fighter: &mut L2CFighterCo
 unsafe extern "C" fn springtrap_special_hi_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
     if ![*FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_HI_MOVE, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_HI_END].contains(&status_kind) {
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NAME_CURSOR);
+        VisibilityModule::set_whole(fighter.module_accessor, true);
+        HitModule::set_whole(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
+        GroundModule::set_ignore_boss(fighter.module_accessor, false);
+        JostleModule::set_status(fighter.module_accessor, true);
         WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE);
         WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_MOVE_TIME);
         WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID);

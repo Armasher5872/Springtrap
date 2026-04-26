@@ -1,7 +1,7 @@
 use super::*;
 
 unsafe extern "C" fn springtrap_special_hi_move_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    StatusModule::init_settings(fighter.module_accessor, SituationKind(*SITUATION_KIND_AIR), *FIGHTER_KINETIC_TYPE_AIR_BRAKE, *GROUND_CORRECT_KIND_AIR as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLOAT, *FS_SUCCEEDS_KEEP_HIT | *FS_SUCCEEDS_KEEP_ATTACK);
+    StatusModule::init_settings(fighter.module_accessor, SituationKind(*SITUATION_KIND_AIR), *FIGHTER_KINETIC_TYPE_AIR_BRAKE, *GROUND_CORRECT_KIND_AIR as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLOAT, *FS_SUCCEEDS_KEEP_HIT | *FS_SUCCEEDS_KEEP_ATTACK);
     FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_STATUS_ATTR_DISABLE_DISSOLVE_CURSOR | *FIGHTER_STATUS_ATTR_HIDE_NAME_CURSOR) as u64, 0, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_HI as u32, 0);
     0.into()
 }
@@ -20,7 +20,6 @@ unsafe extern "C" fn springtrap_special_hi_move_init_status(fighter: &mut L2CFig
 unsafe extern "C" fn springtrap_special_hi_move_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let pos = PostureModule::pos(fighter.module_accessor);
     let effect = EffectModule::req_follow(fighter.module_accessor, Hash40::new("springtrap_static"), Hash40::new("hip"), &Vector3f{x: (*pos).x, y: (*pos).y, z: 0.0}, &Vector3f{x: 0.0, y: 0.0, z: 0.0}, 1.5, true, 0, 0, 0, 0, 0, true, true);
-    HitModule::set_whole(fighter.module_accessor, HitStatus(*HIT_STATUS_XLU), 0);
     GroundModule::set_ignore_boss(fighter.module_accessor, true);
     GroundModule::set_passable_check(fighter.module_accessor, true);
     JostleModule::set_status(fighter.module_accessor, false);
@@ -38,7 +37,7 @@ unsafe extern "C" fn springtrap_special_hi_move_main_loop(fighter: &mut L2CFight
         return 1.into();
     }
     if situation_kind == *SITUATION_KIND_GROUND {
-        WorkModule::set_float(fighter.module_accessor, 30.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
+        WorkModule::set_float(fighter.module_accessor, 40.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
         fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
         return 1.into();
     }

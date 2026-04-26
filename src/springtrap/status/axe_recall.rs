@@ -51,7 +51,7 @@ unsafe extern "C" fn springtrap_axe_recall_exec_status(weapon: &mut L2CWeaponCom
         let pos = *PostureModule::pos(weapon.module_accessor);
         let x_dist = x-pos.x;
         let y_dist = y-pos.y;
-        sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, x_dist/15.0, y_dist/5.0);
+        sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, x_dist/20.0, y_dist/7.5);
     }
     WorkModule::dec_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     0.into()

@@ -1,7 +1,10 @@
 use {
-    crate::common::{
-        common_func::*,
-        springtrap_var::*,
+    crate::{
+        common::{
+            common_func::*,
+            springtrap_var::*,
+        },
+        MARKED_COLORS
     },
     smash::{
         app::{
