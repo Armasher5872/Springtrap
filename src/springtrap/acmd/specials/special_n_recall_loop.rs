@@ -10,8 +10,8 @@ unsafe extern "C" fn springtrap_neutral_special_recall_loop_acmd(agent: &mut L2C
 pub fn install() {
     Agent::new("ganon")
     .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
-    .game_acmd("game_specialnrecallloop", springtrap_neutral_special_recall_loop_acmd, Low)
-    .game_acmd("game_specialairnrecallloop", springtrap_neutral_special_recall_loop_acmd, Low)
+    .acmd("game_specialnrecallloop", springtrap_neutral_special_recall_loop_acmd, Low)
+    .acmd("game_specialairnrecallloop", springtrap_neutral_special_recall_loop_acmd, Low)
     .install()
     ;
 }

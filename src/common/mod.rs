@@ -1,7 +1,8 @@
 use {
     crate::{
         common::{
-            common_func::*,
+            extern_c::*,
+            getter_funcs::*,
             springtrap_var::*,
         },
         MARKED_COLORS
@@ -32,6 +33,10 @@ use {
 };
 
 pub mod common_func;
+pub mod extern_c;
+pub mod getter_funcs;
 pub mod globals;
+pub mod hooks;
 pub mod springtrap_func;
 pub mod springtrap_var;
+pub mod structs;

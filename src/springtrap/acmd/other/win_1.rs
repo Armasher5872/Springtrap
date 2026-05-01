@@ -53,27 +53,27 @@ unsafe extern "C" fn springtrap_win_1_sound(agent: &mut L2CAgentBase) {
     let boma = agent.module_accessor;
     frame(lua_state, 40.0);
     if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_ganon_appear01"));
+        PLAY_SE(agent, Hash40::new("se_ganon_special_n01"));
     }
     frame(lua_state, 55.0);
     if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_ganon_smash_s01"));
+        PLAY_SE(agent, Hash40::new("se_ganon_attackair_s01"));
     }
     frame(lua_state, 65.0);
     if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_item_item_get"));
+        PLAY_SE(agent, Hash40::new("se_ganon_special_h05"));
     }
     frame(lua_state, 85.0);
     if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_ganon_step_left_m"));
+        PLAY_SE(agent, Hash40::new("se_ganon_swing_s"));
     }
     frame(lua_state, 125.0);
     if is_excute(agent) {
-        PLAY_SEQUENCE(agent, Hash40::new("seq_ganon_rnd_attack"));
-        PLAY_SE(agent, Hash40::new("se_ganon_swing_ll"));
+        PLAY_SE(agent, Hash40::new("se_ganon_special_n02"));
     }
     frame(lua_state, 135.0);
     if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("vc_ganon_win01"));
         PLAY_SE(agent, Hash40::new("se_ganon_special_h02"));
         let crit = SoundModule::play_se(boma, Hash40::new("se_ganon_attackhard_h03"), true, false, false, false, enSEType(0));
         SoundModule::set_se_vol(boma, crit as i32, 2.0, 0);
@@ -89,10 +89,10 @@ unsafe extern "C" fn springtrap_win_1_expression(_agent: &mut L2CAgentBase) {}
 pub fn install() {
     Agent::new("ganon")
     .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
-    .game_acmd("game_win1", springtrap_win_1_game, Low)
-    .effect_acmd("effect_win1", springtrap_win_1_effect, Low)
-    .sound_acmd("sound_win1", springtrap_win_1_sound, Low)
-    .expression_acmd("expression_win1", springtrap_win_1_expression, Low)
+    .acmd("game_win1", springtrap_win_1_game, Low)
+    .acmd("effect_win1", springtrap_win_1_effect, Low)
+    .acmd("sound_win1", springtrap_win_1_sound, Low)
+    .acmd("expression_win1", springtrap_win_1_expression, Low)
     .install()
     ;
 }

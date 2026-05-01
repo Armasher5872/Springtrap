@@ -42,9 +42,9 @@ unsafe extern "C" fn springtrap_entry_sound(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_ganon_appear01"));
     }
-    frame(lua_state, 95.0);
+    frame(lua_state, 60.0);
     if is_excute(agent) {
-
+        PLAY_SE(agent, Hash40::new("vc_ganon_special_h01"));
     }
 }
 
@@ -76,12 +76,12 @@ unsafe extern "C" fn springtrap_entry_expression(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("ganon")
     .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
-    .effect_acmd("effect_entryl", springtrap_entry_effect, Low)
-    .sound_acmd("sound_entryl", springtrap_entry_sound, Low)
-    .expression_acmd("expression_entryl", springtrap_entry_expression, Low)
-    .effect_acmd("effect_entryr", springtrap_entry_effect, Low)
-    .sound_acmd("sound_entryr", springtrap_entry_sound, Low)
-    .expression_acmd("expression_entryr", springtrap_entry_expression, Low)
+    .acmd("effect_entryl", springtrap_entry_effect, Low)
+    .acmd("sound_entryl", springtrap_entry_sound, Low)
+    .acmd("expression_entryl", springtrap_entry_expression, Low)
+    .acmd("effect_entryr", springtrap_entry_effect, Low)
+    .acmd("sound_entryr", springtrap_entry_sound, Low)
+    .acmd("expression_entryr", springtrap_entry_expression, Low)
     .install()
     ;
 }

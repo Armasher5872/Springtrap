@@ -1,16 +1,43 @@
 use super::*;
 
-//Neutral Special Recall End Effect
-unsafe extern "C" fn springtrap_grounded_neutral_special_recall_end_effect(agent: &mut L2CAgentBase) {
+//Neutral Special Recall End Game
+unsafe extern "C" fn springtrap_neutral_special_recall_end_game(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("sys_item_get"), Hash40::new("handl"), 0.5, 0, 0, 0, 0, 0, 0.8, true);
+        if ArticleModule::is_exist(boma, FIGHTER_SPRINGTRAP_GENERATE_ARTICLE_AXE) {
+            if ArticleModule::is_exist(boma, *FIGHTER_GANON_GENERATE_ARTICLE_SWORD) {
+                let axe_boma = get_article_boma(boma, *FIGHTER_GANON_GENERATE_ARTICLE_SWORD);
+                ModelModule::set_scale(axe_boma, 0.73);
+                LinkModule::set_model_constraint_pos_ort(axe_boma, *LINK_NO_CONSTRAINT, Hash40::new("have"), Hash40::new("havel"), (*CONSTRAINT_FLAG_ORIENTATION | *CONSTRAINT_FLAG_OFFSET_SCALE | *CONSTRAINT_FLAG_POSITION | *CONSTRAINT_FLAG_OFFSET_TRANSLATE | *CONSTRAINT_FLAG_OFFSET_ROT) as u32, true);
+                LinkModule::set_constraint_translate_offset(axe_boma, &Vector3f{x: 0.0, y: 0.0, z: 0.0});
+                LinkModule::set_constraint_rot_offset(axe_boma, &Vector3f{x: 0.0, y: 0.0, z: 0.0});
+            }
+        }
+        else {
+            ArticleModule::remove_exist(boma, *FIGHTER_GANON_GENERATE_ARTICLE_SWORD, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        }
+    }
+    frame(lua_state, 40.0);
+    if is_excute(agent) {
+        ArticleModule::remove_exist(boma, *FIGHTER_GANON_GENERATE_ARTICLE_SWORD, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+    }
+}
+
+//Neutral Special Recall End Effect
+unsafe extern "C" fn springtrap_neutral_special_recall_end_effect(agent: &mut L2CAgentBase) {
+    let boma = agent.module_accessor;
+    if is_excute(agent) {
+        if ArticleModule::is_exist(boma, *FIGHTER_GANON_GENERATE_ARTICLE_SWORD) {
+            EFFECT_FOLLOW(agent, Hash40::new("springtrap_axe_fire_ash"), Hash40::new("havel"), 0, 13, 0, 0, 0, 0, 0.5, true);
+        }
     }
 }
 
 //Neutral Special Recall End Sound
 unsafe extern "C" fn springtrap_neutral_special_recall_end_sound(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_item_item_get"));
+        PLAY_SE(agent, Hash40::new("se_ganon_special_h05"));
     }
 }
 
@@ -26,12 +53,14 @@ unsafe extern "C" fn springtrap_neutral_special_recall_end_expression(agent: &mu
 pub fn install() {
     Agent::new("ganon")
     .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
-    .effect_acmd("effect_specialnrecallend", springtrap_grounded_neutral_special_recall_end_effect, Low)
-    .sound_acmd("sound_specialnrecallend", springtrap_neutral_special_recall_end_sound, Low)
-    .expression_acmd("expression_specialnrecallend", springtrap_neutral_special_recall_end_expression, Low)
-    .effect_acmd("effect_specialairnrecallend", springtrap_grounded_neutral_special_recall_end_effect, Low)
-    .sound_acmd("sound_specialairnrecallend", springtrap_neutral_special_recall_end_sound, Low)
-    .expression_acmd("expression_specialairnrecallend", springtrap_neutral_special_recall_end_expression, Low)
+    .acmd("game_specialnrecallend", springtrap_neutral_special_recall_end_game, Low)
+    .acmd("effect_specialnrecallend", springtrap_neutral_special_recall_end_effect, Low)
+    .acmd("sound_specialnrecallend", springtrap_neutral_special_recall_end_sound, Low)
+    .acmd("expression_specialnrecallend", springtrap_neutral_special_recall_end_expression, Low)
+    .acmd("game_specialairnrecallend", springtrap_neutral_special_recall_end_game, Low)
+    .acmd("effect_specialairnrecallend", springtrap_neutral_special_recall_end_effect, Low)
+    .acmd("sound_specialairnrecallend", springtrap_neutral_special_recall_end_sound, Low)
+    .acmd("expression_specialairnrecallend", springtrap_neutral_special_recall_end_expression, Low)
     .install()
     ;
 }

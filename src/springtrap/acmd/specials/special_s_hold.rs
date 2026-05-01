@@ -30,14 +30,14 @@ unsafe extern "C" fn springtrap_side_special_hold_expression(agent: &mut L2CAgen
 pub fn install() {
     Agent::new("ganon")
     .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
-    .game_acmd("game_specialshold", springtrap_side_special_hold_acmd, Low)
-    .effect_acmd("effect_specialshold", springtrap_side_special_hold_effect, Low)
-    .sound_acmd("sound_specialshold", springtrap_side_special_hold_sound, Low)
-    .expression_acmd("expression_specialshold", springtrap_side_special_hold_expression, Low)
-    .game_acmd("game_specialairshold", springtrap_side_special_hold_acmd, Low)
-    .effect_acmd("effect_specialairshold", springtrap_side_special_hold_effect, Low)
-    .sound_acmd("sound_specialairshold", springtrap_side_special_hold_sound, Low)
-    .expression_acmd("expression_specialairshold", springtrap_side_special_hold_expression, Low)
+    .acmd("game_specialshold", springtrap_side_special_hold_acmd, Low)
+    .acmd("effect_specialshold", springtrap_side_special_hold_effect, Low)
+    .acmd("sound_specialshold", springtrap_side_special_hold_sound, Low)
+    .acmd("expression_specialshold", springtrap_side_special_hold_expression, Low)
+    .acmd("game_specialairshold", springtrap_side_special_hold_acmd, Low)
+    .acmd("effect_specialairshold", springtrap_side_special_hold_effect, Low)
+    .acmd("sound_specialairshold", springtrap_side_special_hold_sound, Low)
+    .acmd("expression_specialairshold", springtrap_side_special_hold_expression, Low)
     .install()
     ;
 }

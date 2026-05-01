@@ -65,7 +65,7 @@ unsafe extern "C" fn springtrap_win_3_sound(agent: &mut L2CAgentBase) {
     let boma = agent.module_accessor;
     frame(lua_state, 30.0);
     if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_ganon_smash_s01"));
+        PLAY_SE(agent, Hash40::new("se_ganon_special_n02"));
     }
     frame(lua_state, 45.0);
     if is_excute(agent) {
@@ -84,6 +84,7 @@ unsafe extern "C" fn springtrap_win_3_sound(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         let crit = SoundModule::play_se(boma, Hash40::new("se_ganon_attackhard_h03"), true, false, false, false, enSEType(0));
         SoundModule::set_se_vol(boma, crit as i32, 2.0, 0);
+        PLAY_SE(agent, Hash40::new("vc_ganon_win03"));
     }
 }
 
@@ -92,10 +93,10 @@ unsafe extern "C" fn springtrap_win_3_expression(_agent: &mut L2CAgentBase) {}
 pub fn install() {
     Agent::new("ganon")
     .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
-    .game_acmd("game_win3", springtrap_win_3_game, Low)
-    .effect_acmd("effect_win3", springtrap_win_3_effect, Low)
-    .sound_acmd("sound_win3", springtrap_win_3_sound, Low)
-    .expression_acmd("expression_win3", springtrap_win_3_expression, Low)
+    .acmd("game_win3", springtrap_win_3_game, Low)
+    .acmd("effect_win3", springtrap_win_3_effect, Low)
+    .acmd("sound_win3", springtrap_win_3_sound, Low)
+    .acmd("expression_win3", springtrap_win_3_expression, Low)
     .install()
     ;
 }

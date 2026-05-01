@@ -6,7 +6,6 @@ unsafe extern "C" fn springtrap_on_start(fighter: &mut L2CFighterCommon) {
     WorkModule::off_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CHARGED);
     WorkModule::off_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_ACTIVE_PHANTOM);
     WorkModule::set_float(boma, 0.0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_CHARGE);
-    WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_ACTIVE_AXE_BATTLE_OBJECT_ID);
     WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE);
     WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_MOVE_TIME);
     WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID);
@@ -19,19 +18,25 @@ unsafe extern "C" fn springtrap_opff(fighter: &mut L2CFighterCommon) {
     let current_frame = fighter.global_table[CURRENT_FRAME].get_i32();
     let motion_kind = MotionModule::motion_kind(boma);
     let effect_id = WorkModule::get_int(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID);
+    //Handles rescaling
     if ModelModule::scale(boma) == WorkModule::get_param_float(boma, hash40("scale"), 0) {
         ModelModule::set_scale(boma, 1.1);
         AttackModule::set_attack_scale(boma, 1.1, true);
         GrabModule::set_size_mul(boma, 1.1);
     }
+    //Axe Stuff
     if !ArticleModule::is_exist(boma, FIGHTER_SPRINGTRAP_GENERATE_ARTICLE_AXE) {
         if WorkModule::is_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_ACTIVE_AXE) {
             WorkModule::off_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_ACTIVE_AXE);
         }
+    }
+    //Phantom Stuff
+    if !ArticleModule::is_exist(boma, FIGHTER_SPRINGTRAP_GENERATE_ARTICLE_PHANTOM) {
         if WorkModule::is_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_ACTIVE_PHANTOM) {
             WorkModule::off_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_ACTIVE_PHANTOM);
         }
     }
+    //Win Static Sound
     if [hash40("win_1_wait"), hash40("win_2_wait"), hash40("win_3_wait")].contains(&motion_kind) {
         if current_frame % 25 == 0 {
             let end_static = SoundModule::play_se(boma, Hash40::new("se_ganon_special_h02"), true, false, false, false, enSEType(0));
@@ -48,12 +53,7 @@ unsafe extern "C" fn springtrap_opff(fighter: &mut L2CFighterCommon) {
 unsafe extern "C" fn springtrap_axe_on_start(weapon: &mut L2CWeaponCommon) {
     let boma = weapon.module_accessor;
     WorkModule::off_flag(boma, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_LINKED);
-    WorkModule::off_flag(boma, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_PREVIOUSLY_LINKED);
-    WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLOAT_OWNER_INIT_LR);
-    WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLOAT_BB_SPEED_X);
-    WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLOAT_BB_SPEED_Y);
     WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_INT_OBJECT_ID);
-    WorkModule::set_int(boma, 0, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_INT_PHANTOM_TYPE);
 }
 
 unsafe extern "C" fn springtrap_axe_opff(weapon: &mut L2CWeaponCommon) {
@@ -71,6 +71,14 @@ unsafe extern "C" fn springtrap_axe_opff(weapon: &mut L2CWeaponCommon) {
     }
 }
 
+unsafe extern "C" fn springtrap_phantom_on_start(weapon: &mut L2CWeaponCommon) {
+    let boma = weapon.module_accessor;
+    WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_OWNER_INIT_LR);
+    WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_BB_SPEED_X);
+    WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_BB_SPEED_Y);
+    WorkModule::set_int(boma, 0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_INT_PHANTOM_TYPE);
+}
+
 pub fn install() {
     Agent::new("ganon")
     .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
@@ -82,6 +90,11 @@ pub fn install() {
     .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
     .on_start(springtrap_axe_on_start)
     .on_line(Main, springtrap_axe_opff)
+    .install()
+    ;
+    Agent::new("ganon_phantom")
+    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .on_start(springtrap_phantom_on_start)
     .install()
     ;
 }

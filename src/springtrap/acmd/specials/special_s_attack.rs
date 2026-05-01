@@ -102,14 +102,14 @@ unsafe extern "C" fn springtrap_side_special_attack_expression(agent: &mut L2CAg
 pub fn install() {
     Agent::new("ganon")
     .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
-    .game_acmd("game_specialsattack", springtrap_side_special_attack_acmd, Low)
-    .effect_acmd("effect_specialsattack", springtrap_side_special_attack_effect, Low)
-    .sound_acmd("sound_specialsattack", springtrap_side_special_attack_sound, Low)
-    .expression_acmd("expression_specialsattack", springtrap_side_special_attack_expression, Low)
-    .game_acmd("game_specialairsattack", springtrap_side_special_attack_acmd, Low)
-    .effect_acmd("effect_specialairsattack", springtrap_side_special_attack_effect, Low)
-    .sound_acmd("sound_specialairsattack", springtrap_side_special_attack_sound, Low)
-    .expression_acmd("expression_specialairsattack", springtrap_side_special_attack_expression, Low)
+    .acmd("game_specialsattack", springtrap_side_special_attack_acmd, Low)
+    .acmd("effect_specialsattack", springtrap_side_special_attack_effect, Low)
+    .acmd("sound_specialsattack", springtrap_side_special_attack_sound, Low)
+    .acmd("expression_specialsattack", springtrap_side_special_attack_expression, Low)
+    .acmd("game_specialairsattack", springtrap_side_special_attack_acmd, Low)
+    .acmd("effect_specialairsattack", springtrap_side_special_attack_effect, Low)
+    .acmd("sound_specialairsattack", springtrap_side_special_attack_sound, Low)
+    .acmd("expression_specialairsattack", springtrap_side_special_attack_expression, Low)
     .install()
     ;
 }

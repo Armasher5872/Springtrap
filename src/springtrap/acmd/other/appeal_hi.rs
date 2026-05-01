@@ -46,16 +46,39 @@ unsafe extern "C" fn springtrap_up_taunt_effect(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn springtrap_up_taunt_sound(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
+    frame(lua_state, 20.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_ganon_appeal_h01"));
+    }
+    frame(lua_state, 30.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_ganon_appeal_h01"));
+    }
+    frame(lua_state, 40.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_ganon_appeal_h01"));
+    }
+    frame(lua_state, 50.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_ganon_appeal_h01"));
+    }
     frame(lua_state, 60.0);
     if is_excute(agent) {
         let vc_index = if sv_math::randf(hash40("fighter"), 1.0) > 0.5 {Hash40::new("vc_ganon_appeal_h01")} else {Hash40::new("vc_ganon_attackhard_h01")};
         PLAY_SE(agent, vc_index);
+    }
+    frame(lua_state, 100.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_ganon_appeal_h02"));
     }
 }
 
 unsafe extern "C" fn springtrap_up_taunt_expression(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.module_accessor;
+    if is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
+    }
     frame(lua_state, 60.0);
     if is_excute(agent) {
         ControlModule::set_rumble(boma, Hash40::new("rbkind_nohitl"), 40, false, *BATTLE_OBJECT_ID_INVALID as u32);
@@ -71,12 +94,12 @@ unsafe extern "C" fn springtrap_up_taunt_expression(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("ganon")
     .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
-    .effect_acmd("effect_appealhil", springtrap_up_taunt_effect, Low)
-    .sound_acmd("sound_appealhil", springtrap_up_taunt_sound, Low)
-    .expression_acmd("expression_appealhil", springtrap_up_taunt_expression, Low)
-    .effect_acmd("effect_appealhir", springtrap_up_taunt_effect, Low)
-    .sound_acmd("sound_appealhir", springtrap_up_taunt_sound, Low)
-    .expression_acmd("expression_appealhir", springtrap_up_taunt_expression, Low)
+    .acmd("effect_appealhil", springtrap_up_taunt_effect, Low)
+    .acmd("sound_appealhil", springtrap_up_taunt_sound, Low)
+    .acmd("expression_appealhil", springtrap_up_taunt_expression, Low)
+    .acmd("effect_appealhir", springtrap_up_taunt_effect, Low)
+    .acmd("sound_appealhir", springtrap_up_taunt_sound, Low)
+    .acmd("expression_appealhir", springtrap_up_taunt_expression, Low)
     .install()
     ;
 }

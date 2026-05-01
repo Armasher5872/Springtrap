@@ -46,11 +46,11 @@ unsafe extern "C" fn springtrap_neutral_special_high_fire_sound(agent: &mut L2CA
     let lua_state = agent.lua_state_agent;
     frame(lua_state, 6.0);
     if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_ganon_smash_s01"));
+        PLAY_SE(agent, Hash40::new("se_ganon_special_n02"));
     }
     frame(lua_state, 11.0);
     if is_excute(agent) {
-        PLAY_SEQUENCE(agent, Hash40::new("seq_ganon_rnd_attack"));
+        PLAY_SE(agent, Hash40::new("vc_ganon_special_n01"));
     }
 }
 
@@ -70,14 +70,14 @@ unsafe extern "C" fn springtrap_neutral_special_high_fire_expression(agent: &mut
 pub fn install() {
     Agent::new("ganon")
     .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
-    .game_acmd("game_specialnhighfire", springtrap_neutral_special_high_fire_acmd, Low)
-    .effect_acmd("effect_specialnhighfire", springtrap_grounded_neutral_special_high_fire_effect, Low)
-    .sound_acmd("sound_specialnhighfire", springtrap_neutral_special_high_fire_sound, Low)
-    .expression_acmd("expression_specialnhighfire", springtrap_neutral_special_high_fire_expression, Low)
-    .game_acmd("game_specialairnhighfire", springtrap_neutral_special_high_fire_acmd, Low)
-    .effect_acmd("effect_specialairnhighfire", springtrap_aerial_neutral_special_high_fire_effect, Low)
-    .sound_acmd("sound_specialairnhighfire", springtrap_neutral_special_high_fire_sound, Low)
-    .expression_acmd("expression_specialairnhighfire", springtrap_neutral_special_high_fire_expression, Low)
+    .acmd("game_specialnhighfire", springtrap_neutral_special_high_fire_acmd, Low)
+    .acmd("effect_specialnhighfire", springtrap_grounded_neutral_special_high_fire_effect, Low)
+    .acmd("sound_specialnhighfire", springtrap_neutral_special_high_fire_sound, Low)
+    .acmd("expression_specialnhighfire", springtrap_neutral_special_high_fire_expression, Low)
+    .acmd("game_specialairnhighfire", springtrap_neutral_special_high_fire_acmd, Low)
+    .acmd("effect_specialairnhighfire", springtrap_aerial_neutral_special_high_fire_effect, Low)
+    .acmd("sound_specialairnhighfire", springtrap_neutral_special_high_fire_sound, Low)
+    .acmd("expression_specialairnhighfire", springtrap_neutral_special_high_fire_expression, Low)
     .install()
     ;
 }

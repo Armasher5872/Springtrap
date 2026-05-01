@@ -1,6 +1,6 @@
 use {
     crate::common::{
-        common_func::*,
+        getter_funcs::*,
         springtrap_var::*,
     },
     smash::{
@@ -29,8 +29,12 @@ use {
 };
 
 mod appeal_hi;
+mod appeal_lw;
+mod appeal_s;
 mod entry;
+mod lose;
 mod walk_fast;
+mod walk_middle;
 mod walk_slow;
 mod win_1;
 mod win_2;
@@ -38,8 +42,12 @@ mod win_3;
 
 pub fn install() {
     appeal_hi::install();
+    appeal_lw::install();
+    appeal_s::install();
     entry::install();
+    lose::install();
     walk_fast::install();
+    walk_middle::install();
     walk_slow::install();
     win_1::install();
     win_2::install();

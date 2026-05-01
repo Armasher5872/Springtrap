@@ -15,14 +15,14 @@ unsafe extern "C" fn springtrap_up_special_move_expression(_agent: &mut L2CAgent
 pub fn install() {
     Agent::new("ganon")
     .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
-    .game_acmd("game_specialhimove", springtrap_up_special_move_acmd, Low)
-    .effect_acmd("effect_specialhimove", springtrap_up_special_move_effect, Low)
-    .sound_acmd("sound_specialhimove", springtrap_up_special_move_sound, Low)
-    .expression_acmd("expression_specialhimove", springtrap_up_special_move_expression, Low)
-    .game_acmd("game_specialairhimove", springtrap_up_special_move_acmd, Low)
-    .effect_acmd("effect_specialairhimove", springtrap_up_special_move_effect, Low)
-    .sound_acmd("sound_specialairhimove", springtrap_up_special_move_sound, Low)
-    .expression_acmd("expression_specialairhimove", springtrap_up_special_move_expression, Low)
+    .acmd("game_specialhimove", springtrap_up_special_move_acmd, Low)
+    .acmd("effect_specialhimove", springtrap_up_special_move_effect, Low)
+    .acmd("sound_specialhimove", springtrap_up_special_move_sound, Low)
+    .acmd("expression_specialhimove", springtrap_up_special_move_expression, Low)
+    .acmd("game_specialairhimove", springtrap_up_special_move_acmd, Low)
+    .acmd("effect_specialairhimove", springtrap_up_special_move_effect, Low)
+    .acmd("sound_specialairhimove", springtrap_up_special_move_sound, Low)
+    .acmd("expression_specialairhimove", springtrap_up_special_move_expression, Low)
     .install()
     ;
 }

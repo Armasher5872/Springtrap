@@ -95,6 +95,7 @@ unsafe extern "C" fn springtrap_forward_smash_sound(agent: &mut L2CAgentBase) {
     frame(lua_state, 20.0);
     if is_excute(agent) {
         STOP_SE(agent, Hash40::new("se_common_smash_start"));
+        PLAY_SE(agent, Hash40::new("se_ganon_smash_s01"));
     }
     frame(lua_state, 24.0);
     if is_excute(agent) {
@@ -183,13 +184,13 @@ unsafe extern "C" fn springtrap_up_smash_game(agent: &mut L2CAgentBase) {
     frame(lua_state, 19.0);
     if is_excute(agent) {
         FT_MOTION_RATE(agent, 1.0);
-        ATTACK(agent, 0, 0, Hash40::new("top"), 15.0, 90, 75, 0, 60, 9.0, 0.0, 24.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_curse_poison"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_MAGIC);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 12.0, 90, 75, 0, 60, 7.0, 0.0, 17.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_curse_poison"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_MAGIC);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 15.0, 90, 95, 0, 60, 9.0, 0.0, 30.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_curse_poison"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_MAGIC);
+        ATTACK(agent, 1, 0, Hash40::new("top"), 12.0, 90, 95, 0, 60, 7.0, 0.0, 24.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_curse_poison"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_MAGIC);
     }
     frame(lua_state, 23.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 8.0, 90, 95, 0, 60, 9.0, 0.0, 24.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_curse_poison"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_MAGIC);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 5.0, 90, 95, 0, 60, 7.0, 0.0, 17.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_curse_poison"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_MAGIC);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 8.0, 90, 95, 0, 60, 9.0, 0.0, 30.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_curse_poison"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_MAGIC);
+        ATTACK(agent, 1, 0, Hash40::new("top"), 5.0, 90, 95, 0, 60, 7.0, 0.0, 24.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_curse_poison"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_MAGIC);
     }
     frame(lua_state, 26.0);
     if is_excute(agent) {
@@ -220,6 +221,7 @@ unsafe extern "C" fn springtrap_up_smash_sound(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         let vc_index = if sv_math::randf(hash40("fighter"), 1.0) > 0.5 {Hash40::new("vc_ganon_appeal_h01")} else {Hash40::new("vc_ganon_attackhard_h01")};
         PLAY_SE(agent, vc_index);
+        PLAY_SE(agent, Hash40::new("se_ganon_smash_h01"));
     }
 }
 
@@ -405,27 +407,27 @@ unsafe extern "C" fn springtrap_down_smash_expression(agent: &mut L2CAgentBase) 
 pub fn install() {
     Agent::new("ganon")
     .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
-    .effect_acmd("effect_attacks4charge", springtrap_forward_smash_charge_effect, High)
-    .sound_acmd("sound_attacks4charge", springtrap_forward_smash_charge_sound, High)
-    .expression_acmd("expression_attacks4charge", springtrap_forward_smash_charge_expression, High)
-    .game_acmd("game_attacks4", springtrap_forward_smash_game, High)
-    .effect_acmd("effect_attacks4", springtrap_forward_smash_effect, High)
-    .sound_acmd("sound_attacks4", springtrap_forward_smash_sound, High)
-    .expression_acmd("expression_attacks4", springtrap_forward_smash_expression, High)
-    .effect_acmd("effect_attackhi4charge", springtrap_up_smash_charge_effect, High)
-    .sound_acmd("sound_attackhi4charge", springtrap_up_smash_charge_sound, High)
-    .expression_acmd("expression_attackhi4charge", springtrap_up_smash_charge_expression, High)
-    .game_acmd("game_attackhi4", springtrap_up_smash_game, High)
-    .effect_acmd("effect_attackhi4", springtrap_up_smash_effect, High)
-    .sound_acmd("sound_attackhi4", springtrap_up_smash_sound, High)
-    .expression_acmd("expression_attackhi4", springtrap_up_smash_expression, High)
-    .effect_acmd("effect_attacklw4charge", springtrap_down_smash_charge_effect, High)
-    .sound_acmd("sound_attacklw4charge", springtrap_down_smash_charge_sound, High)
-    .expression_acmd("expression_attacklw4charge", springtrap_down_smash_charge_expression, High)
-    .game_acmd("game_attacklw4", springtrap_down_smash_game, High)
-    .effect_acmd("effect_attacklw4", springtrap_down_smash_effect, High)
-    .sound_acmd("sound_attacklw4", springtrap_down_smash_sound, High)
-    .expression_acmd("expression_attacklw4", springtrap_down_smash_expression, High)
+    .acmd("effect_attacks4charge", springtrap_forward_smash_charge_effect, High)
+    .acmd("sound_attacks4charge", springtrap_forward_smash_charge_sound, High)
+    .acmd("expression_attacks4charge", springtrap_forward_smash_charge_expression, High)
+    .acmd("game_attacks4", springtrap_forward_smash_game, High)
+    .acmd("effect_attacks4", springtrap_forward_smash_effect, High)
+    .acmd("sound_attacks4", springtrap_forward_smash_sound, High)
+    .acmd("expression_attacks4", springtrap_forward_smash_expression, High)
+    .acmd("effect_attackhi4charge", springtrap_up_smash_charge_effect, High)
+    .acmd("sound_attackhi4charge", springtrap_up_smash_charge_sound, High)
+    .acmd("expression_attackhi4charge", springtrap_up_smash_charge_expression, High)
+    .acmd("game_attackhi4", springtrap_up_smash_game, High)
+    .acmd("effect_attackhi4", springtrap_up_smash_effect, High)
+    .acmd("sound_attackhi4", springtrap_up_smash_sound, High)
+    .acmd("expression_attackhi4", springtrap_up_smash_expression, High)
+    .acmd("effect_attacklw4charge", springtrap_down_smash_charge_effect, High)
+    .acmd("sound_attacklw4charge", springtrap_down_smash_charge_sound, High)
+    .acmd("expression_attacklw4charge", springtrap_down_smash_charge_expression, High)
+    .acmd("game_attacklw4", springtrap_down_smash_game, High)
+    .acmd("effect_attacklw4", springtrap_down_smash_effect, High)
+    .acmd("sound_attacklw4", springtrap_down_smash_sound, High)
+    .acmd("expression_attacklw4", springtrap_down_smash_expression, High)
     .install()
     ;
 }

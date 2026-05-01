@@ -23,14 +23,14 @@ unsafe extern "C" fn springtrap_up_special_end_expression(agent: &mut L2CAgentBa
 pub fn install() {
     Agent::new("ganon")
     .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
-    .game_acmd("game_specialhiend", springtrap_up_special_end_acmd, Low)
-    .effect_acmd("effect_specialhiend", springtrap_up_special_end_effect, Low)
-    .sound_acmd("sound_specialhiend", springtrap_up_special_end_sound, Low)
-    .expression_acmd("expression_specialhiend", springtrap_up_special_end_expression, Low)
-    .game_acmd("game_specialairhiend", springtrap_up_special_end_acmd, Low)
-    .effect_acmd("effect_specialairhiend", springtrap_up_special_end_effect, Low)
-    .sound_acmd("sound_specialairhiend", springtrap_up_special_end_sound, Low)
-    .expression_acmd("expression_specialairhiend", springtrap_up_special_end_expression, Low)
+    .acmd("game_specialhiend", springtrap_up_special_end_acmd, Low)
+    .acmd("effect_specialhiend", springtrap_up_special_end_effect, Low)
+    .acmd("sound_specialhiend", springtrap_up_special_end_sound, Low)
+    .acmd("expression_specialhiend", springtrap_up_special_end_expression, Low)
+    .acmd("game_specialairhiend", springtrap_up_special_end_acmd, Low)
+    .acmd("effect_specialairhiend", springtrap_up_special_end_effect, Low)
+    .acmd("sound_specialairhiend", springtrap_up_special_end_sound, Low)
+    .acmd("expression_specialairhiend", springtrap_up_special_end_expression, Low)
     .install()
     ;
 }

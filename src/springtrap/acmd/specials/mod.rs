@@ -1,5 +1,8 @@
 use {
-    crate::common::springtrap_var::*,
+    crate::common::{
+        getter_funcs::*,
+        springtrap_var::*,
+    },
     smash::{
         app::{
             lua_bind::*,
@@ -12,6 +15,7 @@ use {
         hash40,
         lib::lua_const::*,
         lua2cpp::*,
+        phx::*,
     },
     smash_script::{
         macros::*,
@@ -23,21 +27,8 @@ use {
     },
 };
 
-mod axe_bb_idle;
-mod axe_chica_attack;
-mod axe_chica_fall;
-mod axe_chica_turn;
-mod axe_chica_walk;
-mod axe_fly;
-mod axe_foxy_attack;
-mod axe_freddy_attack;
-mod axe_freddy_fall;
-mod axe_freddy_turn;
-mod axe_freddy_walk;
-mod axe_hit_stick;
-mod axe_hit_stuck;
-mod axe_stick;
-mod axe_stuck;
+mod axe;
+mod phantoms;
 mod special_hi_end;
 mod special_hi_move;
 mod special_hi;
@@ -53,21 +44,8 @@ mod special_s_hold;
 mod special_s;
 
 pub fn install() {
-    axe_bb_idle::install();
-    axe_chica_attack::install();
-    axe_chica_fall::install();
-    axe_chica_turn::install();
-    axe_chica_walk::install();
-    axe_fly::install();
-    axe_foxy_attack::install();
-    axe_freddy_attack::install();
-    axe_freddy_fall::install();
-    axe_freddy_turn::install();
-    axe_freddy_walk::install();
-    axe_hit_stick::install();
-    axe_hit_stuck::install();
-    axe_stick::install();
-    axe_stuck::install();
+    axe::install();
+    phantoms::install();
     special_hi_end::install();
     special_hi_move::install();
     special_hi::install();

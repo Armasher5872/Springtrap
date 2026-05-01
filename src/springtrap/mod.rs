@@ -1,6 +1,5 @@
 use {
     crate::common::{
-        common_func::*,
         globals::*,
         springtrap_func::*, 
         springtrap_var::*
@@ -26,10 +25,17 @@ mod vtable;
 pub fn install() {
     unsafe {
         FIGHTER_SPRINGTRAP_GENERATE_ARTICLE_AXE += clone_weapon(
+            "krool",
+            *WEAPON_KIND_KROOL_IRONBALL,
+            "ganon",
+            "axe",
+            false,
+        );
+        FIGHTER_SPRINGTRAP_GENERATE_ARTICLE_PHANTOM += clone_weapon(
             "koopajr",
             *WEAPON_KIND_KOOPAJR_CANNONBALL,
             "ganon",
-            "axe",
+            "phantom",
             false,
         );
     }

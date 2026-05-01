@@ -176,7 +176,7 @@ unsafe extern "C" fn springtrap_dash_attack_game(agent: &mut L2CAgentBase) {
     let boma = agent.module_accessor;
     frame(lua_state, 8.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 11.0, 60, 75, 0, 50, 7.0, 0.0, 9.0, 7.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 11.0, 60, 95, 0, 50, 7.0, 0.0, 9.0, 7.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
     }
     frame(lua_state, 11.0);
     if is_excute(agent) {
@@ -262,22 +262,22 @@ unsafe extern "C" fn springtrap_dash_attack_expression(agent: &mut L2CAgentBase)
 pub fn install() {
     Agent::new("ganon")
     .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
-    .game_acmd("game_attack11", springtrap_jab_1_game, High)
-    .effect_acmd("effect_attack11", springtrap_jab_1_effect, High)
-    .sound_acmd("sound_attack11", springtrap_jab_1_sound, High)
-    .expression_acmd("expression_attack11", springtrap_jab_1_expression, High)
-    .game_acmd("game_attack12", springtrap_jab_2_game, High)
-    .effect_acmd("effect_attack12", springtrap_jab_2_effect, High)
-    .sound_acmd("sound_attack12", springtrap_jab_2_sound, High)
-    .expression_acmd("expression_attack12", springtrap_jab_2_expression, High)
-    .game_acmd("game_attack13", springtrap_jab_3_game, High)
-    .effect_acmd("effect_attack13", springtrap_jab_3_effect, High)
-    .sound_acmd("sound_attack13", springtrap_jab_3_sound, High)
-    .expression_acmd("expression_attack13", springtrap_jab_3_expression, High)
-    .game_acmd("game_attackdash", springtrap_dash_attack_game, High)
-    .effect_acmd("effect_attackdash", springtrap_dash_attack_effect, High)
-    .sound_acmd("sound_attackdash", springtrap_dash_attack_sound, High)
-    .expression_acmd("expression_attackdash", springtrap_dash_attack_expression, High)
+    .acmd("game_attack11", springtrap_jab_1_game, High)
+    .acmd("effect_attack11", springtrap_jab_1_effect, High)
+    .acmd("sound_attack11", springtrap_jab_1_sound, High)
+    .acmd("expression_attack11", springtrap_jab_1_expression, High)
+    .acmd("game_attack12", springtrap_jab_2_game, High)
+    .acmd("effect_attack12", springtrap_jab_2_effect, High)
+    .acmd("sound_attack12", springtrap_jab_2_sound, High)
+    .acmd("expression_attack12", springtrap_jab_2_expression, High)
+    .acmd("game_attack13", springtrap_jab_3_game, High)
+    .acmd("effect_attack13", springtrap_jab_3_effect, High)
+    .acmd("sound_attack13", springtrap_jab_3_sound, High)
+    .acmd("expression_attack13", springtrap_jab_3_expression, High)
+    .acmd("game_attackdash", springtrap_dash_attack_game, High)
+    .acmd("effect_attackdash", springtrap_dash_attack_effect, High)
+    .acmd("sound_attackdash", springtrap_dash_attack_sound, High)
+    .acmd("expression_attackdash", springtrap_dash_attack_expression, High)
     .install()
     ;
 }
