@@ -34,6 +34,36 @@ unsafe extern "C" fn koopajr_cannonball_reflector_clean_event(_vtable: u64, weap
     }
 }
 
+unsafe extern "C" fn koopajr_cannonball_on_search_event(_vtable: u64, weapon: &mut smash::app::Weapon, log: *mut CollisionLogScuffed) {
+    let boma = (*weapon).battle_object.module_accessor;
+    let status_kind = StatusModule::status_kind(boma);
+    let owner_id = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
+    let owner_boma = sv_battle_object::module_accessor(owner_id);
+    let owner_kind = utility::get_kind(&mut *owner_boma);
+    let collision_kind = (*log).collision_kind;
+    let opponent_object_id = (*log).opponent_object_id;
+    if owner_kind == *FIGHTER_KIND_GANON {
+        if is_springtrap_slots(owner_boma) {
+            if opponent_object_id != *BATTLE_OBJECT_ID_INVALID as u32 {
+                let opponent_category = sv_battle_object::category(opponent_object_id);
+                if opponent_category == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+                    if collision_kind == 1 {
+                        if [*WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_BB_IDLE, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_BB_FALL].contains(&status_kind) {
+                            StatusModule::change_status_request_from_script(boma, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_EXPLODE, false);
+                        }
+                        if [*WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_CHICA_WALK, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_CHICA_FALL, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_CHICA_TURN].contains(&status_kind) {
+                            StatusModule::change_status_request_from_script(boma, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_CHICA_ATTACK, false);
+                        }
+                        if [*WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_FREDDY_WALK, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_FREDDY_FALL, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_FREDDY_TURN].contains(&status_kind) {
+                            StatusModule::change_status_request_from_script(boma, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_FREDDY_ATTACK, false);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 //Bowser Jr Cannonball On Reflection Event Offset
 unsafe extern "C" fn koopajr_cannonball_on_reflection_event(_vtable: u64, weapon: *mut smash::app::Weapon, log: *mut ShieldAttackCollisionEvent) {
     let boma = (*weapon).battle_object.module_accessor;
@@ -75,11 +105,10 @@ unsafe extern "C" fn koopajr_cannonball_initialize_weapon_module_accessor(vtable
 }
 
 pub fn install() {
-    //Fuck it we ball type code (Patches the initialization of Bowser Jr's Cannonball modules to instead use Palutena's Reflection Board Module Initialization so that the former can call to ReflectorModule functions correctly)
-    let koopajr_cannonball_module_initialization_offset = get_article_module_initialization_offset(*WEAPON_KIND_KOOPAJR_CANNONBALL) as usize;
-    let initialize_reflectormodule = unsafe {skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as u64+0x33b9830};
-    let _ = skyline::patching::Patch::in_text(koopajr_cannonball_module_initialization_offset).data(initialize_reflectormodule);
+    weapon_initialise_module(*WEAPON_KIND_KOOPAJR_CANNONBALL, ModuleInitModules::ReflectorModule);
+    weapon_initialise_module(*WEAPON_KIND_KOOPAJR_CANNONBALL, ModuleInitModules::SearchModule);
     let _ = skyline::patching::Patch::in_text(0x51d8348).data(koopajr_cannonball_reflector_clean_event as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(0x51d8418).data(koopajr_cannonball_on_search_event as *const () as u64);
     let _ = skyline::patching::Patch::in_text(0x51d8468).data(koopajr_cannonball_on_reflection_event as *const () as u64);
     skyline::install_hooks!(
         koopajr_cannonball_initialization_event,

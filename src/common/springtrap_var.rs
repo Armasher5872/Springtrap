@@ -78,6 +78,7 @@ pub const SPRINGTRAP_PHANTOM_TYPE_FREDDY: LuaConst = LuaConst::new(0x3);
 
 //Phantom Hurtbox
 pub const WEAPON_SPRINGTRAP_PHANTOM_SHIELD_KIND_BALLOON_BOY_BODY: LuaConst = LuaConst::new(0x0);
+pub const WEAPON_SPRINGTRAP_PHANTOM_SHIELD_KIND_CHICA_BODY: LuaConst = LuaConst::new(0x1);
 
 //Collision Sound
 pub const COLLISION_SOUND_ATTR_SPRINGTRAP_KNIFE: LuaConst = LuaConst::new(0x8D);

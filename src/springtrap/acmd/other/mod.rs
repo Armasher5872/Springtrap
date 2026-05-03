@@ -31,6 +31,7 @@ use {
 mod appeal_hi;
 mod appeal_lw;
 mod appeal_s;
+mod cliff_attack;
 mod entry;
 mod lose;
 mod walk_fast;
@@ -44,6 +45,7 @@ pub fn install() {
     appeal_hi::install();
     appeal_lw::install();
     appeal_s::install();
+    cliff_attack::install();
     entry::install();
     lose::install();
     walk_fast::install();

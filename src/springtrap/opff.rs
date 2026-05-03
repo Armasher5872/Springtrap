@@ -79,6 +79,11 @@ unsafe extern "C" fn springtrap_phantom_on_start(weapon: &mut L2CWeaponCommon) {
     WorkModule::set_int(boma, 0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_INT_PHANTOM_TYPE);
 }
 
+unsafe extern "C" fn springtrap_phantom_opff(weapon: &mut L2CWeaponCommon) {
+    let boma = weapon.module_accessor;
+    println!("Current Motion Kind: {}", MotionModule::motion_kind(boma));
+}
+
 pub fn install() {
     Agent::new("ganon")
     .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
@@ -95,6 +100,7 @@ pub fn install() {
     Agent::new("ganon_phantom")
     .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
     .on_start(springtrap_phantom_on_start)
+    .on_line(Main, springtrap_phantom_opff)
     .install()
     ;
 }

@@ -28,6 +28,7 @@ use {
 };
 
 mod axe;
+mod final_start;
 mod phantoms;
 mod special_hi_end;
 mod special_hi_move;
@@ -45,6 +46,7 @@ mod special_s;
 
 pub fn install() {
     axe::install();
+    final_start::install();
     phantoms::install();
     special_hi_end::install();
     special_hi_move::install();

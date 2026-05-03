@@ -2,6 +2,7 @@ use {
     crate::common::{
         getter_funcs::*,
         hooks::*,
+        module_init::*,
         springtrap_func::*, 
         springtrap_var::*,
         structs::*,
@@ -16,12 +17,12 @@ use {
     }
 };
 
-mod common;
+mod springtrap_axe;
 mod springtrap_phantom;
 mod springtrap;
 
 pub fn install() {
-    common::install();
+    springtrap_axe::install();
     springtrap_phantom::install();
     springtrap::install();
 }

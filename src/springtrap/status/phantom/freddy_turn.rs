@@ -18,6 +18,7 @@ unsafe extern "C" fn springtrap_phantom_freddy_turn_init_status(weapon: &mut L2C
 unsafe extern "C" fn springtrap_phantom_freddy_turn_main_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
     ReflectorModule::set_status(boma, *FIGHTER_REFLECTOR_GROUP_JUST_SHIELD, ShieldStatus(*SHIELD_STATUS_NORMAL), *WEAPON_SPRINGTRAP_PHANTOM_SHIELD_KIND_BALLOON_BOY_BODY);
+    ReflectorModule::set_size(boma, *WEAPON_SPRINGTRAP_PHANTOM_SHIELD_KIND_BALLOON_BOY_BODY, 10.0, 0);
     MotionModule::change_motion(boma, Hash40::new("freddy_turn"), 0.0, 1.0, false, 0.0, false, false);
     weapon.fastshift(L2CValue::Ptr(springtrap_phantom_freddy_turn_main_loop as *const () as _))
 }

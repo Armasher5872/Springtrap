@@ -15,13 +15,14 @@ pub unsafe extern "C" fn grabbed_anim_selector(fighter: &mut L2CFighterCommon, a
         let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
         let motion_share = WorkModule::get_param_int(capture_boma, hash40("param_motion"), hash40("motion_share"));
         let mut motion = hash40(anim_name);
-        if motion_share != *FIGHTER_MOTION_SHARE_TYPE_TARO {
-            if motion_share == *FIGHTER_MOTION_SHARE_TYPE_GIRL {
-                motion = FighterMotionModuleImpl::add_body_type_hash(capture_boma, Hash40::new_raw(motion), *BODY_TYPE_MOTION_GIRL);
-            }
-        }
-        else {
+        if motion_share == *FIGHTER_MOTION_SHARE_TYPE_TARO {
             motion = FighterMotionModuleImpl::add_body_type_hash(capture_boma, Hash40::new_raw(motion), *BODY_TYPE_MOTION_DX);
+        }
+        if motion_share == *FIGHTER_MOTION_SHARE_TYPE_GIRL {
+            motion = FighterMotionModuleImpl::add_body_type_hash(capture_boma, Hash40::new_raw(motion), *BODY_TYPE_MOTION_GIRL);
+        }
+        if motion_share == *FIGHTER_MOTION_SHARE_TYPE_BIG {
+            motion = FighterMotionModuleImpl::add_body_type_hash(capture_boma, Hash40::new_raw(motion), *BODY_TYPE_MOTION_BIG);
         }
         MotionModule::change_motion(capture_boma, Hash40::new_raw(motion), set_frame, mot_rate, false, 0.0, false, false);
     }
@@ -53,6 +54,34 @@ pub unsafe fn get_module_vtable_func(boma: *mut BattleObjectModuleAccessor, modu
     *((*vtable + func_offset) as *const u64)
 }
 
-pub fn get_article_module_initialization_offset(weapon_id: i32) -> u64 {
-    return 0x5189818+(0xe8*(weapon_id as u64))+0xb8;
+pub fn weapon_initialise_module(weapon_id: i32, module: ModuleInitModules) {
+    let module_init_offset = match module {
+        ModuleInitModules::KineticModule => 0x33b83f0,
+        ModuleInitModules::ArticleModule => 0x33b9200,
+        ModuleInitModules::AttackModule => 0x33b8540,
+        ModuleInitModules::ControlModule => 0x33b9000,
+        ModuleInitModules::EffectModule => 0x33b8730,
+        ModuleInitModules::GroundModule => 0x33b8850,
+        ModuleInitModules::MotionModule => 0x33b7d50,
+        ModuleInitModules::ReflectModule => 0x33b89d0,
+        ModuleInitModules::SearchModule => 0x33b8a80,
+        ModuleInitModules::SoundModule => 0x33b8c60,
+        ModuleInitModules::VisibilityModule => 0x33b7ec0,
+        ModuleInitModules::ColorBlendModule => 0x33b7f60,
+        ModuleInitModules::ShakeModule => 0x33b7ff0,
+        ModuleInitModules::AreaModule => 0x33b8f50,
+        ModuleInitModules::SlopeModule => 0x33b9170,
+        ModuleInitModules::ReflectorModule => 0x33b9830,
+        ModuleInitModules::SlowModule => 0x33b9350,
+        ModuleInitModules::MotionAnimcmdModule => 0x33b81d0,
+        ModuleInitModules::TurnModule => 0x33b9940,
+        ModuleInitModules::LuaModule => 0x33b8e40,
+        _ => 0x0,
+    };
+    if module_init_offset == 0 {
+        return;
+    }
+    let offset = 0x5189818+(0xe8*(weapon_id as usize))+(module as usize*0x8);
+    let module_init = unsafe {skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as u64+module_init_offset};
+    let _ = skyline::patching::Patch::in_text(offset).data(module_init);
 }

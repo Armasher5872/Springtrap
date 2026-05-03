@@ -20,6 +20,7 @@ use {
     smashline::*,
 };
 
+mod final_smash;
 mod special_hi_end;
 mod special_hi_move;
 mod special_hi;
@@ -36,6 +37,7 @@ mod special_s_hold;
 mod special_s;
 
 pub fn install() {
+    final_smash::install();
     special_hi_end::install();
     special_hi_move::install();
     special_hi::install();

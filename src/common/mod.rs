@@ -3,6 +3,7 @@ use {
         common::{
             extern_c::*,
             getter_funcs::*,
+            module_init::*,
             springtrap_var::*,
         },
         MARKED_COLORS
@@ -37,6 +38,7 @@ pub mod extern_c;
 pub mod getter_funcs;
 pub mod globals;
 pub mod hooks;
+pub mod module_init;
 pub mod springtrap_func;
 pub mod springtrap_var;
 pub mod structs;

@@ -49,7 +49,6 @@ unsafe extern "C" fn springtrap_axe_fly_main_loop(weapon: &mut L2CWeaponCommon) 
     let owner_status_kind = StatusModule::status_kind(owner_boma);
     if GroundModule::is_floor_touch_line(boma, *GROUND_TOUCH_FLAG_DOWN as u32) && frame > 1.0 {
         weapon.set_situation(SITUATION_KIND_GROUND.into());
-        WorkModule::on_flag(boma, *WEAPON_KROOL_IRONBALL_INSTANCE_WORK_ID_FLAG_HOP);
         PostureModule::set_pos(boma, &Vector3f{x: pos_x, y: pos_y-2.0, z: pos_z});
         weapon.change_status(WEAPON_SPRINGTRAP_AXE_STATUS_KIND_STICK.into(), false.into());
     }
