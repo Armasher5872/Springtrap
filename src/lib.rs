@@ -4,9 +4,12 @@ use {
     param_config::*,
     smash::{
         hash40,
-        lib::lua_const::FIGHTER_KIND_GANON
+        lib::lua_const::*,
     },
-    std::collections::HashMap,
+    std::{
+        collections::HashMap,
+        fs::*,
+    },
     the_csk_collection_api::*,
 };
 
@@ -18,10 +21,7 @@ extern "C" fn mods_mounted(_ev: Event) {
     let mut lowest_color: i32 = -1;
     let mut marked_slots: Vec<i32> = vec![];
     for x in 0..256 {
-        if let Ok(_) = std::fs::read(format!(
-            "mods:/fighter/ganon/model/body/c{:02}/{}",
-            x, MARKER_FILE
-        )) {
+        if let Ok(_) = read(format!("mods:/fighter/ganon/model/body/c{:02}/{}", x, MARKER_FILE)) {
             unsafe {
                 marked_slots.push(x as _);
                 MARKED_COLORS[x as usize] = true;
@@ -32,8 +32,7 @@ extern "C" fn mods_mounted(_ev: Event) {
         }
     }
     if lowest_color == -1 {
-        // if no marker exist, leave
-        return;
+        return; //If no marker exist, leave
     }
     let color_num = {
         unsafe {

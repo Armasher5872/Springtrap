@@ -194,10 +194,16 @@ unsafe extern "C" fn springtrap_bair_game(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn springtrap_bair_effect(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     frame(lua_state, 11.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("springtrap_attack_arc"), Hash40::new("springtrap_attack_arc"), Hash40::new("top"), 1, 15, -5, 6, 132, 220, 1, true, *EF_FLIP_YZ, 1);
         LAST_EFFECT_SET_RATE(agent, 1.5);
+    }
+    frame(lua_state, 12.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("springtrap_knife_wind"), Hash40::new("top"), 0, 13, -15, 180, 0, 0, 0.3, true);
+        EffectModule::enable_sync_init_pos_last(boma);
     }
     frame(lua_state, 13.0);
     if is_excute(agent) {

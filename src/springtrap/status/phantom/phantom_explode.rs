@@ -26,7 +26,7 @@ unsafe extern "C" fn springtrap_phantom_phantom_explode_init_status(weapon: &mut
 unsafe extern "C" fn springtrap_phantom_phantom_explode_main_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
     let phantom_type = WorkModule::get_int(boma, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_INT_PHANTOM_TYPE);
-    let pos = PostureModule::pos(boma);
+    let pos = *PostureModule::pos(boma);
     if phantom_type == *SPRINGTRAP_PHANTOM_TYPE_BALLOON_BOY {
         SoundModule::play_se(boma, Hash40::new("se_ganon_special_l02"), true, false, false, false, enSEType(0));
         ATTACK(weapon, 0, 0, Hash40::new("top"), 10.0, 80, 80, 0, 40, 15.0, 0.0, 12.0, 0.0, None, None, None, 1.3, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_SPEED, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_OBJECT);
@@ -39,7 +39,8 @@ unsafe extern "C" fn springtrap_phantom_phantom_explode_main_status(weapon: &mut
         SoundModule::play_se(boma, Hash40::new("se_common_bomb_m"), true, false, false, false, enSEType(0));
         ATTACK(weapon, 0, 0, Hash40::new("top"), 6.0, 270, 70, 0, 0, 18.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_SPEED, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_paralyze"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_OBJECT);
     }
-    EffectModule::req(boma, Hash40::new("sys_bomb_b"), pos, &Vector3f{x: 0.0, y: 12.0, z: 0.0}, 1.0, 0, -1, false, 0);
+    EffectModule::req(boma, Hash40::new("springtrap_phantom_detonate"), &Vector3f{x: pos.x, y: pos.y+12.0, z: pos.z}, &Vector3f{x: 0.0, y: 0.0, z: 0.0}, 0.1, 0, -1, false, 0);
+    EffectModule::req(boma, Hash40::new("springtrap_phantom_detonate_shock"), &Vector3f{x: pos.x, y: pos.y+12.0, z: pos.z}, &Vector3f{x: 0.0, y: 0.0, z: 0.0}, 1.0, 0, -1, false, 0);
     ReflectorModule::set_status(boma, *FIGHTER_REFLECTOR_GROUP_JUST_SHIELD, ShieldStatus(*SHIELD_STATUS_NONE), *WEAPON_SPRINGTRAP_PHANTOM_SHIELD_KIND_BALLOON_BOY_BODY);
     weapon.fastshift(L2CValue::Ptr(springtrap_phantom_phantom_explode_main_loop as *const () as _))
 }

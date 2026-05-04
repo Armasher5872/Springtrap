@@ -11,7 +11,11 @@ unsafe extern "C" fn springtrap_phantom_chica_attack_acmd(agent: &mut L2CAgentBa
 }
 
 //Phantom Chica Attack Effect
-unsafe extern "C" fn springtrap_phantom_chica_attack_effect(_agent: &mut L2CAgentBase) {}
+unsafe extern "C" fn springtrap_phantom_chica_attack_effect(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("springtrap_phantom_vortex"), Hash40::new("top"), 0, 10.0, 0, 0, 0, 0, 0.5, true);
+    }
+}
 
 //Phantom Chica Attack Sound
 unsafe extern "C" fn springtrap_phantom_chica_attack_sound(agent: &mut L2CAgentBase) {

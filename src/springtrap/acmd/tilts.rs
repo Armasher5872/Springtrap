@@ -17,11 +17,12 @@ unsafe extern "C" fn springtrap_forward_tilt_game(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn springtrap_forward_tilt_effect(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     frame(lua_state, 11.0);
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
-        EFFECT(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), 0, 10.8, -10, 0, 0, 0, 1.6, 0, 0, 0, 0, 0, 0, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.75, 1.0, 0.40);
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("springtrap_knife_wind"), Hash40::new("top"), 0, 8.8, 20, 0, 0, 0, 0.3, true);
+        EffectModule::enable_sync_init_pos_last(boma);
     }
     frame(lua_state, 13.0);
     if is_excute(agent) {

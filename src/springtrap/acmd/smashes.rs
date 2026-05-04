@@ -206,6 +206,7 @@ unsafe extern "C" fn springtrap_up_smash_effect(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 19.0);
     if is_excute(agent) {
+        EFFECT(agent, Hash40::new("springtrap_soul_burst"), Hash40::new("top"), 0, 18.5, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
         let burst = EffectModule::req_follow(boma, Hash40::new("springtrap_remnant_burst"), Hash40::new("top"), &Vector3f{x: 0.0, y: 18.5, z: 0.0}, &Vector3f{x: 0.0, y: 0.0, z: 0.0}, 1.0, true, 0, 0, -1, 0, 0, false, false);
         EffectModule::set_scale(boma, burst as u32, &Vector3f{x: 1.0, y: 1.2, z: 0.75});
     }

@@ -408,16 +408,29 @@ unsafe extern "C" fn springtrap_down_throw_effect(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     frame(lua_state, 4.0);
     if is_excute(agent) {
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("springtrap_throwlw_hold"), Hash40::new("throw"), 0, 0, 4, 0, 0, 0, 1.0, true);
         LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, 0, -180, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
+    }
+    frame(lua_state, 36.0);
+    if is_excute(agent) {
+        EFFECT(agent, Hash40::new("springtrap_throwlw_slam"), Hash40::new("top"), 12, 0.1, -2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
     frame(lua_state, 38.0);
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 1.5, 0, 18, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
         LANDING_EFFECT(agent, Hash40::new("sys_quake"), Hash40::new("top"), 1.5, 0, 18, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
     }
+    frame(lua_state, 40.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("springtrap_throwlw_hold"), true, true);
+    }
     frame(lua_state, 41.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, true);
+    }
+    frame(lua_state, 43.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("springtrap_throwlw_slam"), true, true);
     }
 }
 

@@ -69,7 +69,7 @@ unsafe extern "C" fn springtrap_win_3_sound(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 45.0);
     if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_item_item_get"));
+        PLAY_SE(agent, Hash40::new("se_ganon_special_h05"));
     }
     frame(lua_state, 70.0);
     if is_excute(agent) {

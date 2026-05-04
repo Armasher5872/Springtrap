@@ -1,6 +1,6 @@
 # Springtrap
 
-The source code for Springtrap
+The source code for the Springtrap Mod for Super Smash Bros Ultimate
 
 Credits to:
 

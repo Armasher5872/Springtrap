@@ -11,7 +11,11 @@ unsafe extern "C" fn springtrap_phantom_freddy_attack_acmd(agent: &mut L2CAgentB
 }
 
 //Phantom Freddy Attack Effect
-unsafe extern "C" fn springtrap_phantom_freddy_attack_effect(_agent: &mut L2CAgentBase) {}
+unsafe extern "C" fn springtrap_phantom_freddy_attack_effect(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("springtrap_phantom_vortex"), Hash40::new("top"), 0, 10.0, 0, 0, 0, 0, 0.5, true);
+    }
+}
 
 //Phantom Freddy Attack Sound
 unsafe extern "C" fn springtrap_phantom_freddy_attack_sound(agent: &mut L2CAgentBase) {
