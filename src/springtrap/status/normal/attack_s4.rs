@@ -24,7 +24,7 @@ unsafe extern "C" fn springtrap_attack_s4_end_status(fighter: &mut L2CFighterCom
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .set_costume(get_costumes())
     .status(Main, *FIGHTER_STATUS_KIND_ATTACK_S4, springtrap_attack_s4_main_status)
     .status(End, *FIGHTER_STATUS_KIND_ATTACK_S4, springtrap_attack_s4_end_status)
     .install()

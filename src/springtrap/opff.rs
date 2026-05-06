@@ -4,8 +4,10 @@ unsafe extern "C" fn springtrap_on_start(fighter: &mut L2CFighterCommon) {
     let boma = fighter.module_accessor;
     WorkModule::off_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_ACTIVE_AXE);
     WorkModule::off_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CHARGED);
+    WorkModule::off_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CRIT);
     WorkModule::off_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_ACTIVE_PHANTOM);
     WorkModule::set_float(boma, 0.0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_CHARGE);
+    WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_S_CRIT_TIME);
     WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE);
     WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_MOVE_TIME);
     WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID);
@@ -17,6 +19,7 @@ unsafe extern "C" fn springtrap_opff(fighter: &mut L2CFighterCommon) {
     let boma = fighter.module_accessor;
     let current_frame = fighter.global_table[CURRENT_FRAME].get_i32();
     let motion_kind = MotionModule::motion_kind(boma);
+    let crit_time = WorkModule::get_int(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_S_CRIT_TIME);
     let effect_id = WorkModule::get_int(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID);
     //Handles rescaling
     if ModelModule::scale(boma) == WorkModule::get_param_float(boma, hash40("scale"), 0) {
@@ -28,6 +31,24 @@ unsafe extern "C" fn springtrap_opff(fighter: &mut L2CFighterCommon) {
     if !ArticleModule::is_exist(boma, FIGHTER_SPRINGTRAP_GENERATE_ARTICLE_AXE) {
         if WorkModule::is_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_ACTIVE_AXE) {
             WorkModule::off_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_ACTIVE_AXE);
+        }
+    }
+    //Jumpscare Crit
+    if WorkModule::is_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CRIT) {
+        WorkModule::inc_int(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_S_CRIT_TIME);
+        if crit_time == 1 {
+            SlowModule::set_whole(boma, 8, 40);
+            FILL_SCREEN_MODEL_COLOR(fighter, 0, 5, 0, 0, 0, 0.1 /*R*/, 0.1 /*G*/, 0.1 /*B*/, 1, 0.5 /*Alpha*/, *smash::lib::lua_const::EffectScreenLayer::GROUND, *EFFECT_SCREEN_PRIO_FINAL);
+            FILL_SCREEN_MODEL_COLOR(fighter, 1, 5, 0, 0, 0, 0 /*R*/, 0 /*G*/, 0 /*B*/, 1, 0.5 /*Alpha*/, *smash::lib::lua_const::EffectScreenLayer::CHAR, *EFFECT_SCREEN_PRIO_FINAL);
+            QUAKE(fighter, *CAMERA_QUAKE_KIND_XL);
+        }
+        if crit_time >= 3 {
+            CANCEL_FILL_SCREEN(fighter, 0, 2.0);
+            CANCEL_FILL_SCREEN(fighter, 1, 2.0);
+        }
+        if crit_time >= 5 {
+            WorkModule::off_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CRIT);
+            WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_S_CRIT_TIME);
         }
     }
     //Phantom Stuff
@@ -81,19 +102,19 @@ unsafe extern "C" fn springtrap_phantom_on_start(weapon: &mut L2CWeaponCommon) {
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .set_costume(get_costumes())
     .on_start(springtrap_on_start)
     .on_line(Main, springtrap_opff)
     .install()
     ;
     Agent::new("ganon_axe")
-    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .set_costume(get_costumes())
     .on_start(springtrap_axe_on_start)
     .on_line(Main, springtrap_axe_opff)
     .install()
     ;
     Agent::new("ganon_phantom")
-    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .set_costume(get_costumes())
     .on_start(springtrap_phantom_on_start)
     .install()
     ;

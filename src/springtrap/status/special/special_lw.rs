@@ -83,7 +83,7 @@ unsafe extern "C" fn springtrap_special_lw_exit_status(fighter: &mut L2CFighterC
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .set_costume(get_costumes())
     .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_LW, springtrap_special_lw_pre_status)
     .status(Init, *FIGHTER_STATUS_KIND_SPECIAL_LW, springtrap_special_lw_init_status)
     .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_LW, springtrap_special_lw_main_status)

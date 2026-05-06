@@ -55,7 +55,7 @@ unsafe extern "C" fn springtrap_axe_stick_exit_status(_weapon: &mut L2CWeaponCom
 
 pub fn install() {
     Agent::new("ganon_axe")
-    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .set_costume(get_costumes())
     .status(Pre, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_STICK, springtrap_axe_stick_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_STICK, springtrap_axe_stick_init_status)
     .status(Main, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_STICK, springtrap_axe_stick_main_status)

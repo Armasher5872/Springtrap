@@ -21,6 +21,7 @@ unsafe extern "C" fn springtrap_grounded_neutral_special_low_fire_effect(agent: 
     let lua_state = agent.lua_state_agent;
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("springtrap_axe_fire_ash"), Hash40::new("havel"), 0, 13, 0, 0, 0, 0, 0.5, true);
+        EFFECT_FOLLOW(agent, Hash40::new("springtrap_axe_fire_ash"), Hash40::new("havel"), 0, 13, 0, 0, 0, 0, 0.5, true);
     }
     frame(lua_state, 20.0);
     if is_excute(agent) {
@@ -34,6 +35,7 @@ unsafe extern "C" fn springtrap_grounded_neutral_special_low_fire_effect(agent: 
 unsafe extern "C" fn springtrap_aerial_neutral_special_low_fire_effect(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("springtrap_axe_fire_ash"), Hash40::new("havel"), 0, 13, 0, 0, 0, 0, 0.5, true);
         EFFECT_FOLLOW(agent, Hash40::new("springtrap_axe_fire_ash"), Hash40::new("havel"), 0, 13, 0, 0, 0, 0, 0.5, true);
     }
     frame(lua_state, 20.0);
@@ -70,7 +72,7 @@ unsafe extern "C" fn springtrap_neutral_special_low_fire_expression(agent: &mut 
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .set_costume(get_costumes())
     .acmd("game_specialnlowfire", springtrap_neutral_special_low_fire_acmd, Low)
     .acmd("effect_specialnlowfire", springtrap_grounded_neutral_special_low_fire_effect, Low)
     .acmd("sound_specialnlowfire", springtrap_neutral_special_low_fire_sound, Low)

@@ -87,13 +87,16 @@ unsafe extern "C" fn springtrap_side_special_attack_sound(agent: &mut L2CAgentBa
 
 unsafe extern "C" fn springtrap_side_special_attack_expression(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    let special_s_charge = WorkModule::get_float(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_CHARGE);
+    let quake_level = if special_s_charge >= 1.0 {*CAMERA_QUAKE_KIND_XL} else if special_s_charge > 0.75 {*CAMERA_QUAKE_KIND_L} else if special_s_charge > 0.5 {*CAMERA_QUAKE_KIND_M} else {*CAMERA_QUAKE_KIND_S};
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
     }
     frame(lua_state, 3.0);
     for _ in 0..2 {
         if is_excute(agent) {
-            QUAKE(agent, *CAMERA_QUAKE_KIND_S);
+            QUAKE(agent, quake_level);
         }
         wait(lua_state, 10.0);
     }
@@ -101,7 +104,7 @@ unsafe extern "C" fn springtrap_side_special_attack_expression(agent: &mut L2CAg
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .set_costume(get_costumes())
     .acmd("game_specialsattack", springtrap_side_special_attack_acmd, Low)
     .acmd("effect_specialsattack", springtrap_side_special_attack_effect, Low)
     .acmd("sound_specialsattack", springtrap_side_special_attack_sound, Low)

@@ -1,7 +1,10 @@
 use super::*;
 
 unsafe extern "C" fn springtrap_phantom_phantom_summon_pre_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    StatusModule::init_settings(weapon.module_accessor, SituationKind(*SITUATION_KIND_GROUND), *WEAPON_KINETIC_TYPE_NONE, *GROUND_CORRECT_KIND_GROUND as u32, GroundCliffCheckKind(0), false, 0, 0, 0, 0);
+    let owner_boma = get_owner_boma(weapon);
+    let owner_situation_kind = StatusModule::situation_kind(owner_boma);
+    let owner_ground_correct = GroundModule::get_correct(owner_boma);
+    StatusModule::init_settings(weapon.module_accessor, SituationKind(owner_situation_kind), *WEAPON_KINETIC_TYPE_NONE, owner_ground_correct as u32, GroundCliffCheckKind(0), false, 0, 0, 0, 0);
     0.into()
 }
 
@@ -83,7 +86,7 @@ unsafe extern "C" fn springtrap_phantom_phantom_summon_exit_status(_weapon: &mut
 
 pub fn install() {
     Agent::new("ganon_phantom")
-    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .set_costume(get_costumes())
     .status(Pre, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_SUMMON, springtrap_phantom_phantom_summon_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_SUMMON, springtrap_phantom_phantom_summon_init_status)
     .status(Main, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_SUMMON, springtrap_phantom_phantom_summon_main_status)

@@ -14,14 +14,16 @@ use {
 };
 
 pub static mut MARKED_COLORS: [bool; 256] = [false; 256];
-pub static mut LAST_COLOR: i32 = -1;
 
 extern "C" fn mods_mounted(_ev: Event) {
     const MARKER_FILE: &str = "springtrap.marker";
     let mut lowest_color: i32 = -1;
     let mut marked_slots: Vec<i32> = vec![];
     for x in 0..256 {
-        if let Ok(_) = read(format!("mods:/fighter/ganon/model/body/c{:02}/{}", x, MARKER_FILE)) {
+        if let Ok(_) = read(format!(
+            "mods:/fighter/ganon/model/body/c{:02}/{}",
+            x, MARKER_FILE
+        )) {
             unsafe {
                 marked_slots.push(x as _);
                 MARKED_COLORS[x as usize] = true;
@@ -148,8 +150,8 @@ extern "C" fn mods_mounted(_ev: Event) {
                 (0x9D5678814 /* Hash40 of n03_index */, UnsignedByteType::Overwrite(0)),
                 (0x910C0B69A /* Hash40 of n04_index */, UnsignedByteType::Overwrite(0)),
                 (0x9B6B7BD2E /* Hash40 of n05_index */, UnsignedByteType::Overwrite(0)),
-                (0x9875FA7B3 /* Hash40 of n06_index */, UnsignedByteType::Overwrite(0)),
-                (0x92128AC07 /* Hash40 of n07_index */, UnsignedByteType::Overwrite(0)),
+                (0x9875FA7B3 /* Hash40 of n06_index */, UnsignedByteType::Overwrite(6)),
+                (0x92128AC07 /* Hash40 of n07_index */, UnsignedByteType::Overwrite(7)),
                 (0x9F873561A /* Hash40 of c00_group */, UnsignedByteType::Overwrite(0)),
                 (0x95E045DAE /* Hash40 of c01_group */, UnsignedByteType::Overwrite(0)),
                 (0x96FEC4733 /* Hash40 of c02_group */, UnsignedByteType::Overwrite(0)),
@@ -262,26 +264,6 @@ extern "C" fn mods_mounted(_ev: Event) {
         spirits_eye_visible: BoolType::Overwrite(true), 
         ..Default::default()
     });
-}
-
-pub mod common;
-mod springtrap;
-
-#[skyline::main(name = "springtrap")]
-pub fn main() {
-    unsafe {
-        //allows online play
-        extern "C" {
-            fn allow_ui_chara_hash_online(ui_chara_hash: u64);
-        }
-        allow_ui_chara_hash_online(0x139a45e3cb); //ui_chara_springtrap
-    }
-    unsafe {
-        extern "C" {
-            fn arcrop_register_event_callback(ty: Event, callback: EventCallbackFn);
-        }
-        arcrop_register_event_callback(Event::ModFilesystemMounted, mods_mounted);
-    }
     add_narration_characall_entry("vc_narration_characall_springtrap");
     add_bgm_db_entry_info(&BgmDatabaseRootEntry {
         ui_bgm_id: hash40("ui_bgm_zz09_f_springtrap"),
@@ -319,4 +301,20 @@ pub fn main() {
     });
     set_fighter_jingle(hash40("ui_chara_springtrap"), "zz09_f_springtrap");
     springtrap::install();
+}
+
+pub mod common;
+mod springtrap;
+
+#[skyline::main(name = "springtrap")]
+pub fn main() {
+    unsafe {
+        //allows online play
+        extern "C" {
+            fn allow_ui_chara_hash_online(ui_chara_hash: u64);
+            fn arcrop_register_event_callback(ty: Event, callback: EventCallbackFn);
+        }
+        allow_ui_chara_hash_online(0x139a45e3cb); //ui_chara_springtrap
+        arcrop_register_event_callback(Event::ModFilesystemMounted, mods_mounted);
+    }
 }

@@ -23,7 +23,7 @@ unsafe extern "C" fn springtrap_phantom_foxy_attack_sound(agent: &mut L2CAgentBa
 
 pub fn install() {
     Agent::new("ganon_phantom")
-    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .set_costume(get_costumes())
     .acmd("game_foxyattack", springtrap_phantom_foxy_attack_acmd, Low)
     .acmd("effect_foxyattack", springtrap_phantom_foxy_attack_effect, Low)
     .acmd("sound_foxyattack", springtrap_phantom_foxy_attack_sound, Low)

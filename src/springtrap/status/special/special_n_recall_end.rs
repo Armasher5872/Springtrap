@@ -84,7 +84,7 @@ unsafe extern "C" fn springtrap_special_n_recall_end_exit_status(fighter: &mut L
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .set_costume(get_costumes())
     .status(Pre, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_END, springtrap_special_n_recall_end_pre_status)
     .status(Init, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_END, springtrap_special_n_recall_end_init_status)
     .status(Main, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_END, springtrap_special_n_recall_end_main_status)

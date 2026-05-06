@@ -87,6 +87,8 @@ unsafe extern "C" fn springtrap_forward_smash_effect(agent: &mut L2CAgentBase) {
         LANDING_EFFECT(agent, Hash40::new("sys_quake"), Hash40::new("top"), 1.5, 0, 17, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
         EFFECT(agent, Hash40::new("springtrap_axe_ground_crack"), Hash40::new("top"), 17, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         AFTER_IMAGE_OFF(agent, 2);
+        LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
+        LAST_EFFECT_SET_RATE(agent, 0.7);
     }
 }
 
@@ -209,6 +211,8 @@ unsafe extern "C" fn springtrap_up_smash_effect(agent: &mut L2CAgentBase) {
         EFFECT(agent, Hash40::new("springtrap_soul_burst"), Hash40::new("top"), 0, 18.5, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
         let burst = EffectModule::req_follow(boma, Hash40::new("springtrap_remnant_burst"), Hash40::new("top"), &Vector3f{x: 0.0, y: 18.5, z: 0.0}, &Vector3f{x: 0.0, y: 0.0, z: 0.0}, 1.0, true, 0, 0, -1, 0, 0, false, false);
         EffectModule::set_scale(boma, burst as u32, &Vector3f{x: 1.0, y: 1.2, z: 0.75});
+        LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), -3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        LAST_EFFECT_SET_RATE(agent, 0.8);
     }
 }
 
@@ -323,6 +327,7 @@ unsafe extern "C" fn springtrap_down_smash_effect(agent: &mut L2CAgentBase) {
     frame(lua_state, 13.0);
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_quake"), Hash40::new("top"), 1.5, 0, 10, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, true);
+        LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 1.5, 0, 10, 0, 0, 0, 0.3, 0, 0, 0, 0, 0, 0, true);
         EFFECT(agent, Hash40::new("springtrap_axe_ground_crack"), Hash40::new("top"), 10, 0, 0, 0, 0, 0, 0.6, 0, 0, 0, 0, 0, 0, false);
     }
     frame(lua_state, 26.0);
@@ -355,6 +360,8 @@ unsafe extern "C" fn springtrap_down_smash_effect(agent: &mut L2CAgentBase) {
     frame(lua_state, 29.0);
     if is_excute(agent) {
         AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_springtrap_knife1"), Hash40::new("tex_springtrap_knife2"), 4, Hash40::new("haver"), 0, 0.0, 0, Hash40::new("haver"), 0, 8.5, 0, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.3, 0.1);
+        LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, false);
+        LAST_EFFECT_SET_RATE(agent, 0.7);
     }
     frame(lua_state, 34.0);
     if is_excute(agent) {

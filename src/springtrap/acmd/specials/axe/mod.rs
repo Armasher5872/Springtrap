@@ -1,4 +1,5 @@
 use {
+    crate::common::common_func::*,
     smash::{
         app::{
             lua_bind::*,

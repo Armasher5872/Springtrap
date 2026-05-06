@@ -1,5 +1,6 @@
 use {
     crate::common::{
+        common_func::*,
         getter_funcs::*,
         hooks::*,
         module_init::*,
@@ -12,6 +13,7 @@ use {
             lua_bind::*, 
             *
         },
+        hash40,
         lib::lua_const::*,
         phx::*,
     }

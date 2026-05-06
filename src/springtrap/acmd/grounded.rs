@@ -261,7 +261,7 @@ unsafe extern "C" fn springtrap_dash_attack_expression(agent: &mut L2CAgentBase)
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .set_costume(get_costumes())
     .acmd("game_attack11", springtrap_jab_1_game, High)
     .acmd("effect_attack11", springtrap_jab_1_effect, High)
     .acmd("sound_attack11", springtrap_jab_1_sound, High)

@@ -10,6 +10,7 @@ const GANON_VTABLE_ON_SEARCH_EVENT_OFFSET: usize = 0x68d8a0;
 unsafe extern "C" fn ganon_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     if is_springtrap_slots(boma) {
+        let status_kind = StatusModule::status_kind(boma);
         let collision_log = log as *mut CollisionLogScuffed;
         let opponent_object_id = (*collision_log).opponent_object_id;
         let opponent_battle_object = get_battle_object_from_id(opponent_object_id);
@@ -26,6 +27,14 @@ unsafe extern "C" fn ganon_on_attack(vtable: u64, fighter: &mut Fighter, log: u6
             let opponent_pos = *PostureModule::pos(opponent_boma);
             if opponent_lr == lr {
                 EffectModule::req(opponent_boma, Hash40::new("springtrap_soul_burst"), &Vector3f{x: opponent_pos.x, y: opponent_pos.y+12.0, z: opponent_pos.z}, &Vector3f{x: 90.0, y: 90.0, z: 0.0}, 1.0, 0, -1, false, 0);
+            }
+            println!("Status Kind: {}", status_kind);
+            if status_kind == *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_S_ATTACK {
+                println!("Attribute: {}", attack_data.attr);
+                println!("Charge: {}", WorkModule::get_float(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_CHARGE));
+                if attack_data.attr == hash40("collision_attr_saving") && WorkModule::get_float(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_CHARGE) >= 1.0 {
+                    WorkModule::on_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CRIT);
+                }
             }
         }
         if sound_attr == *COLLISION_SOUND_ATTR_SPRINGTRAP_KNIFE {

@@ -6,9 +6,7 @@ unsafe extern "C" fn krool_ironball_on_attack_event(vtable: u64, weapon: *mut sm
     let owner_id = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
     let owner_boma = sv_battle_object::module_accessor(owner_id);
     let owner_kind = utility::get_kind(&mut *owner_boma);
-    println!("Owner Kind: {}", owner_kind);
     if owner_kind == *FIGHTER_KIND_GANON {
-        println!("Springtrap Slots: {}", is_springtrap_slots(owner_boma));
         if is_springtrap_slots(owner_boma) {
             *(weapon as *mut bool).add(0x90) = true;
         }
@@ -34,10 +32,11 @@ unsafe extern "C" fn krool_ironball_on_search_event(_vtable: u64, weapon: &mut s
                 let opponent_category = sv_battle_object::category(opponent_object_id);
                 if opponent_category == *BATTLE_OBJECT_CATEGORY_FIGHTER {
                     let opponent_battle_object = get_battle_object_from_id(opponent_object_id);
+                    let opponent_battle_object_id = (*opponent_battle_object).battle_object_id;
                     let opponent_boma = (*opponent_battle_object).module_accessor;
                     let opponent_scale = PostureModule::scale(opponent_boma);
                     if StatusModule::status_kind(boma) == *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_FLY {
-                        if collision_kind == 1 {
+                        if collision_kind == 1 && opponent_battle_object_id >> 0x1C == 0 && HitModule::get_status((*opponent_battle_object).module_accessor, (*log).receiver_id as i32, 0) == 0 {
                             LinkModule::remove_model_constraint(boma, true);
                             if LinkModule::is_link(boma, *WEAPON_LINK_NO_CONSTRAINT) {
                                 LinkModule::unlink(boma, *WEAPON_LINK_NO_CONSTRAINT);
@@ -53,10 +52,7 @@ unsafe extern "C" fn krool_ironball_on_search_event(_vtable: u64, weapon: &mut s
                             }
                             WorkModule::on_flag(boma, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_LINKED);
                             WorkModule::set_int(boma, opponent_object_id as i32, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_INT_OBJECT_ID);
-                            StatusModule::change_status_request_from_script(boma, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_HIT_STICK, false);
-                            if StatusModule::status_kind(owner_boma) == *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_LOOP {
-                                StatusModule::change_status_request_from_script(owner_boma, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_END, false);
-                            }
+                            StatusModule::change_status_request(boma, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_HIT_STICK, false);
                         }
                     }
                 }

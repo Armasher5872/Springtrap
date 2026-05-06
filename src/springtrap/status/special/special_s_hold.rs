@@ -56,7 +56,7 @@ unsafe extern "C" fn springtrap_special_s_hold_main_loop(fighter: &mut L2CFighte
 
 unsafe extern "C" fn springtrap_special_s_hold_exec_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let current_frame = fighter.global_table[CURRENT_FRAME].get_f32();
-    WorkModule::set_float(fighter.module_accessor, current_frame/60.0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_CHARGE);
+    WorkModule::set_float(fighter.module_accessor, current_frame/58.0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_CHARGE);
     0.into()
 }
 
@@ -78,7 +78,7 @@ unsafe extern "C" fn springtrap_special_s_hold_exit_status(fighter: &mut L2CFigh
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .set_costume(get_costumes())
     .status(Pre, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_S_HOLD, springtrap_special_s_hold_pre_status)
     .status(Init, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_S_HOLD, springtrap_special_s_hold_init_status)
     .status(Main, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_S_HOLD, springtrap_special_s_hold_main_status)

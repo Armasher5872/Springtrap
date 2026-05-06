@@ -45,7 +45,7 @@ unsafe extern "C" fn springtrap_phantom_freddy_walk_main_loop(weapon: &mut L2CWe
         weapon.change_status(WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_FREDDY_TURN.into(), false.into());
     }
     if life == 40 {
-        phantom_disappear(weapon);
+        phantom_disappear(weapon, false, 0x31ed91fca);
     }
     if MotionModule::is_end(boma) {
         MotionModule::change_motion(boma, Hash40::new("freddy_walk"), 0.0, 1.0, false, 0.0, false, false);
@@ -68,7 +68,7 @@ unsafe extern "C" fn springtrap_phantom_freddy_walk_exit_status(_weapon: &mut L2
 
 pub fn install() {
     Agent::new("ganon_phantom")
-    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .set_costume(get_costumes())
     .status(Pre, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_FREDDY_WALK, springtrap_phantom_freddy_walk_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_FREDDY_WALK, springtrap_phantom_freddy_walk_init_status)
     .status(Main, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_FREDDY_WALK, springtrap_phantom_freddy_walk_main_status)

@@ -86,7 +86,7 @@ unsafe extern "C" fn springtrap_phantom_phantom_explode_exit_status(weapon: &mut
 
 pub fn install() {
     Agent::new("ganon_phantom")
-    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .set_costume(get_costumes())
     .status(Pre, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_EXPLODE, springtrap_phantom_phantom_explode_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_EXPLODE, springtrap_phantom_phantom_explode_init_status)
     .status(Main, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_EXPLODE, springtrap_phantom_phantom_explode_main_status)

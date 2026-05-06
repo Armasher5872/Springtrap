@@ -276,7 +276,7 @@ unsafe extern "C" fn springtrap_back_throw_effect(agent: &mut L2CAgentBase) {
     frame(lua_state, 23.0);
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("springtrap_static"), true, true);
-        LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, 0, -180, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
+        LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
     }
     frame(lua_state, 27.0);
     if is_excute(agent) {
@@ -348,7 +348,7 @@ unsafe extern "C" fn springtrap_up_throw_effect(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     frame(lua_state, 23.0);
     if is_excute(agent) {
-        LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, 0, -180, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
+        LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
         EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, true);
     }
 }
@@ -409,7 +409,7 @@ unsafe extern "C" fn springtrap_down_throw_effect(agent: &mut L2CAgentBase) {
     frame(lua_state, 4.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("springtrap_throwlw_hold"), Hash40::new("throw"), 0, 0, 4, 0, 0, 0, 1.0, true);
-        LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, 0, -180, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
+        LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
     }
     frame(lua_state, 36.0);
     if is_excute(agent) {
@@ -472,7 +472,7 @@ unsafe extern "C" fn springtrap_down_throw_expression(agent: &mut L2CAgentBase) 
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .set_costume(get_costumes())
     .acmd("game_catch", springtrap_grab_game, High)
     .acmd("sound_catch", springtrap_grab_sound, High)
     .acmd("expression_catch", springtrap_grab_expression, High)

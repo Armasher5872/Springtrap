@@ -22,3 +22,16 @@ pub unsafe extern "C" fn spawn_hit_effects(weapon: &mut L2CWeaponCommon, attr: u
         _ => {EffectModule::req(boma, Hash40::new("sys_hit_normal_s"), &Vector3f{x: pos.x, y: pos.y, z: pos.z}, &Vector3f{x: 0.0, y: 0.0, z: 0.0}, 1.0, 0, -1, false, 0);}
     }
 }
+
+pub fn get_costumes() -> Vec<usize> {
+	let costumes = &mut Vec::new();
+    unsafe {
+        let marked = *&raw mut MARKED_COLORS;
+        for i in 0..marked.len() {
+            if marked[i] {
+                costumes.push(i);
+            }
+        }
+    }
+    costumes.to_vec()
+}

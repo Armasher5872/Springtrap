@@ -29,7 +29,7 @@ unsafe extern "C" fn springtrap_phantom_chica_attack_main_loop(weapon: &mut L2CW
         remove_phantom(weapon);
     }
     if life == 40 {
-        phantom_disappear(weapon);
+        phantom_disappear(weapon, false, 0x31ed91fca);
     }
     if MotionModule::is_end(boma) {
         StatusModule::change_status_force(boma, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_EXPLODE, false);
@@ -51,7 +51,7 @@ unsafe extern "C" fn springtrap_phantom_chica_attack_exit_status(_weapon: &mut L
 
 pub fn install() {
     Agent::new("ganon_phantom")
-    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .set_costume(get_costumes())
     .status(Pre, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_CHICA_ATTACK, springtrap_phantom_chica_attack_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_CHICA_ATTACK, springtrap_phantom_chica_attack_init_status)
     .status(Main, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_CHICA_ATTACK, springtrap_phantom_chica_attack_main_status)

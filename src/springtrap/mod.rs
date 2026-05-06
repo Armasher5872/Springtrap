@@ -1,5 +1,7 @@
+#![allow(static_mut_refs, unused_mut)]
 use {
     crate::common::{
+        common_func::*,
         globals::*,
         springtrap_func::*, 
         springtrap_var::*
@@ -15,6 +17,7 @@ use {
         phx::*,
     },
     smashline::*,
+    smash_script::macros::*,
 };
 
 mod acmd;

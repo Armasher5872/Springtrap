@@ -35,7 +35,7 @@ unsafe extern "C" fn springtrap_phantom_bb_idle_main_loop(weapon: &mut L2CWeapon
         remove_phantom(weapon);
     }
     if life == 40 {
-        phantom_disappear(weapon);
+        phantom_disappear(weapon, false, 0x31ed91fca);
     }
     if MotionModule::is_end(boma) {
         MotionModule::change_motion(boma, Hash40::new("bb_idle"), 0.0, 1.0, false, 0.0, false, false);
@@ -70,7 +70,7 @@ unsafe extern "C" fn springtrap_phantom_bb_idle_exit_status(weapon: &mut L2CWeap
 
 pub fn install() {
     Agent::new("ganon_phantom")
-    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .set_costume(get_costumes())
     .status(Pre, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_BB_IDLE, springtrap_phantom_bb_idle_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_BB_IDLE, springtrap_phantom_bb_idle_init_status)
     .status(Main, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_BB_IDLE, springtrap_phantom_bb_idle_main_status)

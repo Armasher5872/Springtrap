@@ -268,7 +268,7 @@ unsafe extern "C" fn springtrap_uair_effect(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     frame(lua_state, 9.0);
 	if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("springtrap_attack_arc"), Hash40::new("top"), -2.0, 8.0, 4.5, 0, -90, -90, 1.0, true);
+        EFFECT_FOLLOW(agent, Hash40::new("springtrap_attack_arc"), Hash40::new("top"), -2.0, 10.0, -1.5, 0, -90, -90, 1.0, true);
         LAST_EFFECT_SET_RATE(agent, 0.8);
     }
 }
@@ -366,7 +366,7 @@ unsafe extern "C" fn springtrap_dair_expression(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .set_costume(get_costumes())
     .acmd("game_attackairn", springtrap_nair_game, High)
     .acmd("effect_attackairn", springtrap_nair_effect, High)
     .acmd("sound_attackairn", springtrap_nair_sound, High)

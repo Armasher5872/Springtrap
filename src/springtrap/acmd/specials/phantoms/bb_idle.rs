@@ -21,7 +21,7 @@ unsafe extern "C" fn springtrap_phantom_bb_idle_sound(agent: &mut L2CAgentBase) 
 
 pub fn install() {
     Agent::new("ganon_phantom")
-    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .set_costume(get_costumes())
     .acmd("game_bbidle", springtrap_phantom_bb_idle_acmd, Low)
     .acmd("effect_bbidle", springtrap_phantom_bb_idle_effect, Low)
     .acmd("sound_bbidle", springtrap_phantom_bb_idle_sound, Low)

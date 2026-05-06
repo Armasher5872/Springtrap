@@ -57,7 +57,7 @@ unsafe extern "C" fn springtrap_axe_recall_exec_status(weapon: &mut L2CWeaponCom
         let pos = *PostureModule::pos(boma);
         let x_dist = x-pos.x;
         let y_dist = y-pos.y;
-        sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, (x_dist/20.0).min(1.5), y_dist/7.5);
+        sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, (x_dist/20.0).min(2.5), y_dist/7.5);
     }
     WorkModule::dec_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     0.into()
@@ -73,7 +73,7 @@ unsafe extern "C" fn springtrap_axe_recall_exit_status(_weapon: &mut L2CWeaponCo
 
 pub fn install() {
     Agent::new("ganon_axe")
-    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .set_costume(get_costumes())
     .status(Pre, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_RECALL, springtrap_axe_recall_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_RECALL, springtrap_axe_recall_init_status)
     .status(Main, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_RECALL, springtrap_axe_recall_main_status)

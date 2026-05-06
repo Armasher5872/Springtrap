@@ -11,10 +11,11 @@ unsafe extern "C" fn springtrap_special_hi_end_init_status(fighter: &mut L2CFigh
     let boma = fighter.module_accessor;
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     KineticModule::clear_speed_all(boma);
-    KineticModule::unable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_DAMAGE);
     if situation_kind == *SITUATION_KIND_AIR {
         fighter.set_situation(SITUATION_KIND_AIR.into());
-        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
+        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+        KineticModule::enable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+        KineticModule::enable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
         GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
     }
     else {
@@ -107,7 +108,7 @@ unsafe extern "C" fn springtrap_special_hi_end_exit_status(fighter: &mut L2CFigh
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .set_costume(get_costumes())
     .status(Pre, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_HI_END, springtrap_special_hi_end_pre_status)
     .status(Init, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_HI_END, springtrap_special_hi_end_init_status)
     .status(Main, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_HI_END, springtrap_special_hi_end_main_status)

@@ -71,9 +71,14 @@ unsafe extern "C" fn springtrap_special_hi_exec_status(fighter: &mut L2CFighterC
     let current_frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let stick_x = fighter.global_table[STICK_X].get_f32();
     let stick_y = fighter.global_table[STICK_Y].get_f32();
-    let stick = fighter.Vector2__create(stick_x.into(), stick_y.into());
-    let vec_stick_x = stick["x"].get_f32();
-    let vec_stick_y = stick["y"].get_f32();
+    let mut stick = fighter.Vector2__create(stick_x.into(), stick_y.into());
+    if stick["x"].get_f32().abs()+stick["y"].get_f32().abs() < 0.5 {
+        stick["x"].assign(&L2CValue::F32(0.0));
+        stick["y"].assign(&L2CValue::F32(1.0));
+    }
+    let normalize = fighter.Vector2__normalize(stick);
+    let vec_stick_x = normalize["x"].get_f32();
+    let vec_stick_y = normalize["y"].get_f32();
     let stick_angle = vec_stick_y.atan2(vec_stick_x);
     let stick_degrees = stick_angle.to_degrees();
     if current_frame >= 10.0 {
@@ -118,7 +123,7 @@ unsafe extern "C" fn springtrap_special_hi_exit_status(fighter: &mut L2CFighterC
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .set_costume(get_costumes())
     .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_HI, springtrap_special_hi_pre_status)
     .status(Init, *FIGHTER_STATUS_KIND_SPECIAL_HI, springtrap_special_hi_init_status)
     .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_HI, springtrap_special_hi_main_status)
