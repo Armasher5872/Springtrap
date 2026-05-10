@@ -15,6 +15,9 @@ unsafe extern "C" fn springtrap_side_special_attack_acmd(agent: &mut L2CAgentBas
     let z2_coord_1 = 8.0+(10.0*special_s_charge);
     let z2_coord_2 = 8.0+(12.0*special_s_charge);
     let saving_level = if special_s_charge > 0.5 {*FIGHTER_RYU_SAVING_LV_2} else {*FIGHTER_RYU_SAVING_LV_1};
+    if is_excute(agent) {
+        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 5.0+(13.0*special_s_charge));
+    }
     frame(lua_state, 3.0);
     if is_excute(agent) {
         shield!(agent, *MA_MSC_CMD_REFLECTOR, *COLLISION_KIND_REFLECTOR, 0, Hash40::new("top"), size_0, 0.0, 9.5, 8.0, 0.0, 9.5, z2_coord_0, 1.0, 1.0, reflector_threshold, false, 0.0, *FIGHTER_REFLECTOR_GROUP_HOMERUNBAT);
@@ -23,8 +26,8 @@ unsafe extern "C" fn springtrap_side_special_attack_acmd(agent: &mut L2CAgentBas
         ATTACK(agent, 2, 0, Hash40::new("top"), damage_2, 20, 25, 0, 80, size_2, 0.0, 9.5, 8.0, Some(0.0), Some(9.5), Some(z2_coord_2), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, true, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_NONE);
         ATTACK(agent, 3, 0, Hash40::new("top"), damage_1, 60, 25, 0, 50, size_1, 0.0, 9.5, 8.0, Some(0.0), Some(9.5), Some(z2_coord_1), 0.3, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_NONE);
         ATTACK(agent, 4, 0, Hash40::new("top"), damage_2, 60, 25, 0, 80, size_2, 0.0, 9.5, 8.0, Some(0.0), Some(9.5), Some(z2_coord_2), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, true, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_NONE);
-        AttackModule::set_attack_level(agent.module_accessor, 0, saving_level as u8);
-        AttackModule::set_no_finish_camera(agent.module_accessor, 0, true, false);
+        AttackModule::set_attack_level(boma, 0, saving_level as u8);
+        AttackModule::set_no_finish_camera(boma, 0, true, false);
     }
     frame(lua_state, 7.0);
     if is_excute(agent) {
@@ -39,6 +42,7 @@ unsafe extern "C" fn springtrap_side_special_attack_acmd(agent: &mut L2CAgentBas
     }
     frame(lua_state, 16.0);
     if is_excute(agent) {
+        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0.0);
         shield!(agent, *MA_MSC_CMD_SHIELD_OFF, *COLLISION_KIND_REFLECTOR, 0, *FIGHTER_REFLECTOR_GROUP_HOMERUNBAT);
         AttackModule::clear_all(boma);
     }

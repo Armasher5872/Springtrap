@@ -1,6 +1,6 @@
 [package]
 name = "springtrap"
-version = "0.9.5"
+version = "1.0.1"
 authors = ["phazoganon"]
 edition = "2021"
 

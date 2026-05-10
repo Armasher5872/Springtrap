@@ -34,6 +34,12 @@ unsafe extern "C" fn springtrap_phantom_bb_idle_main_loop(weapon: &mut L2CWeapon
     if should_remove_phantom(weapon) {
         remove_phantom(weapon);
     }
+    if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
+        WorkModule::on_flag(boma, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLAG_CAN_EXPLODE);
+    }
+    if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) {
+        WorkModule::off_flag(boma, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLAG_CAN_EXPLODE);
+    }
     if life == 40 {
         phantom_disappear(weapon, false, 0x31ed91fca);
     }

@@ -8,6 +8,7 @@ unsafe extern "C" fn springtrap_axe_fly_acmd(agent: &mut L2CAgentBase) {
         SEARCH(agent, 0, 0, Hash40::new("have"), 3.5, 0.0, 6.0, 0.0, None, None, None, *COLLISION_KIND_MASK_AH, *HIT_STATUS_MASK_ALL, 1, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_FIGHTER, *COLLISION_PART_MASK_ALL, false);
         AttackModule::set_poison_param(boma, 0, 361, 45, 1.0, false);
         AttackModule::set_optional_hit_effect(boma, 0, Hash40::new("sys_hit_fire"));
+        AttackModule::set_add_reaction_frame_revised(boma, 0, 12.0, true);
     }
 }
 

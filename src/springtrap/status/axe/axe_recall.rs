@@ -17,7 +17,6 @@ unsafe extern "C" fn springtrap_axe_recall_init_status(weapon: &mut L2CWeaponCom
         sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.03, 0.03);
     }
     KineticModule::enable_energy(boma, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
-    WorkModule::set_int(boma, -1, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_INT_GRAVITY_FRAME);
     ModelModule::set_scale(boma, 0.73);
     GroundModule::set_passable_check(boma, false);
     GroundModule::set_collidable(boma, false);
@@ -26,8 +25,10 @@ unsafe extern "C" fn springtrap_axe_recall_init_status(weapon: &mut L2CWeaponCom
 }
 
 unsafe extern "C" fn springtrap_axe_recall_main_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    let boma = weapon.module_accessor;
     weapon.set_situation(SITUATION_KIND_AIR.into());
-    MotionModule::change_motion(weapon.module_accessor, Hash40::new("fly"), 0.0, 1.0, false, 0.0, false, false);
+    HitModule::set_whole(boma, HitStatus(*HIT_STATUS_XLU), 0);
+    MotionModule::change_motion(boma, Hash40::new("fly"), 0.0, 1.0, false, 0.0, false, false);
     weapon.fastshift(L2CValue::Ptr(springtrap_axe_recall_main_loop as *const () as _))
 }
 
@@ -57,7 +58,8 @@ unsafe extern "C" fn springtrap_axe_recall_exec_status(weapon: &mut L2CWeaponCom
         let pos = *PostureModule::pos(boma);
         let x_dist = x-pos.x;
         let y_dist = y-pos.y;
-        sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, (x_dist/20.0).min(2.5), y_dist/7.5);
+        let x_speed = if x_dist > 0.0 {(x_dist/20.0).clamp(2.5, 10.0)} else {(x_dist/20.0).clamp(-10.0, -2.5)};
+        sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, x_speed, y_dist/7.5);
     }
     WorkModule::dec_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     0.into()

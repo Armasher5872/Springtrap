@@ -41,6 +41,12 @@ unsafe extern "C" fn springtrap_phantom_freddy_fall_main_loop(weapon: &mut L2CWe
         PostureModule::set_pos(boma, &Vector3f{x: pos_x, y: pos_y-3.0, z: pos_z});
         weapon.change_status(WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_FREDDY_WALK.into(), false.into());
     }
+    if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
+        WorkModule::on_flag(boma, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLAG_CAN_EXPLODE);
+    }
+    if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) {
+        WorkModule::off_flag(boma, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLAG_CAN_EXPLODE);
+    }
     if life == 40 {
         phantom_disappear(weapon, false, 0x31ed91fca);
     }

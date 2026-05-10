@@ -16,6 +16,7 @@ unsafe extern "C" fn ganon_on_attack(vtable: u64, fighter: &mut Fighter, log: u6
         let opponent_battle_object = get_battle_object_from_id(opponent_object_id);
         let opponent_battle_object_id = (*opponent_battle_object).battle_object_id;
         let opponent_category = sv_battle_object::category(opponent_battle_object_id);
+        let collision_kind = (*collision_log).collision_kind;
         let lr = PostureModule::lr(boma);
         let mut_attack_data = AttackModule::attack_data(boma, (*collision_log).collider_id as i32, (*collision_log).x35);
         let attack_data = *(mut_attack_data);
@@ -28,11 +29,8 @@ unsafe extern "C" fn ganon_on_attack(vtable: u64, fighter: &mut Fighter, log: u6
             if opponent_lr == lr {
                 EffectModule::req(opponent_boma, Hash40::new("springtrap_soul_burst"), &Vector3f{x: opponent_pos.x, y: opponent_pos.y+12.0, z: opponent_pos.z}, &Vector3f{x: 90.0, y: 90.0, z: 0.0}, 1.0, 0, -1, false, 0);
             }
-            println!("Status Kind: {}", status_kind);
             if status_kind == *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_S_ATTACK {
-                println!("Attribute: {}", attack_data.attr);
-                println!("Charge: {}", WorkModule::get_float(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_CHARGE));
-                if attack_data.attr == hash40("collision_attr_saving") && WorkModule::get_float(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_CHARGE) >= 1.0 {
+                if collision_kind != *COLLISION_KIND_SHIELD as u8 && attack_data.attr == hash40("collision_attr_saving") && WorkModule::get_float(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_CHARGE) >= 1.0 {
                     WorkModule::on_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CRIT);
                 }
             }
@@ -57,14 +55,31 @@ unsafe extern "C" fn ganon_on_attack(vtable: u64, fighter: &mut Fighter, log: u6
 unsafe extern "C" fn ganon_status_transition(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     if is_springtrap_slots(boma) {
-        if [
+        let active_axe = WorkModule::is_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_ACTIVE_AXE);
+        let status_kind = StatusModule::status_kind(boma);
+        let active_axe_statuses = [
+            *FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_CHARGE_LOOP, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_LOW_FIRE, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_HIGH_FIRE, 
+            *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_END, *FIGHTER_STATUS_KIND_WIN
+        ];
+        let unactive_axe_statuses = [
             *FIGHTER_STATUS_KIND_ATTACK_S4_START, *FIGHTER_STATUS_KIND_ATTACK_S4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_AIR, *FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_CHARGE_LOOP, 
             *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_LOW_FIRE, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_HIGH_FIRE, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_END, *FIGHTER_STATUS_KIND_WIN
-        ].contains(&StatusModule::status_kind(boma)) {
-            ArticleModule::generate_article_enable(boma, *FIGHTER_GANON_GENERATE_ARTICLE_SWORD, false, -1);
+        ];
+        if active_axe {
+            if active_axe_statuses.contains(&status_kind) {
+                ArticleModule::generate_article_enable(boma, *FIGHTER_GANON_GENERATE_ARTICLE_SWORD, false, -1);
+            }
+            else {
+                ArticleModule::remove_exist(boma, *FIGHTER_GANON_GENERATE_ARTICLE_SWORD, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+            }
         }
         else {
-            ArticleModule::remove_exist(boma, *FIGHTER_GANON_GENERATE_ARTICLE_SWORD, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+            if unactive_axe_statuses.contains(&status_kind) {
+                ArticleModule::generate_article_enable(boma, *FIGHTER_GANON_GENERATE_ARTICLE_SWORD, false, -1);
+            }
+            else {
+                ArticleModule::remove_exist(boma, *FIGHTER_GANON_GENERATE_ARTICLE_SWORD, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+            }
         }
     }
     original!()(vtable, fighter)

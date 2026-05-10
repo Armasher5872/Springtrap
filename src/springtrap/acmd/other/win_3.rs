@@ -76,9 +76,11 @@ unsafe extern "C" fn springtrap_win_3_sound(agent: &mut L2CAgentBase) {
         PLAY_SE(agent, Hash40::new("se_ganon_special_h01"));
     }
     frame(lua_state, 160.0);
-    if is_excute(agent) {
-        let vc_index = if sv_math::randf(hash40("fighter"), 1.0) > 0.5 {Hash40::new("vc_ganon_appeal_h01")} else {Hash40::new("vc_ganon_attackhard_h01")};
-        PLAY_SE(agent, vc_index);
+    if !is_glitchtrap_slots(boma) {
+        if is_excute(agent) {
+            let vc_index = if sv_math::randf(hash40("fighter"), 1.0) > 0.5 {Hash40::new("vc_ganon_appeal_h01")} else {Hash40::new("vc_ganon_attackhard_h01")};
+            PLAY_SE(agent, vc_index);
+        }
     }
     frame(lua_state, 218.0);
     if is_excute(agent) {
@@ -92,7 +94,7 @@ unsafe extern "C" fn springtrap_win_3_expression(_agent: &mut L2CAgentBase) {}
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .set_costume(get_costumes())
     .acmd("game_win3", springtrap_win_3_game, Low)
     .acmd("effect_win3", springtrap_win_3_effect, Low)
     .acmd("sound_win3", springtrap_win_3_sound, Low)

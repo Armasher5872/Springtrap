@@ -19,3 +19,5 @@ MaSpoofs for balance suggestions
 KingAK for other sound effects and obtaining them from Dead by Daylight
 
 BombasticBusiness for alternate costumes
+
+JD for Springtrap/Glitchtraps announcer calls

@@ -32,10 +32,13 @@ pub const FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_HI_END: LuaConst = LuaConst::ne
 Springtrap Axe Instance Work ID
 
 Axe Flag Start: 0x2000000B
-Axe Float Start: 0x7
+Axe Float Start: 0x8
 Axe Int Start: 0x10000017
 */
-pub const WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_LINKED: LuaConst = LuaConst::new(0x2000000B);
+pub const WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_CAN_LINK: LuaConst = LuaConst::new(0x2000000B);
+pub const WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_LINKED: LuaConst = LuaConst::new(0x2000000C);
+pub const WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_GROUNDED: LuaConst = LuaConst::new(0x2000000D);
+pub const WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLOAT_SLOPE_ROT_ANGLE: LuaConst = LuaConst::new(0x8);
 pub const WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_INT_OBJECT_ID: LuaConst = LuaConst::new(0x10000017);
 
 //Springtrap Axe Status Kind
@@ -51,6 +54,7 @@ Phantom Flag Start: 0x20000011
 Phantom Float Start: 0x6
 Phantom Int Start: 0x1000000C
 */
+pub const WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLAG_CAN_EXPLODE: LuaConst = LuaConst::new(0x20000011);
 pub const WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_OWNER_INIT_LR: LuaConst = LuaConst::new(0x6);
 pub const WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_BB_SPEED_X: LuaConst = LuaConst::new(0x7);
 pub const WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_BB_SPEED_Y: LuaConst = LuaConst::new(0x8);

@@ -40,7 +40,6 @@ unsafe extern "C" fn koopajr_cannonball_on_search_event(_vtable: u64, weapon: &m
     let owner_id = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
     let owner_boma = sv_battle_object::module_accessor(owner_id);
     let owner_kind = utility::get_kind(&mut *owner_boma);
-    let collision_kind = (*log).collision_kind;
     let opponent_object_id = (*log).opponent_object_id;
     if owner_kind == *FIGHTER_KIND_GANON {
         if is_springtrap_slots(owner_boma) {
@@ -51,7 +50,9 @@ unsafe extern "C" fn koopajr_cannonball_on_search_event(_vtable: u64, weapon: &m
                     let opponent_battle_object_id = (*opponent_object).battle_object_id;
                     let opponent_boma = (*opponent_object).module_accessor;
                     let opponent_situation_kind = StatusModule::situation_kind(opponent_boma);
-                    if collision_kind == 1 && opponent_battle_object_id >> 0x1C == 0 && HitModule::get_status(opponent_boma, (*log).receiver_id as i32, 0) == 0 {
+                    if opponent_battle_object_id >> 0x1C == 0 
+                    && HitModule::get_status(opponent_boma, (*log).receiver_id as i32, 0) == 0
+                    && WorkModule::is_flag(boma, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLAG_CAN_EXPLODE) {
                         if [*WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_BB_IDLE, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_BB_FALL].contains(&status_kind) {
                             StatusModule::change_status_request(boma, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_EXPLODE, false);
                         }

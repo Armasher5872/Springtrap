@@ -58,10 +58,7 @@ unsafe extern "C" fn springtrap_special_hi_move_exec_status(fighter: &mut L2CFig
 
 unsafe extern "C" fn springtrap_special_hi_move_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
-    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-    if status_kind != *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_HI_END {
-        WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID);
-    }
+    WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID);
     EFFECT_OFF_KIND(fighter, Hash40::new("springtrap_static"), true, true);
     WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_MOVE_TIME);
     WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE);
@@ -70,10 +67,7 @@ unsafe extern "C" fn springtrap_special_hi_move_end_status(fighter: &mut L2CFigh
 
 unsafe extern "C" fn springtrap_special_hi_move_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
-    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-    if status_kind != *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_HI_END {
-        WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID);
-    }
+    WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID);
     EFFECT_OFF_KIND(fighter, Hash40::new("springtrap_static"), true, true);
     WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_MOVE_TIME);
     WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE);

@@ -6,6 +6,7 @@ use {
             module_init::*,
             springtrap_var::*,
         },
+        GLITCHTRAP_COLORS,
         MARKED_COLORS
     },
     smash::{

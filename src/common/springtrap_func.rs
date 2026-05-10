@@ -5,6 +5,10 @@ pub unsafe extern "C" fn is_springtrap_slots(boma: *mut BattleObjectModuleAccess
     MARKED_COLORS[WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) as usize]
 }
 
+pub unsafe extern "C" fn is_glitchtrap_slots(boma: *mut BattleObjectModuleAccessor) -> bool {
+    GLITCHTRAP_COLORS[WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) as usize]
+}
+
 pub unsafe extern "C" fn should_remove_axe(weapon: &mut L2CWeaponCommon) -> bool {
     let boma = weapon.module_accessor;
     let life = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
@@ -12,7 +16,11 @@ pub unsafe extern "C" fn should_remove_axe(weapon: &mut L2CWeaponCommon) -> bool
     let pos_y = PostureModule::pos_y(boma);
     let dead_range = dead_range(weapon.lua_state_agent);
     let remove_range = pos_x < dead_range.x || pos_x > dead_range.y || pos_y > dead_range.z || pos_y < dead_range.w;
+    let object_id = WorkModule::get_int(boma, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_INT_OBJECT_ID);
     if life <= 0 || remove_range {
+        return true;
+    }
+    if WorkModule::is_flag(boma, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_LINKED) && object_id == *BATTLE_OBJECT_ID_INVALID {
         return true;
     }
     return false;
@@ -73,18 +81,31 @@ pub unsafe extern "C" fn phantom_disappear(weapon: &mut L2CWeaponCommon, do_expl
 pub unsafe extern "C" fn remove_axe(weapon: &mut L2CWeaponCommon) {
     let boma = weapon.module_accessor;
     let owner_boma = get_owner_boma(weapon);
+    if WorkModule::is_flag(boma, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_LINKED) {
+        LinkModule::remove_model_constraint(boma, true);
+        if LinkModule::is_link(boma, *WEAPON_LINK_NO_CONSTRAINT) {
+            LinkModule::unlink(boma, *WEAPON_LINK_NO_CONSTRAINT);
+        }
+    }
     WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_INT_OBJECT_ID);
+    WorkModule::on_flag(boma, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_CAN_LINK);
     WorkModule::off_flag(boma, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_LINKED);
+    WorkModule::off_flag(boma, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_GROUNDED);
+    WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLOAT_SLOPE_ROT_ANGLE);
     WorkModule::off_flag(owner_boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_ACTIVE_AXE);
     notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
-    weapon.pop_lua_stack(1);
 }
 
 pub unsafe extern "C" fn remove_phantom(weapon: &mut L2CWeaponCommon) {
+    let boma = weapon.module_accessor;
     let owner_boma = get_owner_boma(weapon);
+    WorkModule::on_flag(boma, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLAG_CAN_EXPLODE);
+    WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_OWNER_INIT_LR);
+    WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_BB_SPEED_X);
+    WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_BB_SPEED_Y);
+    WorkModule::set_int(boma, 0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_INT_PHANTOM_TYPE);
     WorkModule::off_flag(owner_boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_ACTIVE_PHANTOM);
     notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
-    weapon.pop_lua_stack(1);
 }
 
 pub unsafe extern "C" fn should_use_special_lw_callback(fighter: &mut L2CFighterCommon) -> L2CValue {

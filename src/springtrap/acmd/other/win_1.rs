@@ -88,7 +88,7 @@ unsafe extern "C" fn springtrap_win_1_expression(_agent: &mut L2CAgentBase) {}
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .set_costume(get_costumes())
     .acmd("game_win1", springtrap_win_1_game, Low)
     .acmd("effect_win1", springtrap_win_1_effect, Low)
     .acmd("sound_win1", springtrap_win_1_sound, Low)

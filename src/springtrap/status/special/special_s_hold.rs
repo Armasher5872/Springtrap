@@ -30,6 +30,7 @@ unsafe extern "C" fn springtrap_special_s_hold_main_loop(fighter: &mut L2CFighte
     let boma = fighter.module_accessor;
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
+    let charge = WorkModule::get_float(fighter.module_accessor, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_CHARGE);
     if !StatusModule::is_changing(boma) {
         if situation_kind == *SITUATION_KIND_GROUND
         && prev_situation_kind == *SITUATION_KIND_AIR {
@@ -44,6 +45,7 @@ unsafe extern "C" fn springtrap_special_s_hold_main_loop(fighter: &mut L2CFighte
             MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_air_s_hold"), -1.0, 1.0, 0.0, false, false);
         }
     }
+    damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 5.0+(13.0*charge));
     if ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
         fighter.change_status(FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_S_ATTACK.into(), false.into());
     }
@@ -63,6 +65,7 @@ unsafe extern "C" fn springtrap_special_s_hold_exec_status(fighter: &mut L2CFigh
 unsafe extern "C" fn springtrap_special_s_hold_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
     if status_kind != *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_S_ATTACK {
+        damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0.0);
         WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_CHARGE);
     }
     0.into()
@@ -71,6 +74,7 @@ unsafe extern "C" fn springtrap_special_s_hold_end_status(fighter: &mut L2CFight
 unsafe extern "C" fn springtrap_special_s_hold_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
     if status_kind != *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_S_ATTACK {
+        damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0.0);
         WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_CHARGE);
     }
     0.into()

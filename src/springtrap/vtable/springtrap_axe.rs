@@ -1,5 +1,22 @@
 use super::*;
 
+unsafe extern "C" fn krool_ironball_on_despawn_event(_vtable: u64, weapon: *mut smash::app::Weapon) {
+    let boma = (*weapon).battle_object.module_accessor;
+    let agent = get_weapon_common_from_accessor(&mut *boma);
+    let owner_boma = get_owner_boma(agent);
+    if WorkModule::is_flag(boma, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_LINKED) {
+        LinkModule::remove_model_constraint(boma, true);
+        if LinkModule::is_link(boma, *WEAPON_LINK_NO_CONSTRAINT) {
+            LinkModule::unlink(boma, *WEAPON_LINK_NO_CONSTRAINT);
+        }
+    }
+    WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_INT_OBJECT_ID);
+    WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLOAT_SLOPE_ROT_ANGLE);
+    WorkModule::on_flag(boma, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_CAN_LINK);
+    WorkModule::off_flag(boma, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_LINKED);
+    WorkModule::off_flag(owner_boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_ACTIVE_AXE);
+}
+
 unsafe extern "C" fn krool_ironball_on_attack_event(vtable: u64, weapon: *mut smash::app::Weapon, collision_bitmask: u32) -> u64 {
     let boma = (*weapon).battle_object.module_accessor;
     let status_kind = StatusModule::status_kind(boma);
@@ -8,6 +25,9 @@ unsafe extern "C" fn krool_ironball_on_attack_event(vtable: u64, weapon: *mut sm
     let owner_kind = utility::get_kind(&mut *owner_boma);
     if owner_kind == *FIGHTER_KIND_GANON {
         if is_springtrap_slots(owner_boma) {
+            if collision_bitmask as i32 & *COLLISION_KIND_MASK_SHIELD != 0 {
+                WorkModule::off_flag(boma, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_CAN_LINK);
+            }
             *(weapon as *mut bool).add(0x90) = true;
         }
     }
@@ -24,7 +44,6 @@ unsafe extern "C" fn krool_ironball_on_search_event(_vtable: u64, weapon: &mut s
     let owner_id = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
     let owner_boma = sv_battle_object::module_accessor(owner_id);
     let owner_kind = utility::get_kind(&mut *owner_boma);
-    let collision_kind = (*log).collision_kind;
     let opponent_object_id = (*log).opponent_object_id;
     if owner_kind == *FIGHTER_KIND_GANON {
         if is_springtrap_slots(owner_boma) {
@@ -36,7 +55,9 @@ unsafe extern "C" fn krool_ironball_on_search_event(_vtable: u64, weapon: &mut s
                     let opponent_boma = (*opponent_battle_object).module_accessor;
                     let opponent_scale = PostureModule::scale(opponent_boma);
                     if StatusModule::status_kind(boma) == *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_FLY {
-                        if collision_kind == 1 && opponent_battle_object_id >> 0x1C == 0 && HitModule::get_status((*opponent_battle_object).module_accessor, (*log).receiver_id as i32, 0) == 0 {
+                        if opponent_battle_object_id >> 0x1C == 0 
+                        && HitModule::get_status((*opponent_battle_object).module_accessor, (*log).receiver_id as i32, 0) == 0
+                        && WorkModule::is_flag(boma, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_CAN_LINK) {
                             LinkModule::remove_model_constraint(boma, true);
                             if LinkModule::is_link(boma, *WEAPON_LINK_NO_CONSTRAINT) {
                                 LinkModule::unlink(boma, *WEAPON_LINK_NO_CONSTRAINT);
@@ -63,6 +84,7 @@ unsafe extern "C" fn krool_ironball_on_search_event(_vtable: u64, weapon: &mut s
 
 pub fn install() {
     weapon_initialise_module(*WEAPON_KIND_KROOL_IRONBALL, ModuleInitModules::SearchModule);
+    let _ = skyline::patching::Patch::in_text(0x51da808).data(krool_ironball_on_despawn_event as *const () as u64);
     let _ = skyline::patching::Patch::in_text(0x51da8a8).data(krool_ironball_on_attack_event as *const () as u64);
     let _ = skyline::patching::Patch::in_text(0x51da8d8).data(krool_ironball_on_search_event as *const () as u64);
 }

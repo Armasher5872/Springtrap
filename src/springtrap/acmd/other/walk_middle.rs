@@ -51,7 +51,7 @@ unsafe extern "C" fn springtrap_walk_middle_expression(agent: &mut L2CAgentBase)
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume([16, 17, 18, 19, 20, 21, 22, 23].to_vec())
+    .set_costume(get_costumes())
     .acmd("effect_walkmiddle", springtrap_walk_middle_effect, Low)
     .acmd("sound_walkmiddle", springtrap_walk_middle_sound, Low)
     .acmd("expression_walkmiddle", springtrap_walk_middle_expression, Low)

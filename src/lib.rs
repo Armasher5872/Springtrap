@@ -14,9 +14,11 @@ use {
 };
 
 pub static mut MARKED_COLORS: [bool; 256] = [false; 256];
+pub static mut GLITCHTRAP_COLORS: [bool; 256] = [false; 256];
 
 extern "C" fn mods_mounted(_ev: Event) {
     const MARKER_FILE: &str = "springtrap.marker";
+    const GLITCHTRAP_MARKER_FILE: &str = "glitchtrap.marker";
     let mut lowest_color: i32 = -1;
     let mut marked_slots: Vec<i32> = vec![];
     for x in 0..256 {
@@ -29,6 +31,19 @@ extern "C" fn mods_mounted(_ev: Event) {
                 MARKED_COLORS[x as usize] = true;
                 if lowest_color == -1 {
                     lowest_color = x as _ ;
+                }
+            }
+        }
+    }
+    for y in 0..256 {
+        if let Ok(_) = read(format!(
+            "mods:/fighter/ganon/model/body/c{:02}/{}",
+            y, GLITCHTRAP_MARKER_FILE
+        )) {
+            unsafe {
+                GLITCHTRAP_COLORS[y as usize] = true;
+                if lowest_color == -1 {
+                    lowest_color = y as _ ;
                 }
             }
         }
@@ -58,9 +73,9 @@ extern "C" fn mods_mounted(_ev: Event) {
     update_float_2(*FIGHTER_KIND_GANON, marked_slots.clone(), (hash40("run_speed_max"), 0, 1.55)); //Vanilla Value is 1.34
     update_float_2(*FIGHTER_KIND_GANON, marked_slots.clone(), (hash40("jump_speed_x_mul"), 0, 0.8)); //Vanilla Value is 0.75
     update_float_2(*FIGHTER_KIND_GANON, marked_slots.clone(), (hash40("jump_speed_x_max"), 0, 1.77)); //Vanilla Value is 1.8
-    update_float_2(*FIGHTER_KIND_GANON, marked_slots.clone(), (hash40("jump_initial_y"), 0, 20.35)); //Vanilla Value is 14.0195
+    update_float_2(*FIGHTER_KIND_GANON, marked_slots.clone(), (hash40("jump_initial_y"), 0, 12.22)); //Vanilla Value is 14.0195
     update_float_2(*FIGHTER_KIND_GANON, marked_slots.clone(), (hash40("jump_y"), 0, 33.03)); //Vanilla Value is 25.49
-    update_float_2(*FIGHTER_KIND_GANON, marked_slots.clone(), (hash40("mini_jump_y"), 0, 12.55)); //Vanilla Value is 12.24
+    update_float_2(*FIGHTER_KIND_GANON, marked_slots.clone(), (hash40("mini_jump_y"), 0, 9.55)); //Vanilla Value is 12.24
     update_float_2(*FIGHTER_KIND_GANON, marked_slots.clone(), (hash40("jump_aerial_y"), 0, 30.25)); //Vanilla Value is 26
     update_float_2(*FIGHTER_KIND_GANON, marked_slots.clone(), (hash40("air_accel_x_mul"), 0, 0.03)); //Vanilla Value is 0.03
     update_float_2(*FIGHTER_KIND_GANON, marked_slots.clone(), (hash40("air_speed_x_stable"), 0, 1.09)); //Vanilla Value is 0.83
@@ -80,12 +95,14 @@ extern "C" fn mods_mounted(_ev: Event) {
     update_float_2(*FIGHTER_KIND_GANON, marked_slots.clone(), (hash40("combo_attack_13_end"), 0, 35.0)); //Vanilla Value is 0
     update_int_2(*FIGHTER_KIND_GANON, marked_slots.clone(), (hash40("squat_walk_type"), 0, 1)); //Vanilla Value is 0 (false)
     //CSK Stuff
+    add_narration_characall_entry("vc_narration_characall_springtrap");
+    add_narration_characall_entry("vc_narration_characall_glitchtrap");
     add_chara_db_entry_info(
         CharacterDatabaseEntry {
             ui_chara_id: hash40("ui_chara_springtrap"), 
             fighter_kind: Hash40Type::Overwrite(0x122AF1B944 /* Hash40 of fighter_kind_ganon */), 
             fighter_kind_corps: Hash40Type::Overwrite(0x122AF1B944 /* Hash40 of fighter_kind_ganon */), 
-            ui_series_id: Hash40Type::Overwrite(0xe53498e68 /* Hash40 of ui_series_fnaf */), 
+            ui_series_id: Hash40Type::Overwrite(0x20f76c22c0 /* Hash40 of ui_series_five_nights_at_freddys */), 
             fighter_type: Hash40Type::Overwrite(0x1353795179 /* Hash40 of fighter_type_normal */), 
             alt_chara_id: Hash40Type::Overwrite(0x2302D482A /* Hash40 of -1 */), 
             shop_item_tag: Hash40Type::Overwrite(0x2302D482A /* Hash40 of -1 */), 
@@ -118,13 +135,13 @@ extern "C" fn mods_mounted(_ev: Event) {
             color_num: UnsignedByteType::Overwrite(color_num as _),
             extra_hash_maps: Hash40Map::Overwrite(HashMap::from([
                 (0x1337FC912E /* Hash40 of characall_label_c00 */, Hash40Type::Overwrite(hash40("vc_narration_characall_springtrap"))),
-                (0x1340FBA1B8 /* Hash40 of characall_label_c01 */, Hash40Type::Overwrite(0x0)),
-                (0x13D9F2F002 /* Hash40 of characall_label_c02 */, Hash40Type::Overwrite(0x0)),
-                (0x13AEF5C094 /* Hash40 of characall_label_c03 */, Hash40Type::Overwrite(0x0)),
-                (0x1330915537 /* Hash40 of characall_label_c04 */, Hash40Type::Overwrite(0x0)),
-                (0x13479665A1 /* Hash40 of characall_label_c05 */, Hash40Type::Overwrite(0x0)),
-                (0x13DE9F341B /* Hash40 of characall_label_c06 */, Hash40Type::Overwrite(0x0)),
-                (0x13A998048D /* Hash40 of characall_label_c07 */, Hash40Type::Overwrite(0x0)),
+                (0x1340FBA1B8 /* Hash40 of characall_label_c01 */, Hash40Type::Overwrite(hash40("vc_narration_characall_springtrap"))),
+                (0x13D9F2F002 /* Hash40 of characall_label_c02 */, Hash40Type::Overwrite(hash40("vc_narration_characall_springtrap"))),
+                (0x13AEF5C094 /* Hash40 of characall_label_c03 */, Hash40Type::Overwrite(hash40("vc_narration_characall_springtrap"))),
+                (0x1330915537 /* Hash40 of characall_label_c04 */, Hash40Type::Overwrite(hash40("vc_narration_characall_springtrap"))),
+                (0x13479665A1 /* Hash40 of characall_label_c05 */, Hash40Type::Overwrite(hash40("vc_narration_characall_springtrap"))),
+                (0x13DE9F341B /* Hash40 of characall_label_c06 */, Hash40Type::Overwrite(hash40("vc_narration_characall_glitchtrap"))),
+                (0x13A998048D /* Hash40 of characall_label_c07 */, Hash40Type::Overwrite(hash40("vc_narration_characall_glitchtrap"))),
                 (0x1B8B13E500 /* Hash40 of characall_label_article_c00 */, Hash40Type::Overwrite(0x0)),
                 (0x1BFC14D596 /* Hash40 of characall_label_article_c01 */, Hash40Type::Overwrite(0x0)),
                 (0x1B651D842C /* Hash40 of characall_label_article_c02 */, Hash40Type::Overwrite(0x0)),
@@ -264,7 +281,6 @@ extern "C" fn mods_mounted(_ev: Event) {
         spirits_eye_visible: BoolType::Overwrite(true), 
         ..Default::default()
     });
-    add_narration_characall_entry("vc_narration_characall_springtrap");
     add_bgm_db_entry_info(&BgmDatabaseRootEntry {
         ui_bgm_id: hash40("ui_bgm_zz09_f_springtrap"),
         clone_from_ui_bgm_id: Some(hash40("ui_bgm_z20_f_ganon")),

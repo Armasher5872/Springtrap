@@ -6,13 +6,16 @@ unsafe extern "C" fn springtrap_axe_hit_stick_pre_status(weapon: &mut L2CWeaponC
 }
 
 unsafe extern "C" fn springtrap_axe_hit_stick_init_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    WorkModule::off_flag(weapon.module_accessor, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_CAN_LINK);
     sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
     sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
     0.into()
 }
 
 unsafe extern "C" fn springtrap_axe_hit_stick_main_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    MotionModule::change_motion(weapon.module_accessor, Hash40::new("hit_stick"), 0.0, 1.0, false, 0.0, false, false);
+    let boma = weapon.module_accessor;
+    HitModule::set_whole(boma, HitStatus(*HIT_STATUS_XLU), 0);
+    MotionModule::change_motion(boma, Hash40::new("hit_stick"), 0.0, 1.0, false, 0.0, false, false);
     weapon.fastshift(L2CValue::Ptr(springtrap_axe_hit_stick_main_loop as *const () as _))
 }
 
@@ -27,13 +30,25 @@ unsafe extern "C" fn springtrap_axe_hit_stick_main_loop(weapon: &mut L2CWeaponCo
     }
     if object_id != *BATTLE_OBJECT_ID_INVALID {
         let opponent_boma = sv_battle_object::module_accessor(object_id as u32);
+        let opponent_kind = utility::get_kind(&mut *opponent_boma);
         let opponent_status_kind = StatusModule::status_kind(opponent_boma);
         if [
-            *FIGHTER_STATUS_KIND_DEAD, *FIGHTER_STATUS_KIND_DEMO, *FIGHTER_STATUS_KIND_WIN, *FIGHTER_STATUS_KIND_LOSE, *FIGHTER_STATUS_KIND_DOLLY_STAGE_DEAD, *FIGHTER_STATUS_KIND_ENTRY, *FIGHTER_STATUS_KIND_MISS_FOOT, *FIGHTER_STATUS_KIND_PLATE_WAIT,
-            *FIGHTER_STATUS_KIND_ROULETTE_FURAFURA, *FIGHTER_STATUS_KIND_ROULETTE
+            *FIGHTER_STATUS_KIND_DEAD, *FIGHTER_STATUS_KIND_DEMO, *FIGHTER_STATUS_KIND_WIN, *FIGHTER_STATUS_KIND_LOSE, *FIGHTER_STATUS_KIND_DOLLY_STAGE_DEAD, *FIGHTER_STATUS_KIND_ENTRY, *FIGHTER_STATUS_KIND_MISS_FOOT, 
+            *FIGHTER_STATUS_KIND_PLATE_WAIT, *FIGHTER_STATUS_KIND_ROULETTE_FURAFURA, *FIGHTER_STATUS_KIND_ROULETTE
         ].contains(&opponent_status_kind) {
             remove_axe(weapon);
         }
+        if [*FIGHTER_KIND_PZENIGAME, *FIGHTER_KIND_PFUSHIGISOU, *FIGHTER_KIND_PLIZARDON, *FIGHTER_KIND_EFLAME, *FIGHTER_KIND_ELIGHT].contains(&opponent_kind) 
+        && [
+            *FIGHTER_STATUS_KIND_SPECIAL_LW, *FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_LW_STANDBY, *FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_LW_OUT, *FIGHTER_PFUSHIGISOU_STATUS_KIND_SPECIAL_LW_STANDBY,
+            *FIGHTER_PFUSHIGISOU_STATUS_KIND_SPECIAL_LW_OUT, *FIGHTER_PLIZARDON_STATUS_KIND_SPECIAL_LW_STANDBY, *FIGHTER_PLIZARDON_STATUS_KIND_SPECIAL_LW_OUT, *FIGHTER_EFLAME_STATUS_KIND_SPECIAL_LW_STANDBY,
+            *FIGHTER_EFLAME_STATUS_KIND_SPECIAL_LW_OUT, *FIGHTER_ELIGHT_STATUS_KIND_SPECIAL_LW_STANDBY, *FIGHTER_ELIGHT_STATUS_KIND_SPECIAL_LW_OUT
+        ].contains(&opponent_status_kind) {
+            remove_axe(weapon);
+        }
+    }
+    else {
+        remove_axe(weapon);
     }
     if owner_status_kind == *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_LOOP {
         weapon.change_status(WEAPON_SPRINGTRAP_AXE_STATUS_KIND_RECALL.into(), false.into());

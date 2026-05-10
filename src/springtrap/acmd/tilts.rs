@@ -30,6 +30,36 @@ unsafe extern "C" fn springtrap_forward_tilt_effect(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn springtrap_forward_tilt_hi_effect(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 11.0);
+    if is_excute(agent) {
+        FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("springtrap_knife_wind"), Hash40::new("top"), 0, 20.8, 20, -40, 0, 0, 0.3, true);
+        EffectModule::enable_sync_init_pos_last(boma);
+    }
+    frame(lua_state, 13.0);
+    if is_excute(agent) {
+        EFFECT(agent, Hash40::new("springtrap_spark"), Hash40::new("top"), 0, 18, 18, 0, 0, 0, 0.3, 0, 0, 0, 0, 0, 0, true);
+    }
+}
+
+unsafe extern "C" fn springtrap_forward_tilt_lw_effect(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 11.0);
+    if is_excute(agent) {
+        FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("springtrap_knife_wind"), Hash40::new("top"), 0, -4.8, 20, 40, 0, 0, 0.3, true);
+        EffectModule::enable_sync_init_pos_last(boma);
+    }
+    frame(lua_state, 13.0);
+    if is_excute(agent) {
+        EFFECT(agent, Hash40::new("springtrap_spark"), Hash40::new("top"), 0, -2, 18, 0, 0, 0, 0.3, 0, 0, 0, 0, 0, 0, true);
+    }
+}
+
 unsafe extern "C" fn springtrap_forward_tilt_sound(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     frame(lua_state, 11.0);
@@ -204,6 +234,14 @@ pub fn install() {
     .acmd("effect_attacks3", springtrap_forward_tilt_effect, High)
     .acmd("sound_attacks3", springtrap_forward_tilt_sound, High)
     .acmd("expression_attacks3", springtrap_forward_tilt_expression, High)
+    .acmd("game_attacks3hi", springtrap_forward_tilt_game, High)
+    .acmd("effect_attacks3hi", springtrap_forward_tilt_hi_effect, High)
+    .acmd("sound_attacks3hi", springtrap_forward_tilt_sound, High)
+    .acmd("expression_attacks3hi", springtrap_forward_tilt_expression, High)
+    .acmd("game_attacks3lw", springtrap_forward_tilt_game, High)
+    .acmd("effect_attacks3lw", springtrap_forward_tilt_lw_effect, High)
+    .acmd("sound_attacks3lw", springtrap_forward_tilt_sound, High)
+    .acmd("expression_attacks3lw", springtrap_forward_tilt_expression, High)
     .acmd("game_attackhi3", springtrap_up_tilt_game, High)
     .acmd("effect_attackhi3", springtrap_up_tilt_effect, High)
     .acmd("sound_attackhi3", springtrap_up_tilt_sound, High)

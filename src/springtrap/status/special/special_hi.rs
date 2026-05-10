@@ -12,9 +12,10 @@ unsafe extern "C" fn springtrap_special_hi_init_status(fighter: &mut L2CFighterC
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     if situation_kind == *SITUATION_KIND_AIR {
         GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_NONE);
+        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_AIR_STOP);
         KineticModule::clear_speed_all(boma);
-        KineticModule::unable_energy_all(boma);
+        KineticModule::unable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+        KineticModule::unable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
     }
     else {
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_MOTION);
@@ -98,8 +99,8 @@ unsafe extern "C" fn springtrap_special_hi_end_status(fighter: &mut L2CFighterCo
         JostleModule::set_status(boma, true);
         WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE);
         WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_MOVE_TIME);
-        WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID);
     }
+    WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID);
     EFFECT_OFF_KIND(fighter, Hash40::new("springtrap_static"), true, true);
     0.into()
 }
@@ -115,8 +116,8 @@ unsafe extern "C" fn springtrap_special_hi_exit_status(fighter: &mut L2CFighterC
         JostleModule::set_status(boma, true);
         WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE);
         WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_MOVE_TIME);
-        WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID);
     }
+    WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID);
     EFFECT_OFF_KIND(fighter, Hash40::new("springtrap_static"), true, true);
     0.into()
 }

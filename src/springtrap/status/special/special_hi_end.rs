@@ -10,7 +10,10 @@ unsafe extern "C" fn springtrap_special_hi_end_pre_status(fighter: &mut L2CFight
 unsafe extern "C" fn springtrap_special_hi_end_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    KineticModule::clear_speed_all(boma);
+    sv_kinetic_energy!(reset_energy, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, *ENERGY_STOP_RESET_TYPE_DAMAGE_AIR, 0.0, 0.0, 0.0, 0.0, 0.0);
+    sv_kinetic_energy!(reset_energy, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, *ENERGY_STOP_RESET_TYPE_DAMAGE_KNOCK_BACK, 0.0, 0.0, 0.0, 0.0, 0.0);
+    sv_kinetic_energy!(reset_energy, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, *ENERGY_STOP_RESET_TYPE_AIR, 0.0, 0.0, 0.0, 0.0, 0.0);
+    sv_kinetic_energy!(reset_energy, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, *ENERGY_STOP_RESET_TYPE_AIR_BRAKE, 0.0, 0.0, 0.0, 0.0, 0.0);
     if situation_kind == *SITUATION_KIND_AIR {
         fighter.set_situation(SITUATION_KIND_AIR.into());
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_AIR_STOP);
