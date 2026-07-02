@@ -24,9 +24,14 @@ unsafe extern "C" fn springtrap_forward_tilt_effect(agent: &mut L2CAgentBase) {
         EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("springtrap_knife_wind"), Hash40::new("top"), 0, 8.8, 20, 0, 0, 0, 0.3, true);
         EffectModule::enable_sync_init_pos_last(boma);
     }
+    frame(lua_state, 12.0);
+    if is_excute(agent) {
+        let light = EffectModule::req_follow(boma, Hash40::new("springtrap_knife_light"), Hash40::new("haver"), &Vector3f{x: 0.0, y: 0.0, z: -10.0}, &Vector3f{x: 0.0, y: 0.0, z: 90.0}, 1.0, true, 0, 0, 0, 0, 0, true, true);
+        EffectModule::set_scale(boma, light as u32, &Vector3f{x: 1.0, y: 1.0, z: 3.0});
+    }
     frame(lua_state, 13.0);
     if is_excute(agent) {
-        EFFECT(agent, Hash40::new("springtrap_spark"), Hash40::new("top"), 0, 9, 18, 0, 0, 0, 0.3, 0, 0, 0, 0, 0, 0, true);
+        EFFECT(agent, Hash40::new("springtrap_spark"), Hash40::new("top"), 0, 9, 18, 0, 0, 0, 0.2, 0, 0, 0, 0, 0, 0, true);
     }
 }
 
@@ -38,6 +43,10 @@ unsafe extern "C" fn springtrap_forward_tilt_hi_effect(agent: &mut L2CAgentBase)
         FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
         EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("springtrap_knife_wind"), Hash40::new("top"), 0, 20.8, 20, -40, 0, 0, 0.3, true);
         EffectModule::enable_sync_init_pos_last(boma);
+    }
+    frame(lua_state, 12.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("springtrap_knife_light"), Hash40::new("haver"), 0, 2, 0, 0, 180, -90, 1, true);
     }
     frame(lua_state, 13.0);
     if is_excute(agent) {
@@ -53,6 +62,10 @@ unsafe extern "C" fn springtrap_forward_tilt_lw_effect(agent: &mut L2CAgentBase)
         FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
         EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("springtrap_knife_wind"), Hash40::new("top"), 0, -4.8, 20, 40, 0, 0, 0.3, true);
         EffectModule::enable_sync_init_pos_last(boma);
+    }
+    frame(lua_state, 12.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("springtrap_knife_light"), Hash40::new("haver"), 0, 2, 0, 0, 180, -90, 1, true);
     }
     frame(lua_state, 13.0);
     if is_excute(agent) {

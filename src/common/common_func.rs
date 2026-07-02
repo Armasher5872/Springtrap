@@ -35,3 +35,24 @@ pub fn get_costumes() -> Vec<usize> {
     }
     costumes.to_vec()
 }
+
+pub unsafe extern "C" fn set_front_cliff_hangdata(boma: &mut BattleObjectModuleAccessor, x: f32, y: f32) {
+    let ground_module = *(boma as *mut BattleObjectModuleAccessor as *const u64).add(0x58/0x8);
+    let ground_data = *((ground_module+0x28) as *mut *mut f32);
+    *ground_data.add(0x530/0x4) = x;
+    *ground_data.add(0x534/0x4) = y;
+}
+
+pub unsafe extern "C" fn set_back_cliff_hangdata(boma: &mut BattleObjectModuleAccessor, x: f32, y: f32) {
+    let ground_module = *(boma as *mut BattleObjectModuleAccessor as *const u64).add(0x58/0x8);
+    let ground_data = *((ground_module+0x28) as *mut *mut f32);
+    *ground_data.add(0x540/0x4) = x;
+    *ground_data.add(0x544/0x4) = y;
+}
+
+pub unsafe extern "C" fn set_center_cliff_hangdata(boma: &mut BattleObjectModuleAccessor, x: f32, y: f32) {
+    let ground_module = *(boma as *mut BattleObjectModuleAccessor as *const u64).add(0x58/0x8);
+    let ground_data = *((ground_module+0x28) as *mut *mut f32);
+    *ground_data.add(0x520/0x4) = x;
+    *ground_data.add(0x524/0x4) = y;
+}

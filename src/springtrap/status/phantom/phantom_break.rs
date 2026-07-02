@@ -27,11 +27,7 @@ unsafe extern "C" fn springtrap_phantom_phantom_break_main_status(weapon: &mut L
 
 unsafe extern "C" fn springtrap_phantom_phantom_break_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
-    let pos_x = PostureModule::pos_x(boma);
-    let pos_y = PostureModule::pos_y(boma);
-    let pos_z = PostureModule::pos_z(boma);
     let life = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-    PostureModule::set_pos(boma, &Vector3f{x: pos_x, y: pos_y-3.0, z: pos_z});
     if should_remove_phantom(weapon) {
         remove_phantom(weapon);
     }
@@ -61,7 +57,7 @@ unsafe extern "C" fn springtrap_phantom_phantom_break_exit_status(weapon: &mut L
 }
 
 pub fn install() {
-    Agent::new("ganon_phantom")
+    Agent::new("ganon_cannonballcloned")
     .set_costume(get_costumes())
     .status(Pre, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_BREAK, springtrap_phantom_phantom_break_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_BREAK, springtrap_phantom_phantom_break_init_status)

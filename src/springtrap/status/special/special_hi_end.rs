@@ -2,7 +2,7 @@ use super::*;
 
 unsafe extern "C" fn springtrap_special_hi_end_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
-    StatusModule::init_settings(boma, SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_NONE as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLOAT, 0);
+    StatusModule::init_settings(boma, SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_NONE as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLOAT, 0);
     FighterStatusModuleImpl::set_fighter_status_data(boma, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, 0, 0, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_HI as u32, 0);
     0.into()
 }
@@ -47,6 +47,7 @@ unsafe extern "C" fn springtrap_special_hi_end_main_loop(fighter: &mut L2CFighte
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
     let current_frame = fighter.global_table[CURRENT_FRAME].get_f32();
+    let lr = PostureModule::lr(boma);
     let effect_id = WorkModule::get_int(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID);
     if CancelModule::is_enable_cancel(boma) {
         if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
@@ -79,6 +80,14 @@ unsafe extern "C" fn springtrap_special_hi_end_main_loop(fighter: &mut L2CFighte
             fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
             return 1.into();
         }
+    }
+    if lr == -1.0 {
+        set_front_cliff_hangdata(&mut *boma, 23.0, 17.0);
+        set_center_cliff_hangdata(&mut *boma, 6.0, 15.0);
+    }
+    else {
+        set_back_cliff_hangdata(&mut *boma, 23.0, 17.0);
+        set_center_cliff_hangdata(&mut *boma, -6.0, 15.0);
     }
     EffectModule::set_alpha(boma, effect_id as u32, 0.5-(current_frame/60.0));
     if MotionModule::is_end(boma) {

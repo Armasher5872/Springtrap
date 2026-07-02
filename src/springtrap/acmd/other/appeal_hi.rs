@@ -2,10 +2,14 @@ use super::*;
 
 unsafe extern "C" fn springtrap_up_taunt_effect(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     frame(lua_state, 60.0);
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("sys_turn_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.6, 20, 0, 20, 0, 0, 0, false);
         LAST_EFFECT_SET_ALPHA(agent, 0.5);
+        if is_glitchtrap_slots(boma) {
+            EFFECT_FOLLOW(agent, Hash40::new("springtrap_phantom_summon"), Hash40::new("top"), 0, 18, 0, 0, 90, 0, 0.5, true);
+        }
     }
     frame(lua_state, 65.0);
     if is_excute(agent) {

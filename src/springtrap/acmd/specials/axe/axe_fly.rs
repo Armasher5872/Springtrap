@@ -30,7 +30,7 @@ unsafe extern "C" fn springtrap_axe_fly_sound(agent: &mut L2CAgentBase) {
 }
 
 pub fn install() {
-    Agent::new("ganon_axe")
+    Agent::new("ganon_ironballcloned")
     .set_costume(get_costumes())
     .acmd("game_fly", springtrap_axe_fly_acmd, Low)
     .acmd("effect_fly", springtrap_axe_fly_effect, Low)

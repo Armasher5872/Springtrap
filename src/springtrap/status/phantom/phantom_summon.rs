@@ -22,6 +22,7 @@ unsafe extern "C" fn springtrap_phantom_phantom_summon_init_status(weapon: &mut 
     WorkModule::set_int(boma, phantom_type, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_INT_PHANTOM_TYPE);
     PostureModule::set_pos(boma, &Vector3f{x: owner_pos_x+(18.0*owner_lr), y: owner_pos_y+3.0, z: owner_pos_z});
     ModelModule::set_scale(boma, 1.75);
+    GroundModule::set_rhombus_offset(boma, &Vector2f{x: 0.0, y: 3.0});
     if phantom_type == *SPRINGTRAP_PHANTOM_TYPE_FOXY {
         StatusModule::change_status_force(boma, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_FOXY_ATTACK, false);
     }
@@ -53,21 +54,11 @@ unsafe extern "C" fn springtrap_phantom_phantom_summon_main_status(weapon: &mut 
 
 unsafe extern "C" fn springtrap_phantom_phantom_summon_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
-    let pos_x = PostureModule::pos_x(boma);
-    let pos_y = PostureModule::pos_y(boma);
-    let pos_z = PostureModule::pos_z(boma);
-    let phantom_type = WorkModule::get_int(boma, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_INT_PHANTOM_TYPE);
-    PostureModule::set_pos(boma, &Vector3f{x: pos_x, y: pos_y-3.0, z: pos_z});
     if should_remove_phantom(weapon) {
         remove_phantom(weapon);
     }
     if MotionModule::is_end(boma) {
-        if phantom_type == *SPRINGTRAP_PHANTOM_TYPE_FREDDY {
-            weapon.change_status(WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_FREDDY_WALK.into(), false.into());
-        }
-        if phantom_type == *SPRINGTRAP_PHANTOM_TYPE_CHICA {
-            weapon.change_status(WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_CHICA_WALK.into(), false.into()); 
-        }
+        weapon.change_status(WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_MOVE.into(), false.into());
     }
     0.into()
 }
@@ -85,7 +76,7 @@ unsafe extern "C" fn springtrap_phantom_phantom_summon_exit_status(_weapon: &mut
 }
 
 pub fn install() {
-    Agent::new("ganon_phantom")
+    Agent::new("ganon_cannonballcloned")
     .set_costume(get_costumes())
     .status(Pre, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_SUMMON, springtrap_phantom_phantom_summon_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_SUMMON, springtrap_phantom_phantom_summon_init_status)

@@ -9,11 +9,12 @@ unsafe extern "C" fn springtrap_phantom_bb_fall_init_status(weapon: &mut L2CWeap
     let boma = weapon.module_accessor;
     let speed_x = WorkModule::get_float(boma, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_BB_SPEED_X);
     let speed_y = WorkModule::get_float(boma, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_BB_SPEED_Y);
-    WorkModule::set_int(boma, -1, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_INT_GRAVITY_FRAME);
-    KineticModule::enable_energy(boma, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
+    sv_kinetic_energy!(reset_energy, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0, 0.0, 0.0, 0.0);
     sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x, speed_y);
     sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, -0.065);
-    sv_kinetic_energy!(set_brake, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.04);
+    KineticModule::enable_energy(boma, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
+    KineticModule::enable_energy(boma, *WEAPON_KOOPAJR_CANNONBALL_KINETIC_ENERGY_ID_GRAVITY);
+    WorkModule::set_int(boma, -1, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_INT_GRAVITY_FRAME);
     0.into()
 }
 
@@ -29,18 +30,13 @@ unsafe extern "C" fn springtrap_phantom_bb_fall_main_status(weapon: &mut L2CWeap
 unsafe extern "C" fn springtrap_phantom_bb_fall_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
     let frame = weapon.global_table[CURRENT_FRAME].get_f32();
-    let pos_x = PostureModule::pos_x(boma);
-    let pos_y = PostureModule::pos_y(boma);
-    let pos_z = PostureModule::pos_z(boma);
     let life = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     if should_remove_phantom(weapon) {
         remove_phantom(weapon);
     }
     if GroundModule::is_floor_touch_line(boma, *GROUND_TOUCH_FLAG_DOWN as u32) && frame > 1.0 {
         weapon.set_situation(SITUATION_KIND_GROUND.into());
-        notify_event_msc_cmd!(weapon, Hash40::new_raw(0x2f89bbb63a));
-        WorkModule::on_flag(boma, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_FLAG_HOP);
-        PostureModule::set_pos(boma, &Vector3f{x: pos_x, y: pos_y-2.0, z: pos_z});
+        GroundModule::set_correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
         weapon.change_status(WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_BB_IDLE.into(), false.into());
     }
     if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
@@ -63,22 +59,16 @@ unsafe extern "C" fn springtrap_phantom_bb_fall_exec_status(weapon: &mut L2CWeap
     0.into()
 }
 
-unsafe extern "C" fn springtrap_phantom_bb_fall_end_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    let boma = weapon.module_accessor;
-    WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_BB_SPEED_X);
-    WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_BB_SPEED_Y);
+unsafe extern "C" fn springtrap_phantom_bb_fall_end_status(_weapon: &mut L2CWeaponCommon) -> L2CValue {
     0.into()
 }
 
-unsafe extern "C" fn springtrap_phantom_bb_fall_exit_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    let boma = weapon.module_accessor;
-    WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_BB_SPEED_X);
-    WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_BB_SPEED_Y);
+unsafe extern "C" fn springtrap_phantom_bb_fall_exit_status(_weapon: &mut L2CWeaponCommon) -> L2CValue {
     0.into()
 }
 
 pub fn install() {
-    Agent::new("ganon_phantom")
+    Agent::new("ganon_cannonballcloned")
     .set_costume(get_costumes())
     .status(Pre, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_BB_FALL, springtrap_phantom_bb_fall_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_BB_FALL, springtrap_phantom_bb_fall_init_status)

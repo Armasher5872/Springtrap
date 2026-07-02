@@ -15,6 +15,7 @@ unsafe extern "C" fn springtrap_cliff_attack_game(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn springtrap_cliff_attack_effect(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     frame(lua_state, 14.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("havel"), 0, 0, 4, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
@@ -23,7 +24,12 @@ unsafe extern "C" fn springtrap_cliff_attack_effect(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), -1, 0, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, false);
         EFFECT(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), 0, 2.8, -10, 0, 0, 0, 1.6, 0, 0, 0, 0, 0, 0, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.75, 1.0, 0.40);
+        if is_glitchtrap_slots(boma) {
+            LAST_EFFECT_SET_COLOR(agent, 1.0, 0.4, 0.75);
+        }
+        else {
+            LAST_EFFECT_SET_COLOR(agent, 0.75, 1.0, 0.40);
+        }
     }
     frame(lua_state, 24.0);
     if is_excute(agent) {

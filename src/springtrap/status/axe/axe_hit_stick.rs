@@ -107,7 +107,7 @@ unsafe extern "C" fn springtrap_axe_hit_stick_exit_status(weapon: &mut L2CWeapon
 }
 
 pub fn install() {
-    Agent::new("ganon_axe")
+    Agent::new("ganon_ironballcloned")
     .set_costume(get_costumes())
     .status(Pre, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_HIT_STICK, springtrap_axe_hit_stick_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_HIT_STICK, springtrap_axe_hit_stick_init_status)

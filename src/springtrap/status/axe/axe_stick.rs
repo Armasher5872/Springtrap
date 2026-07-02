@@ -11,15 +11,6 @@ unsafe extern "C" fn springtrap_axe_stick_pre_status(weapon: &mut L2CWeaponCommo
 
 unsafe extern "C" fn springtrap_axe_stick_init_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
-    sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
-    sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
-    WorkModule::off_flag(boma, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_CAN_LINK);
-    WorkModule::set_int(boma, 900, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-    0.into()
-}
-
-unsafe extern "C" fn springtrap_axe_stick_main_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    let boma = weapon.module_accessor;
     let lr = PostureModule::lr(boma);
     if GroundModule::is_touch(boma, *GROUND_TOUCH_FLAG_DOWN as u32) {
         let down_touch_normal = GroundModule::get_touch_normal(boma, *GROUND_TOUCH_FLAG_DOWN as u32);
@@ -42,6 +33,16 @@ unsafe extern "C" fn springtrap_axe_stick_main_status(weapon: &mut L2CWeaponComm
         println!("Right Touch Angle: {}", right_touch_angle);
         WorkModule::set_float(boma, right_touch_angle, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLOAT_SLOPE_ROT_ANGLE);
     }
+    GroundModule::set_rhombus_offset(boma, &Vector2f{x: 0.0, y: 2.0});
+    sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
+    sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
+    WorkModule::off_flag(boma, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_CAN_LINK);
+    WorkModule::set_int(boma, 900, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    0.into()
+}
+
+unsafe extern "C" fn springtrap_axe_stick_main_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    let boma = weapon.module_accessor;
     HitModule::set_whole(boma, HitStatus(*HIT_STATUS_XLU), 0);
     MotionModule::change_motion(boma, Hash40::new("stick"), 0.0, 1.0, false, 0.0, false, false);
     weapon.fastshift(L2CValue::Ptr(springtrap_axe_stick_main_loop as *const () as _))
@@ -82,7 +83,7 @@ unsafe extern "C" fn springtrap_axe_stick_exit_status(_weapon: &mut L2CWeaponCom
 }
 
 pub fn install() {
-    Agent::new("ganon_axe")
+    Agent::new("ganon_ironballcloned")
     .set_costume(get_costumes())
     .status(Pre, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_STICK, springtrap_axe_stick_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_STICK, springtrap_axe_stick_init_status)

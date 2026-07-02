@@ -8,9 +8,10 @@ unsafe extern "C" fn springtrap_axe_fly_pre_status(weapon: &mut L2CWeaponCommon)
 unsafe extern "C" fn springtrap_axe_fly_init_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
     let owner_boma = get_owner_boma(weapon);
+    let owner_agent = get_fighter_common_from_accessor(&mut *owner_boma);
     let owner_lr = PostureModule::lr(owner_boma);
-    let owner_stick_x = ControlModule::get_stick_x(owner_boma);
-    let owner_stick_y = ControlModule::get_stick_y(owner_boma);
+    let owner_stick_x = owner_agent.global_table[STICK_X].get_f32();
+    let owner_stick_y = owner_agent.global_table[STICK_Y].get_f32();
     let is_charged = WorkModule::is_flag(owner_boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CHARGED);
     let life = WorkModule::get_param_int(boma, hash40("param_axe"), hash40("life"));
     let speed_x_min = WorkModule::get_param_float(boma, hash40("param_axe"), hash40("speed_x_min"));
@@ -21,12 +22,16 @@ unsafe extern "C" fn springtrap_axe_fly_init_status(weapon: &mut L2CWeaponCommon
     let brake_x_max = WorkModule::get_param_float(boma, hash40("param_axe"), hash40("brake_x_max"));
     let gravity_min = WorkModule::get_param_float(boma, hash40("param_axe"), hash40("gravity_min"));
     let gravity_max = WorkModule::get_param_float(boma, hash40("param_axe"), hash40("gravity_max"));
-    let stick = weapon.Vector2__create(owner_stick_x.into(), owner_stick_y.into());
+    let mut stick = weapon.Vector2__create(owner_stick_x.into(), owner_stick_y.into());
+    if stick["x"].get_f32().abs()+stick["y"].get_f32().abs() < 0.5 {
+        stick["x"].assign(&L2CValue::F32(1.0));
+        stick["y"].assign(&L2CValue::F32(0.0));
+    }
     let normalize = weapon.Vector2__normalize(stick);
-    let vec_stick_x = normalize["x"].get_f32();
+    let vec_stick_x = normalize["x"].get_f32()*owner_lr;
     let vec_stick_y = normalize["y"].get_f32();
     let stick_angle = vec_stick_y.atan2(vec_stick_x);
-    let stick_degrees = stick_angle.to_degrees().clamp(30.0, 70.0);
+    let stick_degrees = if stick_angle.to_degrees() == 180.0 {0.0} else {stick_angle.to_degrees().clamp(30.0, 70.0)};
     let x_speed = if is_charged {speed_x_max} else {speed_x_min};
     let y_speed = if is_charged {speed_y_max} else {speed_y_min};
     let brake = if is_charged {-brake_x_max} else {-brake_x_min};
@@ -119,7 +124,7 @@ unsafe extern "C" fn springtrap_axe_fly_exit_status(_weapon: &mut L2CWeaponCommo
 }
 
 pub fn install() {
-    Agent::new("ganon_axe")
+    Agent::new("ganon_ironballcloned")
     .set_costume(get_costumes())
     .status(Pre, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_FLY, springtrap_axe_fly_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_FLY, springtrap_axe_fly_init_status)

@@ -37,17 +37,19 @@ unsafe extern "C" fn springtrap_special_lw_main_loop(fighter: &mut L2CFighterCom
             }
         }
     }
-    if situation_kind == *SITUATION_KIND_GROUND
-    && prev_situation_kind == *SITUATION_KIND_AIR {
-        GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
-        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_MOTION);
-        MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_lw"), -1.0, 1.0, 0.0, false, false);
-    }
-    if situation_kind == *SITUATION_KIND_AIR
-    && prev_situation_kind == *SITUATION_KIND_GROUND {
-        GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
-        MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_air_lw"), -1.0, 1.0, 0.0, false, false);
+    if !StatusModule::is_changing(boma) {
+        if situation_kind == *SITUATION_KIND_GROUND
+        && prev_situation_kind == *SITUATION_KIND_AIR {
+            GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
+            KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_MOTION);
+            MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_lw"), -1.0, 1.0, 0.0, false, false);
+        }
+        if situation_kind == *SITUATION_KIND_AIR
+        && prev_situation_kind == *SITUATION_KIND_GROUND {
+            GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+            KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
+            MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_air_lw"), -1.0, 1.0, 0.0, false, false);
+        }
     }
     if MotionModule::is_end(boma) {
         if situation_kind == *SITUATION_KIND_GROUND {

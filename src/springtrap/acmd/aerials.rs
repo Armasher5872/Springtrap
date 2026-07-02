@@ -170,7 +170,7 @@ unsafe extern "C" fn springtrap_fair_effect(agent: &mut L2CAgentBase) {
     else {
         frame(lua_state, 15.0);
         if is_excute(agent) {
-            EFFECT_FOLLOW_FLIP(agent, Hash40::new("springtrap_attack_arc"), Hash40::new("springtrap_attack_arc"), Hash40::new("top"), 0, 13.5, 0, -60, 45, 90, 1.1, true, *EF_FLIP_YZ);
+            EFFECT_FOLLOW_FLIP(agent, Hash40::new("springtrap_attack_arc"), Hash40::new("springtrap_attack_arc"), Hash40::new("top"), 0, 13.5, 0, 0, 45, 70, 1.1, true, *EF_FLIP_YZ);
             LAST_EFFECT_SET_RATE(agent, 1.5);
         }
     }
@@ -217,8 +217,8 @@ unsafe extern "C" fn springtrap_bair_game(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 13.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("haver"), 12.0, 361, 65, 0, 65, 6.0, 0.0, 1.5, 0.0, Some(0.0), Some(4.0), Some(0.0), 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 1.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_SPRINGTRAP_KNIFE, *ATTACK_REGION_SWORD);
-        ATTACK(agent, 1, 0, Hash40::new("armr"), 10.0, 361, 65, 0, 65, 6.0, 2.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 1.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 0, 0, Hash40::new("haver"), 12.0, 361, 85, 0, 65, 6.0, 0.0, 1.5, 0.0, Some(0.0), Some(4.0), Some(0.0), 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 1.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_SPRINGTRAP_KNIFE, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 1, 0, Hash40::new("armr"), 10.0, 361, 85, 0, 65, 6.0, 2.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 1.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
     }
     frame(lua_state, 15.0);
     if is_excute(agent) {
@@ -365,6 +365,7 @@ unsafe extern "C" fn springtrap_dair_game(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn springtrap_dair_effect(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     frame(lua_state, 4.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 2, 0, 0, 0, 0, 1.3, 0, 0, 0, 0, 0, 0, true);
@@ -372,7 +373,12 @@ unsafe extern "C" fn springtrap_dair_effect(agent: &mut L2CAgentBase) {
     frame(lua_state, 15.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 2, 0, -90, 0, 0, 1.8, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.75, 1.0, 0.40);
+        if is_glitchtrap_slots(boma) {
+            LAST_EFFECT_SET_COLOR(agent, 1.0, 0.4, 0.75);
+        }
+        else {
+            LAST_EFFECT_SET_COLOR(agent, 0.75, 1.0, 0.40);
+        }
     }
     frame(lua_state, 16.0);
     if is_excute(agent) {

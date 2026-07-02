@@ -17,14 +17,22 @@ unsafe extern "C" fn springtrap_phantom_freddy_attack_effect(agent: &mut L2CAgen
 //Phantom Freddy Attack Sound
 unsafe extern "C" fn springtrap_phantom_freddy_attack_sound(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     frame(lua_state, 35.0);
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_ganon_attackhard_h02"));
+    if is_glitchtrap_slots(boma) {
+        if is_excute(agent) {
+            PLAY_SE(agent, Hash40::new("vc_ganon_special_s01"));
+        }
+    }
+    else {
+        if is_excute(agent) {
+            PLAY_SE(agent, Hash40::new("se_ganon_attackhard_h02"));
+        }
     }
 }
 
 pub fn install() {
-    Agent::new("ganon_phantom")
+    Agent::new("ganon_cannonballcloned")
     .set_costume(get_costumes())
     .acmd("game_freddyattack", springtrap_phantom_freddy_attack_acmd, Low)
     .acmd("effect_freddyattack", springtrap_phantom_freddy_attack_effect, Low)

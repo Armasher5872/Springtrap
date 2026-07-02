@@ -270,6 +270,7 @@ unsafe extern "C" fn springtrap_back_throw_game(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn springtrap_back_throw_effect(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("springtrap_static"), Hash40::new("top"), 0, 12, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, true);
     }
@@ -281,7 +282,12 @@ unsafe extern "C" fn springtrap_back_throw_effect(agent: &mut L2CAgentBase) {
     frame(lua_state, 27.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), 0, 11.8, 10, -205, 0, 0, 1.6, 0, 0, 0, 0, 0, 0, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.75, 1.0, 0.40);
+        if is_glitchtrap_slots(boma) {
+            LAST_EFFECT_SET_COLOR(agent, 1.0, 0.4, 0.75);
+        }
+        else {
+            LAST_EFFECT_SET_COLOR(agent, 0.75, 1.0, 0.40);
+        }
     }
     frame(lua_state, 30.0);
     if is_excute(agent) {

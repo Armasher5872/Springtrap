@@ -53,7 +53,12 @@ unsafe extern "C" fn springtrap_win_3_effect(agent: &mut L2CAgentBase) {
     frame(lua_state, 218.0);
     if is_excute(agent) {
         EFFECT_ALPHA(agent, Hash40::new("springtrap_static"), Hash40::new("trans"), 0.0, 15.0, 0.0, 0.0, 0.0, 0.0, 5.0, 0, 0, 0, 0, 0, 0, false, 0.5);
-        LAST_EFFECT_SET_COLOR(agent, 0.1, 0.13, 0.1);
+        if is_glitchtrap_slots(boma) {
+            LAST_EFFECT_SET_COLOR(agent, 0.13, 0.1, 0.13);
+        }
+        else {
+            LAST_EFFECT_SET_COLOR(agent, 0.1, 0.13, 0.1);
+        }
         agent.clear_lua_stack();
         lua_args!(agent, Hash40::new("sys_bg_black"), 0, 0, 0, 0, 0, 0, 1);
         sv_animcmd::EFFECT_GLOBAL_BACK_GROUND(agent.lua_state_agent);
@@ -79,6 +84,12 @@ unsafe extern "C" fn springtrap_win_3_sound(agent: &mut L2CAgentBase) {
     if !is_glitchtrap_slots(boma) {
         if is_excute(agent) {
             let vc_index = if sv_math::randf(hash40("fighter"), 1.0) > 0.5 {Hash40::new("vc_ganon_appeal_h01")} else {Hash40::new("vc_ganon_attackhard_h01")};
+            PLAY_SE(agent, vc_index);
+        }
+    }
+    else {
+        if is_excute(agent) {
+            let vc_index = if sv_math::randf(hash40("fighter"), 1.0) > 0.5 {Hash40::new("vc_ganon_special_l01")} else {Hash40::new("vc_ganon_special_l02")};
             PLAY_SE(agent, vc_index);
         }
     }

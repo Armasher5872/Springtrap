@@ -45,7 +45,6 @@ pub unsafe extern "C" fn phantom_disappear(weapon: &mut L2CWeaponCommon, do_expl
     KineticModule::unable_energy(boma, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
     AttackModule::clear_all(boma);
     search!(weapon, *MA_MSC_CMD_SEARCH_SEARCH_SCH_CLR_ALL);
-    ModelModule::set_mesh_visibility(boma, Hash40::new("axe"), false);
     ModelModule::set_mesh_visibility(boma, Hash40::new("p_bb_body"), false);
     ModelModule::set_mesh_visibility(boma, Hash40::new("p_bb_eye"), false);
     ModelModule::set_mesh_visibility(boma, Hash40::new("p_chica_beakfoot"), false);
@@ -93,6 +92,8 @@ pub unsafe extern "C" fn remove_axe(weapon: &mut L2CWeaponCommon) {
     WorkModule::off_flag(boma, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_GROUNDED);
     WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLOAT_SLOPE_ROT_ANGLE);
     WorkModule::off_flag(owner_boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_ACTIVE_AXE);
+    EFFECT_FOLLOW(weapon, Hash40::new("springtrap_axe_fire_ash"), Hash40::new("have"), 0, 11, 0, 0, 0, 0, 2.0, true);
+    EFFECT_FOLLOW(weapon, Hash40::new("sys_erace_smoke"), Hash40::new("have"), 0, 11, 0, 0, 0, 0, 1.0, true);
     notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
 }
 

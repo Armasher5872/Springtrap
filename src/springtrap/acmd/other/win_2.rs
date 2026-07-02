@@ -11,10 +11,16 @@ unsafe extern "C" fn springtrap_win_2_game(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn springtrap_win_2_effect(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     frame(lua_state, 183.0);
     if is_excute(agent) {
         EFFECT_ALPHA(agent, Hash40::new("springtrap_static"), Hash40::new("trans"), 0.0, 15.0, -10.0, 0.0, 0.0, 0.0, 5.0, 0, 0, 0, 0, 0, 0, false, 0.5);
-        LAST_EFFECT_SET_COLOR(agent, 0.1, 0.13, 0.1);
+        if is_glitchtrap_slots(boma) {
+            LAST_EFFECT_SET_COLOR(agent, 0.13, 0.1, 0.13);
+        }
+        else {
+            LAST_EFFECT_SET_COLOR(agent, 0.1, 0.13, 0.1);
+        }
         agent.clear_lua_stack();
         lua_args!(agent, Hash40::new("sys_bg_black"), 0, 0, 0, 0, 0, 0, 1);
         sv_animcmd::EFFECT_GLOBAL_BACK_GROUND(agent.lua_state_agent);

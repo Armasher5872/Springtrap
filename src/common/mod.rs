@@ -21,11 +21,7 @@ use {
             lua_const::*,
         },
         lua2cpp::*,
-        phx::{
-            Hash40,
-            Vector3f,
-            Vector4f
-        }
+        phx::*
     },
     smash2::cpp::simd::*,
     smash_script::{

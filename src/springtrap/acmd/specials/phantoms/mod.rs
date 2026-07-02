@@ -1,5 +1,8 @@
 use {
-    crate::common::common_func::*,
+    crate::common::{
+        common_func::*,
+        springtrap_func::*,
+    },
     smash::{
         app::sv_animcmd::frame,
         lib::lua_const::*,

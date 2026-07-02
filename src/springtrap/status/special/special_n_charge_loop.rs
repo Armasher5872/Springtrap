@@ -38,17 +38,19 @@ unsafe extern "C" fn springtrap_special_n_charge_loop_main_loop(fighter: &mut L2
         LinkModule::set_constraint_translate_offset(axe_boma, &Vector3f{x: 0.0, y: 0.0, z: 0.0});
         LinkModule::set_constraint_rot_offset(axe_boma, &Vector3f{x: 0.0, y: 0.0, z: 0.0});
     }
-    if situation_kind == *SITUATION_KIND_GROUND
-    && prev_situation_kind == *SITUATION_KIND_AIR {
-        GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
-        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_MOTION);
-        MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_n_hold"), -1.0, 1.0, 0.0, false, false);
-    }
-    if situation_kind == *SITUATION_KIND_AIR
-    && prev_situation_kind == *SITUATION_KIND_GROUND {
-        GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
-        MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_air_n_hold"), -1.0, 1.0, 0.0, false, false);
+    if !StatusModule::is_changing(boma) {
+        if situation_kind == *SITUATION_KIND_GROUND
+        && prev_situation_kind == *SITUATION_KIND_AIR {
+            GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
+            KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_MOTION);
+            MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_n_hold"), -1.0, 1.0, 0.0, false, false);
+        }
+        if situation_kind == *SITUATION_KIND_AIR
+        && prev_situation_kind == *SITUATION_KIND_GROUND {
+            GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+            KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
+            MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_air_n_hold"), -1.0, 1.0, 0.0, false, false);
+        }
     }
     if ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
         if current_frame > 25.0 {

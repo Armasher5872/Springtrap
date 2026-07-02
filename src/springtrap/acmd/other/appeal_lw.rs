@@ -6,33 +6,62 @@ unsafe extern "C" fn springtrap_down_taunt_effect(_agent: &mut L2CAgentBase) {}
 
 unsafe extern "C" fn springtrap_down_taunt_sound(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
-    frame(lua_state, 55.0);
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_ganon_appeal_l01"));
+    let boma = agent.module_accessor;
+    if is_glitchtrap_slots(boma) {
+        frame(lua_state, 15.0);
+        if is_excute(agent) {
+            PLAY_SE(agent, Hash40::new("vc_ganon_appeal_l01"));
+        }
+        frame(lua_state, 55.0);
+        if is_excute(agent) {
+            PLAY_SE(agent, Hash40::new("se_ganon_appeal_l01"));
+        }
+        frame(lua_state, 70.0);
+        if is_excute(agent) {
+            PLAY_SE(agent, Hash40::new("se_ganon_appeal_l01"));
+        }
+        frame(lua_state, 85.0);
+        if is_excute(agent) {
+            PLAY_SE(agent, Hash40::new("se_ganon_appeal_l01"));
+        }
+        frame(lua_state, 100.0);
+        if is_excute(agent) {
+            PLAY_SE(agent, Hash40::new("se_ganon_appeal_l01"));
+        }
+        frame(lua_state, 110.0);
+        if is_excute(agent) {
+            PLAY_SE(agent, Hash40::new("se_ganon_appeal_l02"));
+        }
     }
-    frame(lua_state, 65.0);
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("vc_ganon_appeal_l01"));
-    }
-    frame(lua_state, 70.0);
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_ganon_appeal_l01"));
-    }
-    frame(lua_state, 85.0);
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_ganon_appeal_l01"));
-    }
-    frame(lua_state, 100.0);
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_ganon_appeal_l01"));
-    }
-    frame(lua_state, 110.0);
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_ganon_appeal_l02"));
-    }
-    frame(lua_state, 200.0);
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("vc_ganon_attackhard_h01"));
+    else {
+        frame(lua_state, 55.0);
+        if is_excute(agent) {
+            PLAY_SE(agent, Hash40::new("se_ganon_appeal_l01"));
+        }
+        frame(lua_state, 65.0);
+        if is_excute(agent) {
+            PLAY_SE(agent, Hash40::new("vc_ganon_appeal_l01"));
+        }
+        frame(lua_state, 70.0);
+        if is_excute(agent) {
+            PLAY_SE(agent, Hash40::new("se_ganon_appeal_l01"));
+        }
+        frame(lua_state, 85.0);
+        if is_excute(agent) {
+            PLAY_SE(agent, Hash40::new("se_ganon_appeal_l01"));
+        }
+        frame(lua_state, 100.0);
+        if is_excute(agent) {
+            PLAY_SE(agent, Hash40::new("se_ganon_appeal_l01"));
+        }
+        frame(lua_state, 110.0);
+        if is_excute(agent) {
+            PLAY_SE(agent, Hash40::new("se_ganon_appeal_l02"));
+        }
+        frame(lua_state, 200.0);
+        if is_excute(agent) {
+            PLAY_SE(agent, Hash40::new("vc_ganon_attackhard_h01"));
+        }
     }
 }
 

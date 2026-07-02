@@ -48,13 +48,9 @@ unsafe extern "C" fn springtrap_phantom_phantom_explode_main_status(weapon: &mut
 unsafe extern "C" fn springtrap_phantom_phantom_explode_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
     let current_frame = weapon.global_table[CURRENT_FRAME].get_f32();
-    let pos_x = PostureModule::pos_x(boma);
-    let pos_y = PostureModule::pos_y(boma);
-    let pos_z = PostureModule::pos_z(boma);
     if current_frame > 1.0 {
         AttackModule::clear_all(boma);
     }
-    PostureModule::set_pos(boma, &Vector3f{x: pos_x, y: pos_y-3.0, z: pos_z});
     if should_remove_phantom(weapon) {
         remove_phantom(weapon);
     }
@@ -85,7 +81,7 @@ unsafe extern "C" fn springtrap_phantom_phantom_explode_exit_status(weapon: &mut
 }
 
 pub fn install() {
-    Agent::new("ganon_phantom")
+    Agent::new("ganon_cannonballcloned")
     .set_costume(get_costumes())
     .status(Pre, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_EXPLODE, springtrap_phantom_phantom_explode_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_EXPLODE, springtrap_phantom_phantom_explode_init_status)

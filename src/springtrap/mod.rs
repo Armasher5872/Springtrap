@@ -31,14 +31,14 @@ pub fn install() {
             "krool",
             *WEAPON_KIND_KROOL_IRONBALL,
             "ganon",
-            "axe",
+            "ironballcloned",
             false,
         );
         FIGHTER_SPRINGTRAP_GENERATE_ARTICLE_PHANTOM += clone_weapon(
             "koopajr",
             *WEAPON_KIND_KOOPAJR_CANNONBALL,
             "ganon",
-            "phantom",
+            "cannonballcloned",
             false,
         );
     }

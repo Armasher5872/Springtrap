@@ -14,14 +14,22 @@ unsafe extern "C" fn springtrap_phantom_bb_idle_effect(_agent: &mut L2CAgentBase
 //Phantom Balloon Boy Idle Sound
 unsafe extern "C" fn springtrap_phantom_bb_idle_sound(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     frame(lua_state, 30.0);
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_ganon_special_l01"));
+    if is_glitchtrap_slots(boma) {
+        if is_excute(agent) {
+            PLAY_SE(agent, Hash40::new("vc_ganon_win01"));
+        }
+    }
+    else {
+        if is_excute(agent) {
+            PLAY_SE(agent, Hash40::new("se_ganon_special_l01"));
+        }
     }
 }
 
 pub fn install() {
-    Agent::new("ganon_phantom")
+    Agent::new("ganon_cannonballcloned")
     .set_costume(get_costumes())
     .acmd("game_bbidle", springtrap_phantom_bb_idle_acmd, Low)
     .acmd("effect_bbidle", springtrap_phantom_bb_idle_effect, Low)
