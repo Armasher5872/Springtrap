@@ -1,9 +1,6 @@
 //Credited to WuBoyTH
 use super::*;
 
-const GANON_VTABLE_STATUS_TRANSITION_OFFSET: usize = 0xaa6800;
-const GANON_VTABLE_ON_SEARCH_EVENT_OFFSET: usize = 0x68d8a0;
-
 //Ganondorf On Attack
 #[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_GANON, 36, false, false))]
 unsafe extern "C" fn ganon_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
