@@ -14,7 +14,7 @@ unsafe extern "C" fn springtrap_throw_exit_status(fighter: &mut L2CFighterCommon
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .status(End, *FIGHTER_STATUS_KIND_THROW, springtrap_throw_end_status)
     .status(Exit, *FIGHTER_STATUS_KIND_THROW, springtrap_throw_exit_status)
     .install()

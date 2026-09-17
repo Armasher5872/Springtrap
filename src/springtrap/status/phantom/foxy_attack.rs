@@ -11,7 +11,6 @@ unsafe extern "C" fn springtrap_phantom_foxy_attack_init_status(weapon: &mut L2C
     sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
     sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
     WorkModule::set_int(boma, 80, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-    GroundModule::set_rhombus_offset(boma, &Vector2f{x: 0.0, y: 0.0});
     0.into()
 }
 
@@ -52,7 +51,7 @@ unsafe extern "C" fn springtrap_phantom_foxy_attack_exit_status(_weapon: &mut L2
 
 pub fn install() {
     Agent::new("ganon_cannonballcloned")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .status(Pre, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_FOXY_ATTACK, springtrap_phantom_foxy_attack_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_FOXY_ATTACK, springtrap_phantom_foxy_attack_init_status)
     .status(Main, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_FOXY_ATTACK, springtrap_phantom_foxy_attack_main_status)

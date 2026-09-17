@@ -37,7 +37,7 @@ unsafe extern "C" fn springtrap_phantom_phantom_explode_main_status(weapon: &mut
     }
     if phantom_type == *SPRINGTRAP_PHANTOM_TYPE_FREDDY {
         SoundModule::play_se(boma, Hash40::new("se_common_bomb_m"), true, false, false, false, enSEType(0));
-        ATTACK(weapon, 0, 0, Hash40::new("top"), 6.0, 270, 70, 0, 0, 18.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_SPEED, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_paralyze"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_OBJECT);
+        ATTACK(weapon, 0, 0, Hash40::new("top"), 6.0, 270, 0, 0, 0, 18.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_SPEED, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sleep_ex"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_OBJECT);
     }
     EffectModule::req(boma, Hash40::new("springtrap_phantom_detonate"), &Vector3f{x: pos.x, y: pos.y+12.0, z: pos.z}, &Vector3f{x: 0.0, y: 0.0, z: 0.0}, 0.1, 0, -1, false, 0);
     EffectModule::req(boma, Hash40::new("springtrap_phantom_detonate_shock"), &Vector3f{x: pos.x, y: pos.y+12.0, z: pos.z}, &Vector3f{x: 0.0, y: 0.0, z: 0.0}, 1.0, 0, -1, false, 0);
@@ -48,7 +48,7 @@ unsafe extern "C" fn springtrap_phantom_phantom_explode_main_status(weapon: &mut
 unsafe extern "C" fn springtrap_phantom_phantom_explode_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
     let current_frame = weapon.global_table[CURRENT_FRAME].get_f32();
-    if current_frame > 1.0 {
+    if current_frame > 1.0 || StopModule::is_stop(boma) {
         AttackModule::clear_all(boma);
     }
     if should_remove_phantom(weapon) {
@@ -64,25 +64,19 @@ unsafe extern "C" fn springtrap_phantom_phantom_explode_exec_status(weapon: &mut
 
 unsafe extern "C" fn springtrap_phantom_phantom_explode_end_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
-    WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_OWNER_INIT_LR);
-    WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_BB_SPEED_X);
-    WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_BB_SPEED_Y);
-    WorkModule::set_int(boma, 0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_INT_PHANTOM_TYPE);
+    springtrap_phantom_var(boma);
     0.into()
 }
 
 unsafe extern "C" fn springtrap_phantom_phantom_explode_exit_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
-    WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_OWNER_INIT_LR);
-    WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_BB_SPEED_X);
-    WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_BB_SPEED_Y);
-    WorkModule::set_int(boma, 0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_INT_PHANTOM_TYPE);
+    springtrap_phantom_var(boma);
     0.into()
 }
 
 pub fn install() {
     Agent::new("ganon_cannonballcloned")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .status(Pre, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_EXPLODE, springtrap_phantom_phantom_explode_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_EXPLODE, springtrap_phantom_phantom_explode_init_status)
     .status(Main, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_EXPLODE, springtrap_phantom_phantom_explode_main_status)

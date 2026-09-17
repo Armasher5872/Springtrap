@@ -56,32 +56,71 @@ pub unsafe fn get_module_vtable_func(boma: *mut BattleObjectModuleAccessor, modu
 
 pub fn weapon_initialise_module(weapon_id: i32, module: ModuleInitModules) {
     let module_init_offset = match module {
-        ModuleInitModules::KineticModule => 0x33b83f0,
-        ModuleInitModules::ArticleModule => 0x33b9200,
-        ModuleInitModules::AttackModule => 0x33b8540,
-        ModuleInitModules::ControlModule => 0x33b9000,
-        ModuleInitModules::EffectModule => 0x33b8730,
-        ModuleInitModules::GroundModule => 0x33b8850,
-        ModuleInitModules::MotionModule => 0x33b7d50,
-        ModuleInitModules::ReflectModule => 0x33b89d0,
-        ModuleInitModules::SearchModule => 0x33b8a80,
-        ModuleInitModules::SoundModule => 0x33b8c60,
-        ModuleInitModules::VisibilityModule => 0x33b7ec0,
-        ModuleInitModules::ColorBlendModule => 0x33b7f60,
-        ModuleInitModules::ShakeModule => 0x33b7ff0,
-        ModuleInitModules::AreaModule => 0x33b8f50,
-        ModuleInitModules::SlopeModule => 0x33b9170,
-        ModuleInitModules::ReflectorModule => 0x33b9830,
-        ModuleInitModules::SlowModule => 0x33b9350,
-        ModuleInitModules::MotionAnimcmdModule => 0x33b81d0,
-        ModuleInitModules::TurnModule => 0x33b9940,
-        ModuleInitModules::LuaModule => 0x33b8e40,
+        ModuleInitModules::KineticModule => 0x33b89a0,
+        ModuleInitModules::ArticleModule => 0x33b97b0,
+        ModuleInitModules::AttackModule => 0x33b8af0,
+        ModuleInitModules::ControlModule => 0x33b95b0,
+        ModuleInitModules::EffectModule => 0x33b8ce0,
+        ModuleInitModules::GroundModule => 0x33b8e00,
+        ModuleInitModules::MotionModule => 0x33b8300,
+        ModuleInitModules::ReflectModule => 0x33b8f80,
+        ModuleInitModules::SearchModule => 0x33b9030,
+        ModuleInitModules::SoundModule => 0x33b9210,
+        ModuleInitModules::VisibilityModule => 0x33b8470,
+        ModuleInitModules::ColorBlendModule => 0x33b8510,
+        ModuleInitModules::ShakeModule => 0x33b85a0,
+        ModuleInitModules::AreaModule => 0x33b9500,
+        ModuleInitModules::SlopeModule => 0x33b9720,
+        ModuleInitModules::ReflectorModule => 0x33b9de0,
+        ModuleInitModules::SlowModule => 0x33b9900,
+        ModuleInitModules::MotionAnimcmdModule => 0x33b8780,
+        ModuleInitModules::TurnModule => 0x33b9ef0,
+        ModuleInitModules::LuaModule => 0x33b93f0,
         _ => 0x0,
     };
     if module_init_offset == 0 {
         return;
     }
-    let offset = 0x5189818+(0xe8*(weapon_id as usize))+(module as usize*0x8);
+    let offset = 0x518a818+(0xe8*(weapon_id as usize))+(module as usize*0x8);
     let module_init = unsafe {skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as u64+module_init_offset};
     let _ = skyline::patching::Patch::in_text(offset).data(module_init);
+}
+
+/*
+Credited to IncrediblePlays for the original logic of the function (Of which this is a modified form of). Used to get either the address or pointer address of an agent (fighter/weapon/item) virtual function. 
+
+kind: The respective fighter/weapon kind, takes the dereferenced lua_const value (E.G. *FIGHTER_KIND_SNAKE)
+entry: The entry of the virtual function you want to hook. Documentation can be found here: https://github.com/theincredibleplayer/smash-vtables/blob/main/Vtable/fighter_vtable_documentation.txt
+is_weapon: Indicates if the agent is a weapon
+is_pointer: Determines whether or not it should get the address hook itself, or the pointer to the address hook. The pointer can be seen as the "index" of the agent's virtual table.
+
+An example of its usage would be: get_agent_virtual_function(*FIGHTER_KIND_SNAKE, 13, false, false); This would get the 13th (0-Indexed) virtual function of Snake, which is his OPFF.
+
+This function also has additional checks that will forcibly close the game if the function params are out of bounds
+*/
+pub fn get_agent_virtual_function(kind: i32, entry: usize, is_weapon: bool, is_pointer: bool) -> usize {
+    if kind < 0 {
+        std::process::abort()
+    }
+    unsafe {
+        if is_weapon {
+            if kind >= 0x267 || entry >= 104 {
+                std::process::abort();
+            }
+        }
+        else{
+            if kind >= 0x5E || entry >= 146 {
+                std::process::abort();
+            }
+        }
+        let vtable = if is_weapon {get_weapon_vtable(kind as u32)} else {get_fighter_vtable(kind as u32)};
+        let first_entry_ptr = *(vtable as *const u64) as *const usize;
+        let main = skyline::hooks::getRegionAddress(skyline::hooks::Region::Text);
+        if is_pointer {
+            return first_entry_ptr.add(entry) as usize-main as usize;
+        }
+        else {
+            return *first_entry_ptr.add(entry)-main as usize;
+        }
+    }
 }

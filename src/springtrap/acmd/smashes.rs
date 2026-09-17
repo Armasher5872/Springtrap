@@ -465,7 +465,7 @@ unsafe extern "C" fn springtrap_down_smash_expression(agent: &mut L2CAgentBase) 
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .acmd("effect_attacks4charge", springtrap_forward_smash_charge_effect, High)
     .acmd("sound_attacks4charge", springtrap_forward_smash_charge_sound, High)
     .acmd("expression_attacks4charge", springtrap_forward_smash_charge_expression, High)

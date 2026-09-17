@@ -8,36 +8,22 @@ unsafe extern "C" fn springtrap_axe_fly_pre_status(weapon: &mut L2CWeaponCommon)
 unsafe extern "C" fn springtrap_axe_fly_init_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
     let owner_boma = get_owner_boma(weapon);
-    let owner_agent = get_fighter_common_from_accessor(&mut *owner_boma);
     let owner_lr = PostureModule::lr(owner_boma);
-    let owner_stick_x = owner_agent.global_table[STICK_X].get_f32();
-    let owner_stick_y = owner_agent.global_table[STICK_Y].get_f32();
     let is_charged = WorkModule::is_flag(owner_boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CHARGED);
-    let life = WorkModule::get_param_int(boma, hash40("param_axe"), hash40("life"));
-    let speed_x_min = WorkModule::get_param_float(boma, hash40("param_axe"), hash40("speed_x_min"));
-    let speed_x_max = WorkModule::get_param_float(boma, hash40("param_axe"), hash40("speed_x_max"));
-    let speed_y_min = WorkModule::get_param_float(boma, hash40("param_axe"), hash40("speed_y_min"));
-    let speed_y_max = WorkModule::get_param_float(boma, hash40("param_axe"), hash40("speed_y_max"));
-    let brake_x_min = WorkModule::get_param_float(boma, hash40("param_axe"), hash40("brake_x_min"));
-    let brake_x_max = WorkModule::get_param_float(boma, hash40("param_axe"), hash40("brake_x_max"));
-    let gravity_min = WorkModule::get_param_float(boma, hash40("param_axe"), hash40("gravity_min"));
-    let gravity_max = WorkModule::get_param_float(boma, hash40("param_axe"), hash40("gravity_max"));
-    let mut stick = weapon.Vector2__create(owner_stick_x.into(), owner_stick_y.into());
-    if stick["x"].get_f32().abs()+stick["y"].get_f32().abs() < 0.5 {
-        stick["x"].assign(&L2CValue::F32(1.0));
-        stick["y"].assign(&L2CValue::F32(0.0));
-    }
-    let normalize = weapon.Vector2__normalize(stick);
-    let vec_stick_x = normalize["x"].get_f32()*owner_lr;
-    let vec_stick_y = normalize["y"].get_f32();
-    let stick_angle = vec_stick_y.atan2(vec_stick_x);
-    let stick_degrees = if stick_angle.to_degrees() == 180.0 {0.0} else {stick_angle.to_degrees().clamp(30.0, 70.0)};
-    let x_speed = if is_charged {speed_x_max} else {speed_x_min};
-    let y_speed = if is_charged {speed_y_max} else {speed_y_min};
+    let life = WorkModule::get_param_int(boma, hash40("param_ironballcloned"), hash40("life"));
+    let speed_min = WorkModule::get_param_float(boma, hash40("param_ironballcloned"), hash40("speed_min"));
+    let speed_max = WorkModule::get_param_float(boma, hash40("param_ironballcloned"), hash40("speed_max"));
+    let brake_x_min = WorkModule::get_param_float(boma, hash40("param_ironballcloned"), hash40("brake_x_min"));
+    let brake_x_max = WorkModule::get_param_float(boma, hash40("param_ironballcloned"), hash40("brake_x_max"));
+    let gravity_min = WorkModule::get_param_float(boma, hash40("param_ironballcloned"), hash40("gravity_min"));
+    let gravity_max = WorkModule::get_param_float(boma, hash40("param_ironballcloned"), hash40("gravity_max"));
+    let angle = determine_launch_angle(boma, true);
+    println!("Angle: {}", angle);
+    let speed = if is_charged {speed_max} else {speed_min};
     let brake = if is_charged {-brake_x_max} else {-brake_x_min};
     let gravity = if is_charged {gravity_max} else {gravity_min};
-    let speed_x = stick_degrees.to_radians().cos()*x_speed*owner_lr;
-    let speed_y = stick_degrees.to_radians().sin()*y_speed;
+    let speed_x = angle.to_radians().cos()*speed;
+    let speed_y = angle.to_radians().sin()*speed;
     sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x, speed_y);
     sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, brake*owner_lr, -gravity);
     KineticModule::enable_energy(boma, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
@@ -125,7 +111,7 @@ unsafe extern "C" fn springtrap_axe_fly_exit_status(_weapon: &mut L2CWeaponCommo
 
 pub fn install() {
     Agent::new("ganon_ironballcloned")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .status(Pre, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_FLY, springtrap_axe_fly_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_FLY, springtrap_axe_fly_init_status)
     .status(Main, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_FLY, springtrap_axe_fly_main_status)

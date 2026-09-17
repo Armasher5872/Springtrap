@@ -3,10 +3,11 @@ use {
         common::{
             extern_c::*,
             getter_funcs::*,
+            globals::*,
+            hooks::*,
             module_init::*,
             springtrap_var::*,
         },
-        GLITCHTRAP_COLORS,
         MARKED_COLORS
     },
     smash::{

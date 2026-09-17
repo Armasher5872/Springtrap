@@ -8,9 +8,10 @@ unsafe extern "C" fn springtrap_special_hi_move_pre_status(fighter: &mut L2CFigh
 }
 
 unsafe extern "C" fn springtrap_special_hi_move_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let rot_angle = WorkModule::get_int(fighter.module_accessor, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE) as f32;
-    let speed_x = (rot_angle+90.0).to_radians().sin()*12.0;
-    let speed_y = (rot_angle-90.0).to_radians().cos()*12.0;
+    let boma = fighter.module_accessor;
+    let rot_angle = WorkModule::get_int(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE) as f32;
+    let speed_x = rot_angle.to_radians().cos()*12.0;
+    let speed_y = rot_angle.to_radians().sin()*12.0;
     sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
     sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, speed_x, speed_y);
     sv_kinetic_energy!(set_brake, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.04, 0.04);
@@ -40,6 +41,7 @@ unsafe extern "C" fn springtrap_special_hi_move_main_loop(fighter: &mut L2CFight
         return 1.into();
     }
     if situation_kind == *SITUATION_KIND_GROUND {
+        KineticModule::clear_speed_energy_id(boma, *FIGHTER_KINETIC_ENERGY_ID_STOP);
         WorkModule::set_float(boma, 40.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
         fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
         return 1.into();
@@ -81,7 +83,7 @@ unsafe extern "C" fn springtrap_special_hi_move_exit_status(fighter: &mut L2CFig
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .status(Pre, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_HI_MOVE, springtrap_special_hi_move_pre_status)
     .status(Init, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_HI_MOVE, springtrap_special_hi_move_init_status)
     .status(Main, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_HI_MOVE, springtrap_special_hi_move_main_status)

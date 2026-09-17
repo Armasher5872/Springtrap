@@ -75,7 +75,7 @@ unsafe extern "C" fn springtrap_entry_expression(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .acmd("effect_entryl", springtrap_entry_effect, Low)
     .acmd("sound_entryl", springtrap_entry_sound, Low)
     .acmd("expression_entryl", springtrap_entry_expression, Low)

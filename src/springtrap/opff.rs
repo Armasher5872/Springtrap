@@ -2,17 +2,8 @@ use super::*;
 
 unsafe extern "C" fn springtrap_on_start(fighter: &mut L2CFighterCommon) {
     let boma = fighter.module_accessor;
-    WorkModule::off_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_ACTIVE_AXE);
-    WorkModule::off_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CHARGED);
-    WorkModule::off_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CRIT);
-    WorkModule::off_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_ACTIVE_PHANTOM);
-    WorkModule::set_float(boma, 0.0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_CHARGE);
-    WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_S_CRIT_TIME);
-    WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE);
-    WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_MOVE_TIME);
-    WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID);
-    WorkModule::set_int(boma, *SPRINGTRAP_PHANTOM_TYPE_BALLOON_BOY, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_LW_PHANTOM_TYPE);
-    fighter.global_table[CHECK_SPECIAL_LW_UNIQ].assign(&L2CValue::Ptr(should_use_special_lw_callback as *const () as _));
+    springtrap_var(boma, false);
+    fighter.global_table[CHECK_SPECIAL_LW_UNIQ].assign(&L2CValue::Ptr(springtrap_should_use_special_lw_callback as *const () as _));
 }
 
 unsafe extern "C" fn springtrap_opff(fighter: &mut L2CFighterCommon) {
@@ -73,11 +64,7 @@ unsafe extern "C" fn springtrap_opff(fighter: &mut L2CFighterCommon) {
 
 unsafe extern "C" fn springtrap_axe_on_start(weapon: &mut L2CWeaponCommon) {
     let boma = weapon.module_accessor;
-    WorkModule::on_flag(boma, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_CAN_LINK);
-    WorkModule::off_flag(boma, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_LINKED);
-    WorkModule::off_flag(boma, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_GROUNDED);
-    WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLOAT_SLOPE_ROT_ANGLE);
-    WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_INT_OBJECT_ID);
+    springtrap_axe_var(boma);
 }
 
 unsafe extern "C" fn springtrap_axe_opff(weapon: &mut L2CWeaponCommon) {
@@ -97,28 +84,24 @@ unsafe extern "C" fn springtrap_axe_opff(weapon: &mut L2CWeaponCommon) {
 
 unsafe extern "C" fn springtrap_phantom_on_start(weapon: &mut L2CWeaponCommon) {
     let boma = weapon.module_accessor;
-    WorkModule::on_flag(boma, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLAG_CAN_EXPLODE);
-    WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_OWNER_INIT_LR);
-    WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_BB_SPEED_X);
-    WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_BB_SPEED_Y);
-    WorkModule::set_int(boma, 0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_INT_PHANTOM_TYPE);
+    springtrap_phantom_var(boma);
 }
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .on_start(springtrap_on_start)
     .on_line(Main, springtrap_opff)
     .install()
     ;
     Agent::new("ganon_ironballcloned")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .on_start(springtrap_axe_on_start)
     .on_line(Main, springtrap_axe_opff)
     .install()
     ;
     Agent::new("ganon_cannonballcloned")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .on_start(springtrap_phantom_on_start)
     .install()
     ;

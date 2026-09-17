@@ -66,7 +66,7 @@ unsafe extern "C" fn springtrap_side_taunt_expression(agent: &mut L2CAgentBase) 
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .acmd("effect_appealsl", springtrap_side_taunt_effect, Low)
     .acmd("sound_appealsl", springtrap_side_taunt_sound, Low)
     .acmd("expression_appealsl", springtrap_side_taunt_expression, Low)

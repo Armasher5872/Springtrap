@@ -60,7 +60,7 @@ unsafe extern "C" fn springtrap_neutral_special_start_expression(agent: &mut L2C
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .acmd("game_specialnstart", springtrap_neutral_special_start_acmd, Low)
     .acmd("effect_specialnstart", springtrap_grounded_neutral_special_start_effect, Low)
     .acmd("sound_specialnstart", springtrap_neutral_special_start_sound, Low)

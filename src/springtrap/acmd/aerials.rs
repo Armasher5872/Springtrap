@@ -410,7 +410,7 @@ unsafe extern "C" fn springtrap_dair_expression(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .acmd("game_attackairn", springtrap_nair_game, High)
     .acmd("effect_attackairn", springtrap_nair_effect, High)
     .acmd("sound_attackairn", springtrap_nair_sound, High)

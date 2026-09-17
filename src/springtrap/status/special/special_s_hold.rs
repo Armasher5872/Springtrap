@@ -45,7 +45,7 @@ unsafe extern "C" fn springtrap_special_s_hold_main_loop(fighter: &mut L2CFighte
             MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_air_s_hold"), -1.0, 1.0, 0.0, false, false);
         }
     }
-    damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 5.0+(13.0*charge));
+    damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 0.0+(18.0*charge));
     if ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
         fighter.change_status(FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_S_ATTACK.into(), false.into());
     }
@@ -82,7 +82,7 @@ unsafe extern "C" fn springtrap_special_s_hold_exit_status(fighter: &mut L2CFigh
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .status(Pre, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_S_HOLD, springtrap_special_s_hold_pre_status)
     .status(Init, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_S_HOLD, springtrap_special_s_hold_init_status)
     .status(Main, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_S_HOLD, springtrap_special_s_hold_main_status)

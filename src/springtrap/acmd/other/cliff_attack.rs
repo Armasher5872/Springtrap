@@ -71,7 +71,7 @@ unsafe extern "C" fn springtrap_cliff_attack_expression(agent: &mut L2CAgentBase
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .acmd("game_cliffattack", springtrap_cliff_attack_game, Low)
     .acmd("effect_cliffattack", springtrap_cliff_attack_effect, Low)
     .acmd("sound_cliffattack", springtrap_cliff_attack_sound, Low)

@@ -16,7 +16,7 @@ unsafe extern "C" fn springtrap_side_special_attack_acmd(agent: &mut L2CAgentBas
     let z2_coord_2 = 8.0+(12.0*special_s_charge);
     let saving_level = if special_s_charge > 0.5 {*FIGHTER_RYU_SAVING_LV_2} else {*FIGHTER_RYU_SAVING_LV_1};
     if is_excute(agent) {
-        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 5.0+(13.0*special_s_charge));
+        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 0.0+(18.0*special_s_charge));
     }
     frame(lua_state, 3.0);
     if is_excute(agent) {
@@ -108,7 +108,7 @@ unsafe extern "C" fn springtrap_side_special_attack_expression(agent: &mut L2CAg
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .acmd("game_specialsattack", springtrap_side_special_attack_acmd, Low)
     .acmd("effect_specialsattack", springtrap_side_special_attack_effect, Low)
     .acmd("sound_specialsattack", springtrap_side_special_attack_sound, Low)

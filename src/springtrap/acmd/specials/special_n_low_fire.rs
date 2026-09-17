@@ -12,6 +12,8 @@ unsafe extern "C" fn springtrap_neutral_special_low_fire_acmd(agent: &mut L2CAge
         ArticleModule::remove_exist(boma, *FIGHTER_GANON_GENERATE_ARTICLE_SWORD, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
         ArticleModule::generate_article(boma, FIGHTER_SPRINGTRAP_GENERATE_ARTICLE_AXE, false, -1);
         WorkModule::on_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_ACTIVE_AXE);
+        WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID);
+        EFFECT_OFF_KIND(agent, Hash40::new("springtrap_vector"), true, true);
         FT_MOTION_RATE(agent, 1.0);
     }
 }
@@ -72,7 +74,7 @@ unsafe extern "C" fn springtrap_neutral_special_low_fire_expression(agent: &mut 
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .acmd("game_specialnlowfire", springtrap_neutral_special_low_fire_acmd, Low)
     .acmd("effect_specialnlowfire", springtrap_grounded_neutral_special_low_fire_effect, Low)
     .acmd("sound_specialnlowfire", springtrap_neutral_special_low_fire_sound, Low)

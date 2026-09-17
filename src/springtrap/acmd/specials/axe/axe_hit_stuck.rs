@@ -9,7 +9,7 @@ unsafe extern "C" fn springtrap_axe_hit_stuck_effect(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("ganon_ironballcloned")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .acmd("effect_hitstuck", springtrap_axe_hit_stuck_effect, Low)
     .install()
     ;

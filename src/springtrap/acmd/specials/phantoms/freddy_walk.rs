@@ -16,7 +16,7 @@ unsafe extern "C" fn springtrap_phantom_freddy_walk_sound(_agent: &mut L2CAgentB
 
 pub fn install() {
     Agent::new("ganon_cannonballcloned")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .acmd("game_freddywalk", springtrap_phantom_freddy_walk_acmd, Low)
     .acmd("effect_freddywalk", springtrap_phantom_freddy_walk_effect, Low)
     .acmd("sound_freddywalk", springtrap_phantom_freddy_walk_sound, Low)

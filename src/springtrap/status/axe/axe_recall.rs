@@ -64,7 +64,7 @@ unsafe extern "C" fn calculate_axe_stats(x_dist: f32, y_dist: f32) -> Vector4f {
     let x_speed = if x_dist > 0.0 {(x_dist/20.0).clamp(2.5, 10.0)} else {(x_dist/20.0).clamp(-10.0, -2.5)};
     let y_speed = y_dist/7.5;
     let vector = (y_speed.abs()).atan2(x_speed.abs()).to_degrees();
-    let fixed_knockback = x_speed.abs()*80.0;
+    let fixed_knockback = (x_speed.abs()*80.0).clamp(0.0, 200.0);
     Vector4f{x: x_speed, y: y_speed, z: vector, w: fixed_knockback}
 }
 
@@ -83,7 +83,7 @@ unsafe extern "C" fn springtrap_axe_recall_exit_status(_weapon: &mut L2CWeaponCo
 
 pub fn install() {
     Agent::new("ganon_ironballcloned")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .status(Pre, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_RECALL, springtrap_axe_recall_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_RECALL, springtrap_axe_recall_init_status)
     .status(Main, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_RECALL, springtrap_axe_recall_main_status)

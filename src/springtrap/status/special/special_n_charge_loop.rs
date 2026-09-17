@@ -22,15 +22,20 @@ unsafe extern "C" fn springtrap_special_n_charge_loop_init_status(fighter: &mut 
 }
 
 unsafe extern "C" fn springtrap_special_n_charge_loop_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let boma = fighter.module_accessor;
+    let effect = EffectModule::req_follow(boma, Hash40::new("springtrap_vector"), Hash40::new("top"), &Vector3f{x: 0.0, y: 10.0, z: 0.0}, &Vector3f{x: 0.0, y: 0.0, z: 0.0}, 1.0, true, 0, 0, 0, 0, 0, true, true);
+    WorkModule::set_int(boma, effect as i32, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID);
     fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_n_hold"), L2CValue::Hash40s("special_air_n_hold"), false.into());
     fighter.sub_shift_status_main(L2CValue::Ptr(springtrap_special_n_charge_loop_main_loop as *const () as _))
 }
 
 unsafe extern "C" fn springtrap_special_n_charge_loop_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let boma = fighter.module_accessor;
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
     let current_frame = fighter.global_table[CURRENT_FRAME].get_f32();
+    let boma = fighter.module_accessor;
+    let effect_id = WorkModule::get_int(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID);
+    let angle = determine_launch_angle(boma, false);
     if ArticleModule::is_exist(boma, *FIGHTER_GANON_GENERATE_ARTICLE_SWORD) {
         let axe_boma = get_article_boma(boma, *FIGHTER_GANON_GENERATE_ARTICLE_SWORD);
         ModelModule::set_scale(axe_boma, 0.73);
@@ -61,6 +66,7 @@ unsafe extern "C" fn springtrap_special_n_charge_loop_main_loop(fighter: &mut L2
             fighter.change_status(FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_LOW_FIRE.into(), false.into());
         }
     }
+    EffectModule::set_rot(boma, effect_id as u32, &Vector3f{x: -angle, y: 0.0, z: 0.0});
     if MotionModule::is_end(boma) {
         WorkModule::on_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CHARGED);
         fighter.change_status(FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_HIGH_FIRE.into(), false.into());
@@ -73,17 +79,31 @@ unsafe extern "C" fn springtrap_special_n_charge_loop_exec_status(_fighter: &mut
     0.into()
 }
 
-unsafe extern "C" fn springtrap_special_n_charge_loop_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn springtrap_special_n_charge_loop_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let boma = fighter.module_accessor;
+    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
+    if ![*FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_LOW_FIRE, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_HIGH_FIRE].contains(&status_kind) {
+        WorkModule::off_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CHARGED);
+        WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID);
+        EFFECT_OFF_KIND(fighter, Hash40::new("springtrap_vector"), true, true);
+    }
     0.into()
 }
 
-unsafe extern "C" fn springtrap_special_n_charge_loop_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn springtrap_special_n_charge_loop_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let boma = fighter.module_accessor;
+    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
+    if ![*FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_LOW_FIRE, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_HIGH_FIRE].contains(&status_kind) {
+        WorkModule::off_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CHARGED);
+        WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID);
+        EFFECT_OFF_KIND(fighter, Hash40::new("springtrap_vector"), true, true);
+    }
     0.into()
 }
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .status(Pre, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_CHARGE_LOOP, springtrap_special_n_charge_loop_pre_status)
     .status(Init, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_CHARGE_LOOP, springtrap_special_n_charge_loop_init_status)
     .status(Main, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_CHARGE_LOOP, springtrap_special_n_charge_loop_main_status)

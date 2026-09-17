@@ -52,7 +52,7 @@ unsafe extern "C" fn springtrap_down_special_expression(agent: &mut L2CAgentBase
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .acmd("game_speciallw", springtrap_down_special_acmd, Low)
     .acmd("effect_speciallw", springtrap_down_special_effect, Low)
     .acmd("sound_speciallw", springtrap_down_special_sound, Low)

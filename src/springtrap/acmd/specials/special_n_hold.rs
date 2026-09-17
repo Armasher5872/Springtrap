@@ -35,7 +35,7 @@ unsafe extern "C" fn springtrap_neutral_special_charge_loop_expression(agent: &m
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .acmd("game_specialnhold", springtrap_neutral_special_charge_loop_acmd, Low)
     .acmd("effect_specialnhold", springtrap_neutral_special_charge_loop_effect, Low)
     .acmd("sound_specialnhold", springtrap_neutral_special_charge_loop_sound, Low)

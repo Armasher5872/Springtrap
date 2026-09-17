@@ -16,7 +16,7 @@ unsafe extern "C" fn springtrap_phantom_chica_walk_sound(_agent: &mut L2CAgentBa
 
 pub fn install() {
     Agent::new("ganon_cannonballcloned")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .acmd("game_chicawalk", springtrap_phantom_chica_walk_acmd, Low)
     .acmd("effect_chicawalk", springtrap_phantom_chica_walk_effect, Low)
     .acmd("sound_chicawalk", springtrap_phantom_chica_walk_sound, Low)

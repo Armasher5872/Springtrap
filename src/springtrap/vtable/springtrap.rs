@@ -1,12 +1,11 @@
 //Credited to WuBoyTH
 use super::*;
 
-const GANON_VTABLE_ON_ATTACK_OFFSET: usize = 0xaa6540;
 const GANON_VTABLE_STATUS_TRANSITION_OFFSET: usize = 0xaa6800;
 const GANON_VTABLE_ON_SEARCH_EVENT_OFFSET: usize = 0x68d8a0;
 
 //Ganondorf On Attack
-#[skyline::hook(offset = GANON_VTABLE_ON_ATTACK_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_GANON, 36, false, false))]
 unsafe extern "C" fn ganon_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     if is_springtrap_slots(boma) {
@@ -51,7 +50,7 @@ unsafe extern "C" fn ganon_on_attack(vtable: u64, fighter: &mut Fighter, log: u6
 }
 
 //Ganondorf Status Transition
-#[skyline::hook(offset = GANON_VTABLE_STATUS_TRANSITION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_GANON, 43, false, false))]
 unsafe extern "C" fn ganon_status_transition(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     if is_springtrap_slots(boma) {
@@ -86,33 +85,34 @@ unsafe extern "C" fn ganon_status_transition(vtable: u64, fighter: &mut Fighter)
 }
 
 //Ganondorf On Search
-#[skyline::hook(offset = GANON_VTABLE_ON_SEARCH_EVENT_OFFSET)]
-unsafe extern "C" fn ganon_on_search(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
-    if fighter.battle_object.kind == *FIGHTER_KIND_GANON as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        let collision_log = *(log as *const u64).add(0x10/0x8);
-        let collision_log = collision_log as *const CollisionLog;
-        let status_kind = StatusModule::status_kind(boma);
+unsafe extern "C" fn ganon_on_search(_vtable: u64, fighter: &mut Fighter, log: u64) {
+    let boma = fighter.battle_object.module_accessor;
+    let collision_log = *(log as *const u64).add(0x10/0x8) as *const CollisionLogScuffed;
+    let status_kind = StatusModule::status_kind(boma);
+    if is_springtrap_slots(boma) {
         if status_kind == *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_LOOP {
-            let opponent_id = (*collision_log).opponent_battle_object_id;
-            let opponent_boma = sv_battle_object::module_accessor(opponent_id);
+            let opponent_id = (*collision_log).opponent_object_id;
+            let opponent_battle_object = get_battle_object_from_id(opponent_id);
+            let opponent_battle_object_id = (*opponent_battle_object).battle_object_id;
+            let opponent_boma = (*opponent_battle_object).module_accessor;
             let opponent_kind = utility::get_kind(&mut *opponent_boma);
-            if opponent_kind == *WEAPON_KIND_KROOL_IRONBALL {
-                let owner_id = WorkModule::get_int(opponent_boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
-                if owner_id == fighter.battle_object.battle_object_id {
-                    WorkModule::set_int(opponent_boma, 1, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_END, false);
+            if opponent_battle_object_id >> 0x1C == 1 {
+                if opponent_kind == *WEAPON_KIND_KROOL_IRONBALL {
+                    let owner_id = WorkModule::get_int(opponent_boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
+                    if owner_id == fighter.battle_object.battle_object_id {
+                        WorkModule::set_int(opponent_boma, 1, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+                        StatusModule::change_status_request_from_script(boma, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_END, false);
+                    }
                 }
             }
         }
     }
-    original!()(vtable, fighter, log)
 }
 
 pub fn install() {
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_GANON, 48, false, true)).data(ganon_on_search as *const () as *const u64);
 	skyline::install_hooks!(
         ganon_on_attack,
-        ganon_status_transition,
-        ganon_on_search
+        ganon_status_transition
     );
 }

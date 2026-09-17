@@ -32,7 +32,7 @@ unsafe extern "C" fn springtrap_attack_s4_hold_main_loop(fighter: &mut L2CFighte
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .status(Main, *FIGHTER_STATUS_KIND_ATTACK_S4_HOLD, springtrap_attack_s4_hold_main_status)
     .install()
     ;

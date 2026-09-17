@@ -3,7 +3,7 @@ use super::*;
 unsafe extern "C" fn springtrap_special_hi_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
     StatusModule::init_settings(boma, SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
-    FighterStatusModuleImpl::set_fighter_status_data(boma, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_HI | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64, 0, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_HI as u32, 0);
+    FighterStatusModuleImpl::set_fighter_status_data(boma, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_HI | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64, *FIGHTER_STATUS_ATTR_START_TURN as u32, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_HI as u32, 0);
     0.into()
 }
 
@@ -72,18 +72,11 @@ unsafe extern "C" fn springtrap_special_hi_exec_status(fighter: &mut L2CFighterC
     let current_frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let stick_x = fighter.global_table[STICK_X].get_f32();
     let stick_y = fighter.global_table[STICK_Y].get_f32();
-    let mut stick = fighter.Vector2__create(stick_x.into(), stick_y.into());
-    if stick["x"].get_f32().abs()+stick["y"].get_f32().abs() < 0.5 {
-        stick["x"].assign(&L2CValue::F32(0.0));
-        stick["y"].assign(&L2CValue::F32(1.0));
-    }
-    let normalize = fighter.Vector2__normalize(stick);
-    let vec_stick_x = normalize["x"].get_f32();
-    let vec_stick_y = normalize["y"].get_f32();
-    let stick_angle = vec_stick_y.atan2(vec_stick_x);
-    let stick_degrees = stick_angle.to_degrees();
+    let boma = fighter.module_accessor;
+    let deadzone_check = stick_x.abs()+stick_y.abs() < 0.5;
+    let degrees = if deadzone_check {90.0} else {ControlModule::get_stick_angle(boma).to_degrees()};
     if current_frame >= 10.0 {
-        WorkModule::set_int(fighter.module_accessor, stick_degrees as i32, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE);
+        WorkModule::set_int(fighter.module_accessor, degrees as i32, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE);
     }
     0.into()
 }
@@ -124,7 +117,7 @@ unsafe extern "C" fn springtrap_special_hi_exit_status(fighter: &mut L2CFighterC
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_HI, springtrap_special_hi_pre_status)
     .status(Init, *FIGHTER_STATUS_KIND_SPECIAL_HI, springtrap_special_hi_init_status)
     .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_HI, springtrap_special_hi_main_status)

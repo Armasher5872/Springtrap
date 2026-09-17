@@ -3,7 +3,8 @@ use super::*;
 //Axe Stuck ACMD
 unsafe extern "C" fn springtrap_axe_stuck_acmd(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 1.0, 0, 0, 0, 0, 13.5, 0.0, 0.0, 6.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 30, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_curse_poison"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_OBJECT);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 1.0, 0, 0, 0, 0, 13.5, 0.0, 0.0, 6.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 30, false, false, true, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_curse_poison"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_OBJECT);
+        ATK_SET_SHIELD_SETOFF_MUL(agent, 0, 0.0);
     }
 }
 
@@ -37,7 +38,7 @@ unsafe extern "C" fn springtrap_axe_stuck_effect(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("ganon_ironballcloned")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .acmd("game_stuck", springtrap_axe_stuck_acmd, Low)
     .acmd("effect_stuck", springtrap_axe_stuck_effect, Low)
     .install()

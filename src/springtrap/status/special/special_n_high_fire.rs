@@ -27,9 +27,11 @@ unsafe extern "C" fn springtrap_special_n_high_fire_main_status(fighter: &mut L2
 }
 
 unsafe extern "C" fn springtrap_special_n_high_fire_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let boma = fighter.module_accessor;
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
+    let boma = fighter.module_accessor;
+    let effect_id = WorkModule::get_int(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID) as u32;
+    let angle = determine_launch_angle(boma, false);
     if CancelModule::is_enable_cancel(boma) {
         if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             if fighter.sub_air_check_fall_common().get_bool() {
@@ -58,6 +60,9 @@ unsafe extern "C" fn springtrap_special_n_high_fire_main_loop(fighter: &mut L2CF
             MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_air_n_high_fire"), -1.0, 1.0, 0.0, false, false);
         }
     }
+    if EffectModule::is_exist_effect(boma, effect_id) {
+        EffectModule::set_rot(boma, effect_id as u32, &Vector3f{x: 0.0, y: 0.0, z: angle-90.0});
+    }
     if MotionModule::is_end(boma) {
         if situation_kind == *SITUATION_KIND_GROUND {
             fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
@@ -78,6 +83,8 @@ unsafe extern "C" fn springtrap_special_n_high_fire_end_status(fighter: &mut L2C
     let boma = fighter.module_accessor;
     ArticleModule::remove_exist(boma, *FIGHTER_GANON_GENERATE_ARTICLE_SWORD, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     WorkModule::off_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CHARGED);
+    WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID);
+    EFFECT_OFF_KIND(fighter, Hash40::new("springtrap_vector"), true, true);
     0.into()
 }
 
@@ -85,12 +92,14 @@ unsafe extern "C" fn springtrap_special_n_high_fire_exit_status(fighter: &mut L2
     let boma = fighter.module_accessor;
     ArticleModule::remove_exist(boma, *FIGHTER_GANON_GENERATE_ARTICLE_SWORD, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     WorkModule::off_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CHARGED);
+    WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID);
+    EFFECT_OFF_KIND(fighter, Hash40::new("springtrap_vector"), true, true);
     0.into()
 }
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .status(Pre, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_HIGH_FIRE, springtrap_special_n_high_fire_pre_status)
     .status(Init, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_HIGH_FIRE, springtrap_special_n_high_fire_init_status)
     .status(Main, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_HIGH_FIRE, springtrap_special_n_high_fire_main_status)

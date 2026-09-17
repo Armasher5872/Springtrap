@@ -107,7 +107,7 @@ unsafe extern "C" fn ssbexo_springtrap_final_smash_start_expression(agent: &mut 
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .game_acmd("game_finalstart", ssbexo_springtrap_final_smash_start_acmd, Low)
     .game_acmd("game_finalairstart", ssbexo_springtrap_final_smash_start_acmd, Low)
     .effect_acmd("effect_finalstart", ssbexo_springtrap_final_smash_start_effect, Low)

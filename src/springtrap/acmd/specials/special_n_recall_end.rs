@@ -52,7 +52,7 @@ unsafe extern "C" fn springtrap_neutral_special_recall_end_expression(agent: &mu
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .acmd("game_specialnrecallend", springtrap_neutral_special_recall_end_game, Low)
     .acmd("effect_specialnrecallend", springtrap_neutral_special_recall_end_effect, Low)
     .acmd("sound_specialnrecallend", springtrap_neutral_special_recall_end_sound, Low)

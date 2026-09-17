@@ -64,7 +64,7 @@ unsafe extern "C" fn springtrap_phantom_bb_idle_exit_status(_weapon: &mut L2CWea
 
 pub fn install() {
     Agent::new("ganon_cannonballcloned")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .status(Pre, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_BB_IDLE, springtrap_phantom_bb_idle_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_BB_IDLE, springtrap_phantom_bb_idle_init_status)
     .status(Main, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_BB_IDLE, springtrap_phantom_bb_idle_main_status)

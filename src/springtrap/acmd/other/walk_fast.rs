@@ -46,7 +46,7 @@ unsafe extern "C" fn springtrap_walk_fast_expression(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .acmd("effect_walkfast", springtrap_walk_fast_effect, Low)
     .acmd("sound_walkfast", springtrap_walk_fast_sound, Low)
     .acmd("expression_walkfast", springtrap_walk_fast_expression, Low)

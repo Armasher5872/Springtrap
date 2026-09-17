@@ -29,7 +29,7 @@ unsafe extern "C" fn springtrap_side_special_hold_expression(agent: &mut L2CAgen
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .acmd("game_specialshold", springtrap_side_special_hold_acmd, Low)
     .acmd("effect_specialshold", springtrap_side_special_hold_effect, Low)
     .acmd("sound_specialshold", springtrap_side_special_hold_sound, Low)

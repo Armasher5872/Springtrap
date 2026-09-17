@@ -3,12 +3,21 @@ use super::*;
 //Axe Fly ACMD
 unsafe extern "C" fn springtrap_axe_fly_acmd(agent: &mut L2CAgentBase) {
     let boma = agent.module_accessor;
-    if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("have"), 7.0, 30, 45, 0, 50, 3.5, 0.0, 6.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_SPEED, false, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_curse_poison"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_OBJECT);
-        SEARCH(agent, 0, 0, Hash40::new("have"), 3.5, 0.0, 6.0, 0.0, None, None, None, *COLLISION_KIND_MASK_AH, *HIT_STATUS_MASK_ALL, 1, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_FIGHTER, *COLLISION_PART_MASK_ALL, false);
-        AttackModule::set_poison_param(boma, 0, 361, 45, 1.0, false);
-        AttackModule::set_optional_hit_effect(boma, 0, Hash40::new("sys_hit_fire"));
-        AttackModule::set_add_reaction_frame_revised(boma, 0, 12.0, true);
+    let status_kind = StatusModule::status_kind(boma);
+    if status_kind == *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_RECALL {
+        if is_excute(agent) {
+            ATTACK(agent, 0, 0, Hash40::new("have"), 7.0, 30, 45, 0, 50, 3.5, 0.0, 6.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_SPEED, false, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_OBJECT);
+            AttackModule::set_add_reaction_frame_revised(boma, 0, 12.0, true);
+        }
+    }
+    else {
+        if is_excute(agent) {
+            ATTACK(agent, 0, 0, Hash40::new("have"), 7.0, 30, 45, 0, 50, 3.5, 0.0, 6.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_SPEED, false, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_curse_poison"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_OBJECT);
+            SEARCH(agent, 0, 0, Hash40::new("have"), 3.5, 0.0, 6.0, 0.0, None, None, None, *COLLISION_KIND_MASK_AH, *HIT_STATUS_MASK_ALL, 1, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_FIGHTER, *COLLISION_PART_MASK_ALL, false);
+            AttackModule::set_poison_param(boma, 0, 361, 45, 1.0, false);
+            AttackModule::set_optional_hit_effect(boma, 0, Hash40::new("sys_hit_fire"));
+            AttackModule::set_add_reaction_frame_revised(boma, 0, 12.0, true);
+        }
     }
 }
 
@@ -31,7 +40,7 @@ unsafe extern "C" fn springtrap_axe_fly_sound(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("ganon_ironballcloned")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .acmd("game_fly", springtrap_axe_fly_acmd, Low)
     .acmd("effect_fly", springtrap_axe_fly_effect, Low)
     .acmd("sound_fly", springtrap_axe_fly_sound, Low)

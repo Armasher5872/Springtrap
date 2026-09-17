@@ -44,6 +44,13 @@ unsafe extern "C" fn springtrap_special_n_recall_loop_main_loop(fighter: &mut L2
             MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_air_n_recall_loop"), -1.0, 1.0, 0.0, false, false);
         }
     }
+    if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD) {
+        if ArticleModule::is_exist(boma, FIGHTER_SPRINGTRAP_GENERATE_ARTICLE_AXE) {
+            let axe_boma = get_article_boma(boma, FIGHTER_SPRINGTRAP_GENERATE_ARTICLE_AXE);
+            WorkModule::set_int(axe_boma, 1, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+        }
+        fighter.change_status(FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_END.into(), false.into());
+    }
     if !WorkModule::is_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_ACTIVE_AXE) {
         fighter.change_status(FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_END.into(), false.into());
     }
@@ -67,7 +74,7 @@ unsafe extern "C" fn springtrap_special_n_recall_loop_exit_status(_fighter: &mut
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .status(Pre, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_LOOP, springtrap_special_n_recall_loop_pre_status)
     .status(Init, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_LOOP, springtrap_special_n_recall_loop_init_status)
     .status(Main, *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_LOOP, springtrap_special_n_recall_loop_main_status)

@@ -190,8 +190,8 @@ unsafe extern "C" fn springtrap_down_tilt_game(agent: &mut L2CAgentBase) {
     let boma = agent.module_accessor;
     frame(lua_state, 10.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("haver"), 8.0, 28, 85, 0, 25, 4.0, 0.0, 1.5, 0.0, Some(0.0), Some(4.0), Some(0.0), 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
-        ATTACK(agent, 1, 0, Hash40::new("armr"), 6.0, 28, 85, 0, 25, 4.0, 2.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 0, 0, Hash40::new("haver"), 8.0, 28, 45, 0, 65, 4.0, 0.0, 1.5, 0.0, Some(0.0), Some(4.0), Some(0.0), 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 1, 0, Hash40::new("armr"), 6.0, 28, 45, 0, 65, 4.0, 2.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
     }
     frame(lua_state, 14.0);
     if is_excute(agent) {
@@ -242,7 +242,7 @@ unsafe extern "C" fn springtrap_down_tilt_expression(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume(get_costumes())
+    .set_costume(get_springtrap_costumes_acmd())
     .acmd("game_attacks3", springtrap_forward_tilt_game, High)
     .acmd("effect_attacks3", springtrap_forward_tilt_effect, High)
     .acmd("sound_attacks3", springtrap_forward_tilt_sound, High)

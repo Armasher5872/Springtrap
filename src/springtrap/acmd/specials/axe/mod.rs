@@ -1,5 +1,8 @@
 use {
-    crate::common::common_func::*,
+    crate::common::{
+        springtrap_func::*,
+        springtrap_var::*,
+    },
     smash::{
         app::{
             lua_bind::*,
