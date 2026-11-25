@@ -29,7 +29,7 @@ unsafe extern "C" fn springtrap_axe_recall_main_status(weapon: &mut L2CWeaponCom
 
 unsafe extern "C" fn springtrap_axe_recall_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
-    let owner_boma = get_owner_boma(weapon);
+    let founder_boma = get_founder_boma(weapon);
     let attack_data = AttackModule::attack_data(boma, 0, false);
     let axe_dist = calculate_axe_distance(weapon);
     let axe_stats = calculate_axe_stats(axe_dist.x, axe_dist.y);
@@ -37,7 +37,7 @@ unsafe extern "C" fn springtrap_axe_recall_main_loop(weapon: &mut L2CWeaponCommo
     (*attack_data).r_add = 0;
     (*attack_data).r_fix = axe_stats.w.round() as i32;
     sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, axe_stats.x, axe_stats.y);
-    if should_remove_axe(weapon) || StatusModule::status_kind(owner_boma) != *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_LOOP {
+    if should_remove_axe(weapon) || StatusModule::status_kind(founder_boma) != *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_LOOP {
         remove_axe(weapon);
     }
     if MotionModule::is_end(boma) {
@@ -82,7 +82,7 @@ unsafe extern "C" fn springtrap_axe_recall_exit_status(_weapon: &mut L2CWeaponCo
 }
 
 pub fn install() {
-    Agent::new("ganon_ironballcloned")
+    Agent::new("ganon_axe")
     .set_costume(get_springtrap_costumes_acmd())
     .status(Pre, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_RECALL, springtrap_axe_recall_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_RECALL, springtrap_axe_recall_init_status)

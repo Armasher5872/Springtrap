@@ -23,36 +23,25 @@ pub unsafe extern "C" fn spawn_hit_effects(weapon: &mut L2CWeaponCommon, attr: u
     }
 }
 
-pub fn get_costumes() -> Vec<usize> {
+//Installs for all slots
+pub fn get_all_costumes_acmd() -> Vec<usize> {
 	let costumes = &mut Vec::new();
-    unsafe {
-        let marked = *&raw mut MARKED_COLORS;
-        for i in 0..marked.len() {
-            if marked[i] {
-                costumes.push(i);
-            }
-        }
+    for i in 0..=256 {
+        costumes.push(i);
     }
     costumes.to_vec()
 }
 
-pub unsafe extern "C" fn set_front_cliff_hangdata(boma: &mut BattleObjectModuleAccessor, x: f32, y: f32) {
-    let ground_module = *(boma as *mut BattleObjectModuleAccessor as *const u64).add(0x58/0x8);
-    let ground_data = *((ground_module+0x28) as *mut *mut f32);
-    *ground_data.add(0x530/0x4) = x;
-    *ground_data.add(0x534/0x4) = y;
-}
-
-pub unsafe extern "C" fn set_back_cliff_hangdata(boma: &mut BattleObjectModuleAccessor, x: f32, y: f32) {
-    let ground_module = *(boma as *mut BattleObjectModuleAccessor as *const u64).add(0x58/0x8);
-    let ground_data = *((ground_module+0x28) as *mut *mut f32);
-    *ground_data.add(0x540/0x4) = x;
-    *ground_data.add(0x544/0x4) = y;
-}
-
-pub unsafe extern "C" fn set_center_cliff_hangdata(boma: &mut BattleObjectModuleAccessor, x: f32, y: f32) {
-    let ground_module = *(boma as *mut BattleObjectModuleAccessor as *const u64).add(0x58/0x8);
-    let ground_data = *((ground_module+0x28) as *mut *mut f32);
-    *ground_data.add(0x520/0x4) = x;
-    *ground_data.add(0x524/0x4) = y;
+//Adds a new reflector type, used for making new reflectors
+pub unsafe fn add_reflector_group(boma: *mut BattleObjectModuleAccessor, resource: *mut ShieldGroupResource2, group_id: i32) {
+    let ptr = get_module_vtable_func(boma, 0x108, 0x60);
+    let set_shield_group2: extern "C" fn(*mut u64, *mut ShieldGroupResource2, i32) = std::mem::transmute(ptr);
+    let reflector_module = *(boma as *mut *mut u64).add(0x108/8);
+    set_shield_group2(reflector_module, resource, group_id);
+    let count = (*resource).count as i32;
+    if count > 0 {
+        for x in 0..count {
+            ReflectorModule::set_status(boma, x, smash::app::ShieldStatus(*SHIELD_STATUS_NONE), group_id);
+        }
+    }
 }

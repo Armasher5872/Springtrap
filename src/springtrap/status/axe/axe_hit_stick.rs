@@ -6,7 +6,6 @@ unsafe extern "C" fn springtrap_axe_hit_stick_pre_status(weapon: &mut L2CWeaponC
 }
 
 unsafe extern "C" fn springtrap_axe_hit_stick_init_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    WorkModule::off_flag(weapon.module_accessor, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_CAN_LINK);
     sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
     sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
     0.into()
@@ -14,7 +13,7 @@ unsafe extern "C" fn springtrap_axe_hit_stick_init_status(weapon: &mut L2CWeapon
 
 unsafe extern "C" fn springtrap_axe_hit_stick_main_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
-    HitModule::set_whole(boma, HitStatus(*HIT_STATUS_XLU), 0);
+    GroundModule::set_collidable(boma, false);
     MotionModule::change_motion(boma, Hash40::new("hit_stick"), 0.0, 1.0, false, 0.0, false, false);
     weapon.fastshift(L2CValue::Ptr(springtrap_axe_hit_stick_main_loop as *const () as _))
 }
@@ -23,8 +22,8 @@ unsafe extern "C" fn springtrap_axe_hit_stick_main_loop(weapon: &mut L2CWeaponCo
     let boma = weapon.module_accessor;
     let motion_kind = MotionModule::motion_kind(boma);
     let object_id = WorkModule::get_int(boma, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_INT_OBJECT_ID);
-    let owner_boma = get_owner_boma(weapon);
-    let owner_status_kind = StatusModule::status_kind(owner_boma);
+    let founder_boma = get_founder_boma(weapon);
+    let founder_status_kind = StatusModule::status_kind(founder_boma);
     if should_remove_axe(weapon) {
         remove_axe(weapon);
     }
@@ -50,7 +49,7 @@ unsafe extern "C" fn springtrap_axe_hit_stick_main_loop(weapon: &mut L2CWeaponCo
     else {
         remove_axe(weapon);
     }
-    if owner_status_kind == *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_LOOP {
+    if founder_status_kind == *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_LOOP {
         weapon.change_status(WEAPON_SPRINGTRAP_AXE_STATUS_KIND_RECALL.into(), false.into());
     }
     if MotionModule::is_end(boma) {
@@ -107,7 +106,7 @@ unsafe extern "C" fn springtrap_axe_hit_stick_exit_status(weapon: &mut L2CWeapon
 }
 
 pub fn install() {
-    Agent::new("ganon_ironballcloned")
+    Agent::new("ganon_axe")
     .set_costume(get_springtrap_costumes_acmd())
     .status(Pre, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_HIT_STICK, springtrap_axe_hit_stick_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_HIT_STICK, springtrap_axe_hit_stick_init_status)

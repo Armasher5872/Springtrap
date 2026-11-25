@@ -62,7 +62,7 @@ unsafe extern "C" fn springtrap_phantom_phantom_attack_exit_status(_weapon: &mut
 }
 
 pub fn install() {
-    Agent::new("ganon_cannonballcloned")
+    Agent::new("ganon_phantom")
     .set_costume(get_springtrap_costumes_acmd())
     .status(Pre, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_ATTACK, springtrap_phantom_phantom_attack_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_ATTACK, springtrap_phantom_phantom_attack_init_status)

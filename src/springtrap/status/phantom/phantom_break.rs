@@ -57,7 +57,7 @@ unsafe extern "C" fn springtrap_phantom_phantom_break_exit_status(weapon: &mut L
 }
 
 pub fn install() {
-    Agent::new("ganon_cannonballcloned")
+    Agent::new("ganon_phantom")
     .set_costume(get_springtrap_costumes_acmd())
     .status(Pre, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_BREAK, springtrap_phantom_phantom_break_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_BREAK, springtrap_phantom_phantom_break_init_status)

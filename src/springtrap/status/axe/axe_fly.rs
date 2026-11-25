@@ -7,9 +7,9 @@ unsafe extern "C" fn springtrap_axe_fly_pre_status(weapon: &mut L2CWeaponCommon)
 
 unsafe extern "C" fn springtrap_axe_fly_init_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
-    let owner_boma = get_owner_boma(weapon);
-    let owner_lr = PostureModule::lr(owner_boma);
-    let is_charged = WorkModule::is_flag(owner_boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CHARGED);
+    let founder_boma = get_founder_boma(weapon);
+    let founder_lr = PostureModule::lr(founder_boma);
+    let is_charged = WorkModule::is_flag(founder_boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CHARGED);
     let life = WorkModule::get_param_int(boma, hash40("param_ironballcloned"), hash40("life"));
     let speed_min = WorkModule::get_param_float(boma, hash40("param_ironballcloned"), hash40("speed_min"));
     let speed_max = WorkModule::get_param_float(boma, hash40("param_ironballcloned"), hash40("speed_max"));
@@ -24,8 +24,8 @@ unsafe extern "C" fn springtrap_axe_fly_init_status(weapon: &mut L2CWeaponCommon
     let gravity = if is_charged {gravity_max} else {gravity_min};
     let speed_x = angle.to_radians().cos()*speed;
     let speed_y = angle.to_radians().sin()*speed;
-    sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x, speed_y);
-    sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, brake*owner_lr, -gravity);
+    sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x*founder_lr, speed_y);
+    sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, brake*founder_lr, -gravity);
     KineticModule::enable_energy(boma, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
     WorkModule::set_int(boma, life, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
     WorkModule::set_int(boma, life, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
@@ -34,23 +34,24 @@ unsafe extern "C" fn springtrap_axe_fly_init_status(weapon: &mut L2CWeaponCommon
 
 unsafe extern "C" fn springtrap_axe_fly_main_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
-    let owner_boma = get_owner_boma(weapon);
-    let owner_lr = PostureModule::lr(owner_boma);
-    let owner_pos_x = PostureModule::pos_x(owner_boma);
-    let owner_pos_y = PostureModule::pos_y(owner_boma);
-    let owner_pos_z = PostureModule::pos_z(owner_boma);
+    let founder_boma = get_founder_boma(weapon);
+    let founder_lr = PostureModule::lr(founder_boma);
+    let founder_pos_x = PostureModule::pos_x(founder_boma);
+    let founder_pos_y = PostureModule::pos_y(founder_boma);
+    let founder_pos_z = PostureModule::pos_z(founder_boma);
     ModelModule::set_scale(boma, 0.73);
-    PostureModule::set_pos(boma, &Vector3f{x: owner_pos_x+(12.0*owner_lr), y: owner_pos_y+18.0, z: owner_pos_z});
-    HitModule::set_whole(boma, HitStatus(*HIT_STATUS_XLU), 0);
-    MotionModule::change_motion(weapon.module_accessor, Hash40::new("fly"), 0.0, 1.0, false, 0.0, false, false);
+    PostureModule::set_pos(boma, &Vector3f{x: founder_pos_x+(12.0*founder_lr), y: founder_pos_y+18.0, z: founder_pos_z});
+    PostureModule::init_pos(boma, &Vector3f{x: founder_pos_x+(12.0*founder_lr), y: founder_pos_y+18.0, z: founder_pos_z}, true, true);
+    HitModule::set_status_all(boma, HitStatus(*HIT_STATUS_XLU), 0);
+    MotionModule::change_motion(boma, Hash40::new("fly"), 0.0, 1.0, false, 0.0, false, false);
     weapon.fastshift(L2CValue::Ptr(springtrap_axe_fly_main_loop as *const () as _))
 }
 
 unsafe extern "C" fn springtrap_axe_fly_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
     let frame = weapon.global_table[CURRENT_FRAME].get_f32();
-    let owner_boma = get_owner_boma(weapon);
-    let owner_status_kind = StatusModule::status_kind(owner_boma);
+    let founder_boma = get_founder_boma(weapon);
+    let founder_status_kind = StatusModule::status_kind(founder_boma);
     if frame > 1.0 {
         if GroundModule::is_floor_touch_line(boma, *GROUND_TOUCH_FLAG_DOWN as u32) {
             WorkModule::on_flag(boma, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_GROUNDED);
@@ -68,7 +69,7 @@ unsafe extern "C" fn springtrap_axe_fly_main_loop(weapon: &mut L2CWeaponCommon) 
     if should_remove_axe(weapon) {
         remove_axe(weapon);
     }
-    if owner_status_kind == *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_LOOP {
+    if founder_status_kind == *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_LOOP {
         weapon.change_status(WEAPON_SPRINGTRAP_AXE_STATUS_KIND_RECALL.into(), false.into());
     }
     if MotionModule::is_end(boma) {
@@ -79,8 +80,8 @@ unsafe extern "C" fn springtrap_axe_fly_main_loop(weapon: &mut L2CWeaponCommon) 
 
 unsafe extern "C" fn springtrap_axe_fly_exec_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
-    let owner_boma = get_owner_boma(weapon);
-    let is_charged = WorkModule::is_flag(owner_boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CHARGED);
+    let founder_boma = get_founder_boma(weapon);
+    let is_charged = WorkModule::is_flag(founder_boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CHARGED);
     let gravity_min = WorkModule::get_param_float(boma, hash40("param_axe"), hash40("gravity_min"));
     let gravity_max = WorkModule::get_param_float(boma, hash40("param_axe"), hash40("gravity_max"));
     let gravity = if is_charged {gravity_max} else {gravity_min};
@@ -110,7 +111,7 @@ unsafe extern "C" fn springtrap_axe_fly_exit_status(_weapon: &mut L2CWeaponCommo
 }
 
 pub fn install() {
-    Agent::new("ganon_ironballcloned")
+    Agent::new("ganon_axe")
     .set_costume(get_springtrap_costumes_acmd())
     .status(Pre, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_FLY, springtrap_axe_fly_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_FLY, springtrap_axe_fly_init_status)

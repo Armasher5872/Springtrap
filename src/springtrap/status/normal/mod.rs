@@ -3,7 +3,7 @@ use {
         getter_funcs::*,
         globals::*,
         springtrap_func::*,
-        springtrap_var::*,
+        springtrap_var::*
     },
     smash::{
         app::{
@@ -13,10 +13,10 @@ use {
         hash40,
         lib::lua_const::*,
         lua2cpp::*,
-        phx::Vector3f
+        phx::*
     },
     smashline::*,
-    smash_script::macros::*,
+    smash_script::macros::*
 };
 
 mod attack_s4_hold;

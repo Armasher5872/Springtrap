@@ -94,13 +94,13 @@ pub fn install() {
     .on_line(Main, springtrap_opff)
     .install()
     ;
-    Agent::new("ganon_ironballcloned")
+    Agent::new("ganon_axe")
     .set_costume(get_springtrap_costumes_acmd())
     .on_start(springtrap_axe_on_start)
     .on_line(Main, springtrap_axe_opff)
     .install()
     ;
-    Agent::new("ganon_cannonballcloned")
+    Agent::new("ganon_phantom")
     .set_costume(get_springtrap_costumes_acmd())
     .on_start(springtrap_phantom_on_start)
     .install()

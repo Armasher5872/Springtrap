@@ -11,32 +11,29 @@ unsafe extern "C" fn springtrap_axe_stick_pre_status(weapon: &mut L2CWeaponCommo
 
 unsafe extern "C" fn springtrap_axe_stick_init_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
-    let lr = PostureModule::lr(boma);
     if GroundModule::is_touch(boma, *GROUND_TOUCH_FLAG_DOWN as u32) {
-        let down_touch_normal = GroundModule::get_touch_normal(boma, *GROUND_TOUCH_FLAG_DOWN as u32);
-        let atan = down_touch_normal.x.atan2(down_touch_normal.y);
-        let down_touch_angle = atan.to_degrees();
-        println!("Down Touch Angle: {}", down_touch_angle);
-        WorkModule::set_float(boma, down_touch_angle, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLOAT_SLOPE_ROT_ANGLE);
+        let normal_x = GroundModule::get_touch_normal_x(boma, *GROUND_TOUCH_FLAG_DOWN as u32);
+        let normal_y = GroundModule::get_touch_normal_y(boma, *GROUND_TOUCH_FLAG_DOWN as u32);
+        let angle = (normal_y/normal_x).atan().to_degrees()-90.0;
+        WorkModule::set_float(boma, angle, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLOAT_SLOPE_ROT_ANGLE);
+        GroundModule::set_rhombus_offset(boma, &Vector2f{x: 0.0, y: 3.0});
     }
     if GroundModule::is_touch(boma, *GROUND_TOUCH_FLAG_LEFT as u32) {
-        let left_touch_normal = GroundModule::get_touch_normal(boma, *GROUND_TOUCH_FLAG_LEFT as u32);
-        let atan = left_touch_normal.x.atan2(left_touch_normal.y)*lr;
-        let left_touch_angle = atan.to_degrees();
-        println!("Left Touch Angle: {}", left_touch_angle);
-        WorkModule::set_float(boma, left_touch_angle, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLOAT_SLOPE_ROT_ANGLE);
+        let normal_x = GroundModule::get_touch_normal_x(boma, *GROUND_TOUCH_FLAG_LEFT as u32);
+        let normal_y = GroundModule::get_touch_normal_y(boma, *GROUND_TOUCH_FLAG_LEFT as u32);
+        let angle = (normal_y/normal_x).atan().to_degrees()-90.0;
+        WorkModule::set_float(boma, angle, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLOAT_SLOPE_ROT_ANGLE);
+        GroundModule::set_rhombus_offset(boma, &Vector2f{x: 3.0, y: 0.0});
     }
     if GroundModule::is_touch(boma, *GROUND_TOUCH_FLAG_RIGHT as u32) {
-        let right_touch_normal = GroundModule::get_touch_normal(boma, *GROUND_TOUCH_FLAG_RIGHT as u32);
-        let atan = right_touch_normal.x.atan2(right_touch_normal.y)*lr;
-        let right_touch_angle = atan.to_degrees();
-        println!("Right Touch Angle: {}", right_touch_angle);
-        WorkModule::set_float(boma, right_touch_angle, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLOAT_SLOPE_ROT_ANGLE);
+        let normal_x = GroundModule::get_touch_normal_x(boma, *GROUND_TOUCH_FLAG_RIGHT as u32);
+        let normal_y = GroundModule::get_touch_normal_y(boma, *GROUND_TOUCH_FLAG_RIGHT as u32);
+        let angle = (normal_y/normal_x).atan().to_degrees()-90.0;
+        WorkModule::set_float(boma, angle, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLOAT_SLOPE_ROT_ANGLE);
+        GroundModule::set_rhombus_offset(boma, &Vector2f{x: -3.0, y: 0.0});
     }
-    GroundModule::set_rhombus_offset(boma, &Vector2f{x: 0.0, y: 2.0});
     sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
     sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
-    WorkModule::off_flag(boma, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_CAN_LINK);
     WorkModule::set_int(boma, 900, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     0.into()
 }
@@ -52,13 +49,13 @@ unsafe extern "C" fn springtrap_axe_stick_main_loop(weapon: &mut L2CWeaponCommon
     let boma = weapon.module_accessor;
     let motion_kind = MotionModule::motion_kind(boma);
     let slope_rot_angle = WorkModule::get_float(boma, *WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLOAT_SLOPE_ROT_ANGLE);
-    let owner_boma = get_owner_boma(weapon);
-    let owner_status_kind = StatusModule::status_kind(owner_boma);
+    let founder_boma = get_founder_boma(weapon);
+    let founder_status_kind = StatusModule::status_kind(founder_boma);
     PostureModule::set_rot(boma, &Vector3f{x: slope_rot_angle, y: 0.0, z: 0.0}, 0);
     if should_remove_axe(weapon) {
         remove_axe(weapon);
     }
-    if owner_status_kind == *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_LOOP {
+    if founder_status_kind == *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_LOOP {
         weapon.change_status(WEAPON_SPRINGTRAP_AXE_STATUS_KIND_RECALL.into(), false.into());
     }
     if MotionModule::is_end(boma) {
@@ -83,7 +80,7 @@ unsafe extern "C" fn springtrap_axe_stick_exit_status(_weapon: &mut L2CWeaponCom
 }
 
 pub fn install() {
-    Agent::new("ganon_ironballcloned")
+    Agent::new("ganon_axe")
     .set_costume(get_springtrap_costumes_acmd())
     .status(Pre, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_STICK, springtrap_axe_stick_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_AXE_STATUS_KIND_STICK, springtrap_axe_stick_init_status)

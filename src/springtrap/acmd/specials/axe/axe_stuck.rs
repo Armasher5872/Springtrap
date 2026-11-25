@@ -37,7 +37,7 @@ unsafe extern "C" fn springtrap_axe_stuck_effect(agent: &mut L2CAgentBase) {
 }
 
 pub fn install() {
-    Agent::new("ganon_ironballcloned")
+    Agent::new("ganon_axe")
     .set_costume(get_springtrap_costumes_acmd())
     .acmd("game_stuck", springtrap_axe_stuck_acmd, Low)
     .acmd("effect_stuck", springtrap_axe_stuck_effect, Low)

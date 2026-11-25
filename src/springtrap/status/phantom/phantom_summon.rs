@@ -1,27 +1,27 @@
 use super::*;
 
 unsafe extern "C" fn springtrap_phantom_phantom_summon_pre_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    let owner_boma = get_owner_boma(weapon);
-    let owner_situation_kind = StatusModule::situation_kind(owner_boma);
-    let owner_ground_correct = GroundModule::get_correct(owner_boma);
-    StatusModule::init_settings(weapon.module_accessor, SituationKind(owner_situation_kind), *WEAPON_KINETIC_TYPE_NONE, owner_ground_correct as u32, GroundCliffCheckKind(0), false, 0, 0, 0, 0);
+    let founder_boma = get_founder_boma(weapon);
+    let founder_situation_kind = StatusModule::situation_kind(founder_boma);
+    let founder_ground_correct = GroundModule::get_correct(founder_boma);
+    StatusModule::init_settings(weapon.module_accessor, SituationKind(founder_situation_kind), *WEAPON_KINETIC_TYPE_NONE, founder_ground_correct as u32, GroundCliffCheckKind(0), false, 0, 0, 0, 0);
     0.into()
 }
 
 unsafe extern "C" fn springtrap_phantom_phantom_summon_init_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
-    let owner_boma = get_owner_boma(weapon);
-    let owner_lr = PostureModule::lr(owner_boma);
-    let owner_pos_x = PostureModule::pos_x(owner_boma);
-    let owner_pos_y = PostureModule::pos_y(owner_boma);
-    let owner_pos_z = PostureModule::pos_z(owner_boma);
-    let phantom_type = WorkModule::get_int(owner_boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_LW_PHANTOM_TYPE);
+    let founder_boma = get_founder_boma(weapon);
+    let founder_lr = PostureModule::lr(founder_boma);
+    let founder_pos_x = PostureModule::pos_x(founder_boma);
+    let founder_pos_y = PostureModule::pos_y(founder_boma);
+    let founder_pos_z = PostureModule::pos_z(founder_boma);
+    let phantom_type = WorkModule::get_int(founder_boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_LW_PHANTOM_TYPE);
     sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
     sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
     WorkModule::on_flag(boma, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLAG_WAS_INIT_SPAWN);
-    WorkModule::set_float(boma, owner_lr, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_OWNER_INIT_LR);
+    WorkModule::set_float(boma, founder_lr, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_OWNER_INIT_LR);
     WorkModule::set_int(boma, phantom_type, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_INT_PHANTOM_TYPE);
-    PostureModule::set_pos(boma, &Vector3f{x: owner_pos_x+(18.0*owner_lr), y: owner_pos_y+3.0, z: owner_pos_z});
+    PostureModule::set_pos(boma, &Vector3f{x: founder_pos_x+(18.0*founder_lr), y: founder_pos_y+3.0, z: founder_pos_z});
     ModelModule::set_scale(boma, 1.75);
     GroundModule::set_rhombus_offset(boma, &Vector2f{x: 0.0, y: 3.0});
     if phantom_type == *SPRINGTRAP_PHANTOM_TYPE_FOXY {
@@ -35,12 +35,12 @@ unsafe extern "C" fn springtrap_phantom_phantom_summon_init_status(weapon: &mut 
 
 unsafe extern "C" fn springtrap_phantom_phantom_summon_main_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
-    let owner_boma = get_owner_boma(weapon);
-    let team_no = TeamModule::team_no(owner_boma) as i32;
+    let founder_boma = get_founder_boma(weapon);
+    let team_no = TeamModule::team_no(founder_boma) as i32;
     let phantom_type = WorkModule::get_int(boma, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_INT_PHANTOM_TYPE);
     ReflectorModule::set_status(boma, *FIGHTER_REFLECTOR_GROUP_JUST_SHIELD, ShieldStatus(*SHIELD_STATUS_NORMAL), *WEAPON_SPRINGTRAP_PHANTOM_SHIELD_KIND_BALLOON_BOY_BODY);
     ReflectorModule::set_no_team(boma, false);
-    TeamModule::set_team_owner_id(boma, (*owner_boma).battle_object_id);
+    TeamModule::set_team_owner_id(boma, (*founder_boma).battle_object_id);
     TeamModule::set_team(boma, team_no, true);
     if phantom_type == *SPRINGTRAP_PHANTOM_TYPE_FREDDY {
         WorkModule::set_int(boma, 2, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_INT_HIT_COUNT);
@@ -79,7 +79,7 @@ unsafe extern "C" fn springtrap_phantom_phantom_summon_exit_status(_weapon: &mut
 }
 
 pub fn install() {
-    Agent::new("ganon_cannonballcloned")
+    Agent::new("ganon_phantom")
     .set_costume(get_springtrap_costumes_acmd())
     .status(Pre, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_SUMMON, springtrap_phantom_phantom_summon_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_SUMMON, springtrap_phantom_phantom_summon_init_status)

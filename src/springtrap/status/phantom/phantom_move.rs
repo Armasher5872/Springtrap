@@ -70,7 +70,7 @@ unsafe extern "C" fn springtrap_phantom_phantom_move_init_status(weapon: &mut L2
         }
     }
     else {
-        sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, -(current_x_speed*10.0), 0.0);
+        sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, -(current_x_speed*100.0), 0.0);
     }
     KineticModule::enable_energy(boma, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
     0.into()
@@ -216,7 +216,7 @@ unsafe extern "C" fn springtrap_phantom_phantom_move_exit_status(_weapon: &mut L
 }
 
 pub fn install() {
-    Agent::new("ganon_cannonballcloned")
+    Agent::new("ganon_phantom")
     .set_costume(get_springtrap_costumes_acmd())
     .status(Pre, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_MOVE, springtrap_phantom_phantom_move_pre_status)
     .status(Init, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_MOVE, springtrap_phantom_phantom_move_init_status)

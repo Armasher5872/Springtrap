@@ -9,7 +9,7 @@ unsafe extern "C" fn springtrap_axe_hit_stick_effect(agent: &mut L2CAgentBase) {
 }
 
 pub fn install() {
-    Agent::new("ganon_ironballcloned")
+    Agent::new("ganon_axe")
     .set_costume(get_springtrap_costumes_acmd())
     .acmd("effect_hitstick", springtrap_axe_hit_stick_effect, Low)
     .install()

@@ -1,14 +1,9 @@
 use {
-    crate::{
-        common::{
-            extern_c::*,
-            getter_funcs::*,
-            globals::*,
-            hooks::*,
-            module_init::*,
-            springtrap_var::*,
-        },
-        MARKED_COLORS
+    crate::common::{
+        getter_funcs::*,
+        globals::*,
+        springtrap_var::*,
+        structs::*
     },
     smash::{
         app::{
@@ -19,7 +14,7 @@ use {
         lib::{
             L2CValue,
             LuaConst,
-            lua_const::*,
+            lua_const::*
         },
         lua2cpp::*,
         phx::*
@@ -28,7 +23,7 @@ use {
     smash_script::{
         macros::*,
         *
-    },
+    }
 };
 
 pub mod common_func;
@@ -36,7 +31,6 @@ pub mod extern_c;
 pub mod getter_funcs;
 pub mod globals;
 pub mod hooks;
-pub mod module_init;
 pub mod springtrap_func;
 pub mod springtrap_var;
 pub mod structs;

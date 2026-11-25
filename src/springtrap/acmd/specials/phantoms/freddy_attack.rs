@@ -32,7 +32,7 @@ unsafe extern "C" fn springtrap_phantom_freddy_attack_sound(agent: &mut L2CAgent
 }
 
 pub fn install() {
-    Agent::new("ganon_cannonballcloned")
+    Agent::new("ganon_phantom")
     .set_costume(get_springtrap_costumes_acmd())
     .acmd("game_freddyattack", springtrap_phantom_freddy_attack_acmd, Low)
     .acmd("effect_freddyattack", springtrap_phantom_freddy_attack_effect, Low)
